@@ -63,3 +63,73 @@ main{height:100dvh;display:flex;flex-direction:column;min-height:0;padding:6px 1
 #moderationPanel[hidden]{display:none!important}.moderationRow{display:flex;align-items:center;gap:6px;justify-content:space-between;padding:8px 4px;border-bottom:1px solid #ffffff22;font-size:12px}.moderationRow span{flex:1;overflow-wrap:anywhere}.moderationRow button{font-size:11px;padding:5px 9px;background:#6a353b;color:#ffe8e8;border:1px solid #bb7171;border-radius:8px}#bannedMembers .moderationRow button{background:#365b48;border-color:#78ae8c}
 
 #recordVoice{background:#2b3347;color:#f5d697;border:1px solid #d6b67e66;min-width:42px;height:43px;padding:6px;font-size:20px}.voiceDraft{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#283043}.voiceDraft audio{min-width:0;flex:1;max-width:340px;height:36px}.voiceDraft button,.voiceSpeed{background:#d9b77b;color:#201b1a;padding:6px 10px;font-size:12px;border-radius:9px}.voiceMessage{display:flex;align-items:center;gap:6px;margin-top:9px}.voiceMessage audio{width:min(260px,65vw);height:40px}.voiceSpeed{white-space:nowrap}.voiceDraft[hidden]{display:none!important}@media(max-width:650px){#recordVoice{min-width:37px;width:37px;padding:3px}.voiceDraft{padding:6px;gap:4px}.voiceDraft button{padding:6px;font-size:10px}}
+
+
+/* SARA ROYAL CHAT — presentation-only enhancement, existing chat logic untouched */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap');
+:root{--royal-gold:#f1c978;--royal-burgundy:#390c1b}
+.messages:not(.lightChat){
+ background:
+ radial-gradient(ellipse at 8% 65%,rgba(118,36,53,.32),transparent 48%),
+ radial-gradient(ellipse at 90% 8%,rgba(212,153,67,.14),transparent 43%),
+ repeating-linear-gradient(135deg,transparent 0 37px,rgba(225,179,102,.025) 38px 39px,transparent 40px 77px),
+ linear-gradient(145deg,#11111e 0%,#1b1221 48%,#090e1a 100%)!important;
+}
+.messages .bubble,.messages .bubble.mine{
+ position:relative;
+ width:fit-content;
+ min-width:110px;
+ max-width:min(82%,650px);
+ padding:13px 17px 12px!important;
+ background:linear-gradient(135deg,rgba(103,27,43,.96),rgba(46,10,25,.97) 65%,rgba(31,10,23,.98))!important;
+ color:#fff8ee;
+ border:1px solid rgba(245,197,111,.88)!important;
+ border-right:3px solid #eac17a!important;
+ border-radius:21px 21px 8px 21px!important;
+ box-shadow:inset 0 1px 0 #ffe3a64a,0 5px 19px #0009,0 0 14px #b77a3220!important;
+ overflow-wrap:anywhere;
+}
+.messages .bubble.mine{border-radius:21px 21px 21px 8px!important}
+.messages .bubble:before{
+ content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+ background:linear-gradient(115deg,transparent 25%,rgba(255,222,154,.055) 48%,transparent 68%);
+}
+.messages .bubble .who{
+ display:inline-block;
+ font-family:'Tajawal','Cairo',sans-serif;
+ font-size:18px!important;font-weight:900!important;
+ color:#ffd991!important;
+ text-shadow:0 2px 5px #000b,0 0 12px #f1c9783b;
+ letter-spacing:.1px;
+}
+.messages .bubble .time{font-size:10px;color:#d7c5b5!important}
+.messages .bubble .body{
+ position:relative;font-family:'Tajawal','Cairo',sans-serif;
+ font-size:19px!important;font-weight:800!important;
+ line-height:1.65!important;color:#fff8f2!important;
+ text-shadow:0 1px 2px #0009;
+}
+.messages .bubble img,.messages .bubble video{border:1px solid #d7a95c77;border-radius:13px}
+.messages .bubble .replyMsg,.messages .bubble .deleteMsg,.messages .bubble .saveMedia{
+ font-family:'Tajawal','Cairo',sans-serif;font-weight:800;
+ border-radius:10px;
+}
+.messages .bubble .replyMsg{color:#ffe0a3;background:#e2b96c18}
+.messages .bubble .deleteMsg{background:#7a24364a}
+.messages .bubble .quotedReply{background:#f6d28a14;color:#ffdfac}
+.messages.lightChat{background:linear-gradient(145deg,#fff9ed,#f1e8dc)!important}
+.messages.lightChat .bubble,.messages.lightChat .bubble.mine{
+ background:linear-gradient(145deg,#fffdf9,#f5e9d9)!important;
+ border:1px solid #bd8a48!important;border-right:3px solid #c3914b!important;
+ color:#32211b!important;box-shadow:0 5px 16px #53331820!important;
+}
+.messages.lightChat .bubble .who{color:#89571e!important;text-shadow:none}
+.messages.lightChat .bubble .body{color:#32211b!important;text-shadow:none}
+.messages.lightChat .bubble .time{color:#6c5c50!important}
+@media(max-width:650px){
+ .messages .bubble,.messages .bubble.mine{max-width:88%;padding:10px 12px!important;border-radius:17px 17px 6px 17px!important}
+ .messages .bubble.mine{border-radius:17px 17px 17px 6px!important}
+ .messages .bubble .who{font-size:16px!important}
+ .messages .bubble .body{font-size:17px!important;line-height:1.55!important}
+ .messages .bubble .time{font-size:9px}
+}
