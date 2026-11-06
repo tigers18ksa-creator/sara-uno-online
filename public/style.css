@@ -133,3 +133,14 @@ main{height:100dvh;display:flex;flex-direction:column;min-height:0;padding:6px 1
  .messages .bubble .body{font-size:17px!important;line-height:1.55!important}
  .messages .bubble .time{font-size:9px}
 }
+
+
+/* Owner-only bulk message selection */
+.bulkToolbar{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:7px 11px;background:#241b29;border-bottom:1px solid #d6ad6970;color:#f6d69b;font-size:12px}
+.bulkToolbar[hidden]{display:none!important}
+.bulkToolbar button{padding:6px 10px;font-size:12px;background:#4b3541;color:#ffe2aa;border:1px solid #b68b56;border-radius:9px}
+.bulkToolbar button.bulkDelete{background:#7d283a;color:#fff}
+.bulkToolbar button:disabled{opacity:.45;cursor:not-allowed}
+.bulkSelectable{cursor:pointer;outline-offset:2px}
+.bulkSelected{outline:3px solid #f6d18a!important;box-shadow:0 0 16px #f6c46b66!important}
+.bulkCheck{width:20px;height:20px;accent-color:#d9ad61;margin-left:9px;vertical-align:middle;cursor:pointer}
