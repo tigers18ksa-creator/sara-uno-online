@@ -41,3 +41,11 @@ html,body{min-height:100%;overflow-x:hidden}
  .welcome{margin:auto 12px;max-height:85dvh;overflow:auto}
  footer{display:none}
 }
+
+/* Each member's own message background follows their selected identity color */
+.messages .bubble,.messages .bubble.mine{background:color-mix(in srgb,var(--bubble-color,#e9c88c) 24%,#161d2a)!important;border-color:var(--bubble-color,#e9c88c)!important}
+.messages.lightChat .bubble,.messages.lightChat .bubble.mine{background:color-mix(in srgb,var(--bubble-color,#e9c88c) 19%,white)!important;border-color:var(--bubble-color,#e9c88c)!important}
+.messages .bubble .body{color:#f8f8fa}
+.messages.lightChat .bubble .body{color:#172033}
+.messages .bubble .time{color:#c8c8d0}
+.messages.lightChat .bubble .time{color:#596273}
