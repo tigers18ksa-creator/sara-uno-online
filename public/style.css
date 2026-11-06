@@ -16,3 +16,15 @@
 .card.back .face{font-size:32px;color:#f5d52c;-webkit-text-stroke:2px #121212;transform:rotate(-23deg)}
 .hand .card .face{font-size:46px}.hand .card.wild .face{width:42px;height:52px}
 @media(max-width:480px){.hand .card .face{font-size:36px;-webkit-text-stroke:2px #171717}.hand .card.wild .face{width:33px;height:42px;gap:2px}.hand .card.wild .face i{border-width:2px}.card .corner{font-size:12px}}
+
+/* SARA Royal Casino — premium walnut, emerald velvet and gold table */
+.arena{isolation:isolate;position:relative;overflow:hidden;min-height:350px;margin:30px auto 34px;padding:37px 24px 33px;border:14px solid transparent;border-radius:150px;background:radial-gradient(ellipse at 50% 38%,#24755d 0%,#135340 48%,#092e29 100%) padding-box,linear-gradient(135deg,#4b2616 0%,#ad7844 12%,#f8df9e 22%,#5c341f 33%,#a46b37 49%,#f5d69a 59%,#613821 74%,#bb874b 87%,#422318 100%) border-box;outline:3px solid #4c2918;box-shadow:0 0 0 7px #1a0d0c,0 0 0 10px #b38a4a,0 25px 70px #000c,inset 0 0 0 5px #d1ae6c,inset 0 0 0 13px #103e32,inset 0 0 75px #0009}
+.arena:before{content:'';position:absolute;inset:21px;border:2px solid #d8b97985;border-radius:135px;pointer-events:none;box-shadow:0 0 0 5px #102e2a88,inset 0 0 30px #0004}
+.arena:after{content:'♛   S A R A   ♛';position:absolute;left:50%;bottom:13px;transform:translateX(-50%);color:#e2c58a55;font-family:Georgia,serif;font-size:16px;font-weight:700;letter-spacing:5px;white-space:nowrap;pointer-events:none}
+.arena-title{font-size:19px;font-weight:900;color:#fff2c7;text-shadow:0 2px 10px #000a;letter-spacing:.2px}
+.deckarea{gap:46px;margin:24px 0 22px}
+.arena .card{box-shadow:0 4px 1px #0007,0 15px 22px #0008}
+#colorLabel{display:inline-block;background:#061e1b9c;border:1px solid #e4c68669;padding:5px 19px;border-radius:99px;color:#f9e8bb;box-shadow:0 4px 15px #0005}
+#table>h3{color:#f6d89c}
+.player.active{background:linear-gradient(145deg,#4c3b28,#212b3c);border-color:#e9c57e;box-shadow:0 0 0 1px #f5d99299,0 0 24px #f5c77344}
+@media(max-width:600px){.arena{border-width:10px;min-height:300px;border-radius:85px;padding:31px 13px 35px;margin:25px 2px 30px;box-shadow:0 0 0 4px #1a0d0c,0 0 0 6px #b38a4a,0 20px 45px #000b,inset 0 0 0 4px #d1ae6c,inset 0 0 0 10px #103e32,inset 0 0 55px #0009}.arena:before{inset:14px;border-radius:70px}.arena:after{bottom:8px;font-size:11px;letter-spacing:3px}.deckarea{gap:25px;margin:21px 0}.arena-title{font-size:16px}}
