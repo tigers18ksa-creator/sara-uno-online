@@ -327,3 +327,7 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 /* Approved message text: 11px regular, keep usernames bold */
 .messages .bubble .body,.messages .bubble.mine .body,.messages.lightChat .bubble .body{font-size:11px!important;font-weight:400!important;line-height:1.5!important;letter-spacing:normal!important;text-shadow:none!important}
 @media(max-width:650px){.messages .bubble .body,.messages .bubble.mine .body{font-size:11px!important;font-weight:400!important}}
+
+/* User update: message text 13px regular */
+.messages .bubble .body,.messages .bubble.mine .body,.messages.lightChat .bubble .body{font-size:13px!important;font-weight:400!important;line-height:1.5!important}
+@media(max-width:650px){.messages .bubble .body,.messages .bubble.mine .body{font-size:13px!important;font-weight:400!important}}
