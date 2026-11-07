@@ -25,3 +25,33 @@ $('cancelReply').onclick=()=>{replyingTo=null;$('replyDraft').hidden=true};funct
 let blockedMembers=[];s.on('bannedMembers',list=>{blockedMembers=list||[];renderModeration()});s.on('removedFromCouncil',d=>{alert(d.banned?'تم حظرك من مجلس سارة':'تم إخراجك من مجلس سارة');location.reload()});function renderModeration(){if(!isAdmin)return;const box=$('moderationMembers');box.replaceChildren();for(const p of people.filter(p=>p.id!==me)){const row=document.createElement('div');row.className='moderationRow';const name=document.createElement('span');name.textContent=p.name;row.append(name);for(const [label,action] of [['طرد','kick'],['حظر','ban']]){const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>{if(confirm(action==='ban'?'حظر '+p.name+' من المجلس؟':'طرد '+p.name+' من المجلس؟'))s.emit('moderateMember',{id:p.id,action})};row.append(b)}box.append(row)}const banned=$('bannedMembers');banned.replaceChildren();for(const p of blockedMembers){const row=document.createElement('div');row.className='moderationRow';const label=document.createElement('span');label.textContent=p.name;const btn=document.createElement('button');btn.type='button';btn.textContent='فك الحظر';btn.onclick=()=>s.emit('moderateMember',{id:p.id,action:'unban'});row.append(label,btn);banned.append(row)}}
 
 let voiceRecorder=null,voiceStream=null,voiceParts=[],voiceTimer=null;const recordButton=$('recordVoice');function stopVoiceTracks(){if(voiceStream){voiceStream.getTracks().forEach(t=>t.stop());voiceStream=null}clearTimeout(voiceTimer)}recordButton.onclick=async()=>{if(voiceRecorder?.state==='recording'){voiceRecorder.stop();recordButton.textContent='🎙️';return}if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)return toast('المتصفح لا يدعم التسجيل الصوتي');try{voiceStream=await navigator.mediaDevices.getUserMedia({audio:true});const mime=['audio/webm;codecs=opus','audio/mp4','audio/webm','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x));voiceParts=[];voiceRecorder=new MediaRecorder(voiceStream,mime?{mimeType:mime,audioBitsPerSecond:32000}:undefined);voiceRecorder.ondataavailable=e=>{if(e.data.size)voiceParts.push(e.data)};voiceRecorder.onstop=async()=>{stopVoiceTracks();recordButton.textContent='🎙️';const blob=new Blob(voiceParts,{type:voiceRecorder.mimeType||'audio/webm'});if(blob.size>2400000)return toast('التسجيل كبير، سجل رسالة أقصر');const reader=new FileReader();reader.onload=()=>{voice=reader.result;$('voicePreview').src=voice;$('voiceDraft').hidden=false;toast('اسمع التسجيل ثم أرسله أو ألغِه')};reader.readAsDataURL(blob)};voiceRecorder.start();recordButton.textContent='⏹️';toast('جاري التسجيل، اضغط مرة ثانية للإيقاف');voiceTimer=setTimeout(()=>{if(voiceRecorder?.state==='recording')voiceRecorder.stop()},45000)}catch(e){stopVoiceTracks();toast('تعذر تشغيل المايك، تأكد من السماح للتسجيل')}};$('voiceCancel').onclick=()=>{voice=null;$('voiceDraft').hidden=true;$('voicePreview').removeAttribute('src')};$('voiceSend').onclick=()=>{if(!voice)return;send()};
+
+
+/* Multiplayer Connect Four — state and moves verified by server */
+let c4=null;
+$('gameToggle').onclick=()=>{$('c4Overlay').hidden=false;renderC4()};
+$('c4Close').onclick=()=>{$('c4Overlay').hidden=true};
+$('c4Overlay').addEventListener('click',e=>{if(e.target===$('c4Overlay'))$('c4Overlay').hidden=true});
+$('c4Join').onclick=()=>s.emit('connect4Join');
+$('c4Restart').onclick=()=>s.emit('connect4Restart');
+$('c4Leave').onclick=()=>s.emit('connect4Leave');
+s.on('connect4State',state=>{c4=state;renderC4()});
+function renderC4(){
+ if(!c4)return;
+ const p=c4.players||[],myIndex=p.findIndex(x=>x.id===me);
+ $('c4Players').textContent='🟡 '+(p[0]?.name||'بانتظار اللاعب الأول')+'     🔴 '+(p[1]?.name||'بانتظار اللاعب الثاني');
+ const status=c4.status;
+ $('c4Status').textContent=status==='waiting'?'بانتظار لاعبين للبدء':status==='won'?'🏆 الفائز: '+(p[c4.winner-1]?.name||'اللاعب'):status==='draw'?'تعادل!':'الدور الآن: '+(p[c4.turn]?.name||'اللاعب');
+ $('c4Join').hidden=myIndex!==-1||p.length>=2;
+ $('c4Restart').hidden=myIndex===-1;
+ $('c4Leave').hidden=myIndex===-1;
+ const board=$('c4Board');board.replaceChildren();
+ for(let row=0;row<6;row++)for(let col=0;col<7;col++){
+  const slot=document.createElement('button');slot.type='button';slot.className='c4Slot';
+  const piece=c4.board[row][col];if(piece)slot.classList.add(piece===1?'yellow':'red');
+  slot.setAttribute('aria-label','العمود '+(col+1));
+  slot.disabled=status!=='playing'||myIndex!==c4.turn||!!c4.board[0][col];
+  slot.onclick=()=>s.emit('connect4Move',{col});
+  board.append(slot);
+ }
+}
