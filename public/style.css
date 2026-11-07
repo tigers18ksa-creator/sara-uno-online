@@ -317,3 +317,9 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 .messages .bubble button,.messages .bubble .replyBtn,.messages .bubble .deleteBtn,.messages .bubble .commentBtn,.messages .bubble .msgAction,.messages .bubble .messageAction{background:#490b23!important;background-image:none!important;color:#fff!important;border:1px solid #8c4760!important;border-radius:10px!important;box-shadow:0 2px 5px #0003!important;font-size:11px!important;font-weight:800!important}
 .messages .bubble button:hover,.messages .bubble button:focus-visible{background:#651330!important;border-color:#d7a15f!important}
 .messages .bubble button:disabled{opacity:.55}
+
+/* Approved: clear non-shadowed usernames, black chat canvas, black save-photo button */
+.messages,.messages.lightChat{background:#050505!important;background-image:none!important}
+.messages .bubble .who,.messages.lightChat .bubble .who{color:var(--name-color,#e9b64b)!important;text-shadow:none!important;filter:none!important;opacity:1!important;font-weight:950!important;letter-spacing:0!important}
+.messages .bubble .saveMedia,.messages.lightChat .bubble .saveMedia{display:inline-flex!important;align-items:center;justify-content:center;background:#050505!important;background-image:none!important;color:#fff!important;border:1px solid #2e2e2e!important;border-radius:9px!important;padding:6px 11px!important;text-decoration:none!important;font-weight:800!important;box-shadow:none!important}
+.messages .bubble .saveMedia:hover,.messages .bubble .saveMedia:focus-visible{background:#1b1b1b!important;border-color:#b58c4c!important}
