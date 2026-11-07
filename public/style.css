@@ -323,3 +323,7 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 .messages .bubble .who,.messages.lightChat .bubble .who{color:var(--name-color,#e9b64b)!important;text-shadow:none!important;filter:none!important;opacity:1!important;font-weight:950!important;letter-spacing:0!important}
 .messages .bubble .saveMedia,.messages.lightChat .bubble .saveMedia{display:inline-flex!important;align-items:center;justify-content:center;background:#050505!important;background-image:none!important;color:#fff!important;border:1px solid #2e2e2e!important;border-radius:9px!important;padding:6px 11px!important;text-decoration:none!important;font-weight:800!important;box-shadow:none!important}
 .messages .bubble .saveMedia:hover,.messages .bubble .saveMedia:focus-visible{background:#1b1b1b!important;border-color:#b58c4c!important}
+
+/* Approved message text: 11px regular, keep usernames bold */
+.messages .bubble .body,.messages .bubble.mine .body,.messages.lightChat .bubble .body{font-size:11px!important;font-weight:400!important;line-height:1.5!important;letter-spacing:normal!important;text-shadow:none!important}
+@media(max-width:650px){.messages .bubble .body,.messages .bubble.mine .body{font-size:11px!important;font-weight:400!important}}
