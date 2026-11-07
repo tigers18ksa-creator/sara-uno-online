@@ -307,3 +307,13 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 .messages.lightChat .bubble,.messages.lightChat .bubble.mine{background:linear-gradient(160deg,#fff,#e9e5f1 75%,#fff)!important}
 .messages.lightChat .bubble .who{color:var(--name-color,#d68c2c)!important;text-shadow:0 1px 1px #0005,0 0 5px var(--name-color,#d68c2c)!important}
 @media(max-width:650px){.messages .bubble .who{font-size:17px!important}.messages .bubble .body{font-size:12px!important}}
+
+/* Approved Nov 7: solid white bubbles, dark text, burgundy actions */
+.messages .bubble,.messages .bubble.mine,.messages.lightChat .bubble,.messages.lightChat .bubble.mine{background:#ffffff!important;background-image:none!important;color:#101010!important;border:1px solid #e5e1e3!important;border-right:2px solid #d7c9cd!important;box-shadow:0 2px 6px #0003!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.messages .bubble::before,.messages .bubble.mine::before{display:none!important;content:none!important}
+.messages .bubble .body,.messages .bubble.mine .body{color:#101010!important;font-size:12px!important;font-weight:500!important;text-shadow:none!important}
+.messages .bubble .time{color:#666!important}
+.messages .bubble .who{color:var(--name-color,#f0b72d)!important;font-weight:950!important}
+.messages .bubble button,.messages .bubble .replyBtn,.messages .bubble .deleteBtn,.messages .bubble .commentBtn,.messages .bubble .msgAction,.messages .bubble .messageAction{background:#490b23!important;background-image:none!important;color:#fff!important;border:1px solid #8c4760!important;border-radius:10px!important;box-shadow:0 2px 5px #0003!important;font-size:11px!important;font-weight:800!important}
+.messages .bubble button:hover,.messages .bubble button:focus-visible{background:#651330!important;border-color:#d7a15f!important}
+.messages .bubble button:disabled{opacity:.55}
