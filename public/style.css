@@ -244,3 +244,19 @@ body:has(#welcome:not([hidden])) #c4Overlay,
 body:has(#welcome:not([hidden])) #gameChooser{display:none!important}
 body:has(#welcome:not([hidden])) main{min-height:100dvh;display:flex!important;flex-direction:column;align-items:center;justify-content:center}
 body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
+
+/* Neon X O game */
+.xoModal{width:min(96vw,650px);max-height:94dvh;overflow-y:auto;border:2px solid #d9b365!important;background:radial-gradient(ellipse at top,#242044,#0c0c25 75%)!important;box-shadow:0 0 35px #ba30ff55!important}
+.xoModal .c4Head h2{font-size:clamp(18px,4vw,27px);color:#f5d58f}
+.xoBlue{color:#e8fcff!important;text-shadow:0 0 7px #00d9ff,0 0 16px #007aff,0 0 24px #008cff}
+.xoPink{color:#fff0fa!important;text-shadow:0 0 7px #ff4fb7,0 0 16px #ff0088,0 0 24px #ff0088}
+.xoPlayers{display:flex;justify-content:space-around;gap:12px;margin:12px 0;font-size:16px;font-weight:800;color:#f5d99d}
+.xoPlayers>div{border:1px solid #b78b5d;border-radius:12px;padding:9px;flex:1;text-align:center;background:#15132e}
+.xoStatus{text-align:center;color:#ffde9b;font-weight:800;margin:10px 0;font-size:19px}
+.xoBoard{direction:ltr;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:9px;margin:10px auto 18px;width:min(100%,460px);aspect-ratio:1;border:4px solid #d52bff;border-radius:24px;background:linear-gradient(120deg,#004fc5,#2025a9,#b000d9);box-shadow:0 0 22px #8d13ff88}
+.xoCell{min-width:0;min-height:0;border:1px solid #5a42ce;border-radius:15px;background:linear-gradient(145deg,#0d205e,#0b0739);font:900 clamp(45px,13vw,105px)/1 Arial,sans-serif;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff}
+.xoCell:disabled{opacity:1;cursor:default}
+.xoActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.xoActions button{padding:13px 8px;border-radius:13px;border:1px solid #e4b966;background:linear-gradient(145deg,#32243c,#17162a);color:#f7dfb2;font-weight:800;font-size:15px}
+.xoActions button:first-child{background:linear-gradient(120deg,#bd8b42,#f5d486);color:#191327}
+.xoActions button[hidden]{display:none!important}
