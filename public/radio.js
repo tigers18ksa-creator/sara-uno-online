@@ -11,7 +11,7 @@ const stations={
 'Bahrain FM 93.3':{query:'Bahrain FM 93.3',link:'https://www.mia.gov.bh/bahrain-fm-93-3/'},
 'Bahrain Radio 102.3':{query:'Bahrain Radio 102.3',link:'https://www.mia.gov.bh/radio-bahrain-102-3/'}
 };
-let request=0,hls=null;const clearHls=()=>{if(hls){hls.destroy();hls=null}};const ensureHls=()=>new Promise((resolve,reject)=>{if(window.Hls)return resolve(window.Hls);const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/hls.js@1.6.13/dist/hls.min.js';script.onload=()=>window.Hls?resolve(window.Hls):reject(Error('hls missing'));script.onerror=()=>reject(Error('hls unavailable'));document.head.append(script)});
+let request=0,hls=null,hasPlayed=false;const stationCache=new Map();const warm=async(name)=>{if(stationCache.has(name))return stationCache.get(name);try{const resp=await fetch('/api/radio/stations?name='+encodeURIComponent(name));if(!resp.ok)return [];const data=await resp.json();const urls=(data.stations||[]).map(x=>x.url);stationCache.set(name,urls);return urls}catch{return []}};const clearHls=()=>{if(hls){hls.destroy();hls=null}};const ensureHls=()=>new Promise((resolve,reject)=>{if(window.Hls)return resolve(window.Hls);const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/hls.js@1.6.13/dist/hls.min.js';script.onload=()=>window.Hls?resolve(window.Hls):reject(Error('hls missing'));script.onerror=()=>reject(Error('hls unavailable'));document.head.append(script)});
 const status=t=>el('radioStatus').textContent=t;
 const chosen=()=>stations[el('radioStation').value];
 const updateLink=()=>{el('radioExternal').href=chosen().link};
@@ -20,7 +20,7 @@ el('radioClose').onclick=()=>el('radioPanel').hidden=true;
 el('radioVolume').value=localStorage.getItem('saraRadioVolume')||'50';
 const volume=()=>{audio.volume=Number(el('radioVolume').value)/100;el('radioVolumeText').textContent=el('radioVolume').value+'%';localStorage.setItem('saraRadioVolume',el('radioVolume').value)};
 el('radioVolume').oninput=volume;volume();
-el('radioStation').onchange=()=>{request++;clearHls();candidates=[];candidateIndex=0;audio.pause();audio.removeAttribute('src');audio.load();updateLink();status('اختر تشغيل للاستماع إلى '+el('radioStation').value)};
+el('radioStation').onchange=()=>{request++;clearHls();candidates=[];candidateIndex=0;audio.pause();audio.removeAttribute('src');audio.load();updateLink();document.querySelectorAll('.saraStationChoice').forEach(b=>b.classList.toggle('selected',b.dataset.station===el('radioStation').value));status('جاري تشغيل '+el('radioStation').value+'...');if(hasPlayed)el('radioPlay').click();else status('اضغط تشغيل أول مرة، وبعدها التنقل تلقائي')};
 el('radioStop').onclick=()=>{request++;clearHls();audio.pause();audio.removeAttribute('src');audio.load();el('radioPlay').textContent='▶ تشغيل';status('تم إيقاف الراديو')};
 audio.onplaying=()=>{el('radioPlay').textContent='⏸ إيقاف مؤقت';status('🔴 بث مباشر • '+el('radioStation').value)};
 audio.onpause=()=>{el('radioPlay').textContent='▶ تشغيل'};
@@ -30,8 +30,8 @@ const tryCandidate=async(seq)=>{if(seq!==request)return;while(candidateIndex<can
 el('radioPlay').onclick=async()=>{
  if(!audio.paused){audio.pause();status('تم إيقاف الصوت مؤقتًا');return}
  if(audio.src){try{await audio.play();return}catch{audio.removeAttribute('src')}}
- const seq=++request;status('جاري البحث عن بث '+el('radioStation').value+'...');
- try{const r=await fetch('/api/radio/stations?name='+encodeURIComponent(el('radioStation').value));if(!r.ok)throw Error('lookup');const data=await r.json();if(seq!==request)return;candidates=(data.stations||[]).map(x=>x.url);candidateIndex=0;if(!candidates.length)throw Error('empty');await tryCandidate(seq)}catch(e){if(seq===request)status('ما لقينا رابط بث متاح حاليًا. افتح موقع الإذاعة للاستماع')}
+ const seq=++request;hasPlayed=true;status('جاري الاتصال بـ '+el('radioStation').value+'...');
+ try{const urls=await warm(el('radioStation').value);if(seq!==request)return;candidates=urls;candidateIndex=0;if(!candidates.length)throw Error('empty');await tryCandidate(seq)}catch(e){if(seq===request)status('ما لقينا رابط بث متاح حاليًا. افتح موقع الإذاعة للاستماع')}
 };
-updateLink();
+updateLink();const list=el('radioChoices');if(list){for(const opt of el('radioStation').options){const b=document.createElement('button');b.type='button';b.className='saraStationChoice';b.dataset.station=opt.value;b.innerHTML='<span class="stationIcon">📻</span><span class="stationLabel"></span><span class="stationSignal">◉</span>';b.querySelector('.stationLabel').textContent=opt.textContent;b.onclick=()=>{el('radioStation').value=opt.value;el('radioStation').dispatchEvent(new Event('change'))};list.append(b)}list.querySelector('.saraStationChoice')?.classList.add('selected')}const prefetch=()=>{for(const opt of el('radioStation').options)warm(opt.value)};setTimeout(prefetch,1800);
 })();
