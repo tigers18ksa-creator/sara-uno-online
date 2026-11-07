@@ -65,3 +65,6 @@ function renderC4(){
 }
 
 s.on('gameViewers',({game,viewers}={})=>{if(game!=='c4')return;const el=$('c4Viewers');if(!el)return;el.replaceChildren();const title=document.createElement('strong');title.textContent='👁️ المتابعون الآن ('+(viewers?.length||0)+'): ';el.append(title);const names=document.createElement('span');names.textContent=(viewers||[]).map(v=>v.name).join('، ')||'لا يوجد مشاهدون';el.append(names)});
+
+/* Admin-only one-time guest games access */
+$('createGuestCode').onclick=()=>s.emit('createGuestCode');s.on('guestCodeCreated',({code,expires})=>{const out=$('guestCodeResult');out.hidden=false;out.replaceChildren();const desc=document.createElement('p');desc.textContent='رمز دخول زائر للألعاب فقط، صالح لمدة 10 دقائق ويُستخدم مرة واحدة:';const val=document.createElement('strong');val.textContent=code;const copy=document.createElement('button');copy.type='button';copy.textContent='📋 نسخ الدعوة';copy.onclick=()=>{const link=location.origin+'/guest.html';navigator.clipboard?.writeText('رابط مشاهدة ألعاب مجلس سارة: '+link+'\nرمز الدخول: '+code).then(()=>toast('تم نسخ دعوة الزائر')).catch(()=>toast('انسخ الرمز يدويًا'))};out.append(desc,val,copy)});
