@@ -228,3 +228,19 @@ body:has(#welcome:not([hidden])) main>header,body:has(#welcome:not([hidden])) ma
 .saraLogin #adminFields label{display:block;text-align:right;margin:0 0 8px;color:#e9ca90}
 .saraLogin .srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 @media(max-width:420px){#welcome.saraLogin{padding:30px 20px!important;border-radius:28px!important}.saraLogin .loginBrand{font-size:54px}.saraLogin .loginSub{letter-spacing:2px}}
+
+/* Login isolation: never expose chat composer before authentication */
+[hidden]{display:none!important}
+body:has(#welcome:not([hidden])) #chat,
+body:has(#welcome:not([hidden])) .layout,
+body:has(#welcome:not([hidden])) .conversation,
+body:has(#welcome:not([hidden])) .compose,
+body:has(#welcome:not([hidden])) .note,
+body:has(#welcome:not([hidden])) .top,
+body:has(#welcome:not([hidden])) .messages,
+body:has(#welcome:not([hidden])) #radioPanel,
+body:has(#welcome:not([hidden])) #unoOverlay,
+body:has(#welcome:not([hidden])) #c4Overlay,
+body:has(#welcome:not([hidden])) #gameChooser{display:none!important}
+body:has(#welcome:not([hidden])) main{min-height:100dvh;display:flex!important;flex-direction:column;align-items:center;justify-content:center}
+body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
