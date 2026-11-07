@@ -205,3 +205,26 @@ main{height:100dvh;display:flex;flex-direction:column;min-height:0;padding:6px 1
 #radioVolume{width:100%;accent-color:#e7b259}
 #radioStatus{font-size:12px;line-height:1.7;margin-top:10px;color:#f4d8a8}
 @media(max-width:480px){.radioPanel{top:115px;left:8px;width:calc(100vw - 16px)}#radioToggle{padding:8px}}
+
+/* SARA luxury standalone login */
+body:has(#welcome:not([hidden])){background:radial-gradient(ellipse at 50% 30%,#242137 0%,#111221 65%,#0a0b16 100%);min-height:100dvh}
+body:has(#welcome:not([hidden])) main{max-width:100%;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px 14px}
+body:has(#welcome:not([hidden])) main>header,body:has(#welcome:not([hidden])) main>footer,body:has(#welcome:not([hidden])) #radioPanel,body:has(#welcome:not([hidden])) #gameChooser{display:none!important}
+#welcome.saraLogin{box-sizing:border-box;width:min(100%,510px);margin:0 auto;padding:38px 24px 32px!important;min-height:auto;text-align:center;background:linear-gradient(150deg,#18182b,#0d0f1e)!important;border:1.5px solid #d7ad64!important;border-radius:34px!important;box-shadow:0 0 40px #d8a9501a,0 22px 65px #0008;color:#f8e9cc}
+.saraLogin .loginCrown{font-size:76px;line-height:1;color:#e6bd70;text-shadow:0 0 22px #d9a75044}
+.saraLogin .loginBrand{font:normal 64px Georgia,serif;letter-spacing:5px;color:#ebc779;line-height:1.15}
+.saraLogin .loginSub{font:11px Georgia,serif;letter-spacing:4px;color:#ded3d5;margin:8px 0 16px}
+.saraLogin .loginOrnament{color:#e7be73;margin-bottom:26px;font-size:25px}
+.saraLogin #loginForm{display:flex;flex-direction:column;gap:17px}
+.saraLogin input:not([type=color]){box-sizing:border-box;display:block;width:100%;height:58px;background:#191b2c;border:1px solid #cba361;border-radius:15px;color:#fff4df;padding:0 20px;font-size:18px;text-align:right;outline:none}
+.saraLogin input:focus{border-color:#f7d48c;box-shadow:0 0 0 2px #d5a75235}
+.saraLogin .passwordWrap{position:relative}
+.saraLogin #roomPassword{padding-left:52px}
+.saraLogin #showPassword{position:absolute;left:10px;top:9px;background:transparent;border:0;color:#e4c68f;font-size:23px;width:42px;height:40px}
+.saraLogin .loginSubmit{height:59px;border-radius:40px;border:1px solid #ffe4a0;background:linear-gradient(120deg,#bd8b42,#f5d486,#b98840);color:#141421;font-weight:800;font-size:23px;margin-top:10px}
+.saraLogin .adminEntry{align-self:center;width:75%;min-height:51px;border:1px solid #d5ac62;border-radius:14px;background:#181827;color:#f1d59c;font-size:18px;margin-top:10px}
+.saraLogin #adminFields{padding-top:6px}
+.saraLogin #adminFields[hidden]{display:none!important}
+.saraLogin #adminFields label{display:block;text-align:right;margin:0 0 8px;color:#e9ca90}
+.saraLogin .srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:420px){#welcome.saraLogin{padding:30px 20px!important;border-radius:28px!important}.saraLogin .loginBrand{font-size:54px}.saraLogin .loginSub{letter-spacing:2px}}
