@@ -165,3 +165,28 @@ main{height:100dvh;display:flex;flex-direction:column;min-height:0;padding:6px 1
 .c4Actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;padding:9px 0}
 .c4Actions button{background:linear-gradient(120deg,#6d2d35,#32101d);border:1px solid #e3ac58;border-radius:18px;color:#ffe0a4;padding:10px 14px;font-weight:900}
 .c4Actions button[hidden]{display:none!important}
+
+
+/* UNO royal table */
+.unoModal{width:min(100%,820px);border-color:#f4c369;background:radial-gradient(ellipse at center,#68142c 0%,#320c20 65%,#120710 100%)}
+.unoModal .c4Head h2{color:#ffd478}
+.unoModal .c4Head button{min-width:36px}
+.unoPlayers{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px auto}
+.unoPlayer{border:1px solid #d9a34c;background:#290b1a;color:#fff2d9;padding:8px 12px;border-radius:18px;font-weight:800}
+.unoPlayer.current{box-shadow:0 0 14px #ffc04a;border:2px solid #ffd87b}
+.unoTable{border-radius:45%;background:radial-gradient(ellipse,#7d1636,#350b22 75%);border:2px solid #ad693e;min-height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;padding:14px;margin:10px 0;color:#ffe7b5;font-weight:900}
+.unoPiles{display:flex;justify-content:center;gap:30px;align-items:center;direction:ltr}
+.unoCard{flex:0 0 auto;display:flex;justify-content:center;align-items:center;width:76px;height:112px;border:5px solid #fff;border-radius:13px;box-shadow:2px 6px 9px #0008;color:#fff;font-size:31px;font-weight:1000;text-shadow:1px 2px 2px #0007;transform:rotate(-3deg);cursor:pointer;background:#15151c}
+.unoBack{background:radial-gradient(ellipse at 55% 45%,#f23526 0%,#d7191f 55%,#17131c 56%);color:#ffe15c;font-size:24px;font-style:italic;transform:rotate(4deg)}
+.uno-red{background:linear-gradient(145deg,#ff6766,#d41425)}
+.uno-yellow{background:linear-gradient(145deg,#fff17c,#e6a900);color:#fff}
+.uno-green{background:linear-gradient(145deg,#7ce88c,#128d42)}
+.uno-blue{background:linear-gradient(145deg,#72caff,#1153d4)}
+.uno-wild{background:conic-gradient(#e83838 0 25%,#2e9c56 25% 50%,#2463c7 50% 75%,#e8c62c 75% 100%)}
+.unoHand{display:flex;justify-content:center;align-items:end;gap:0;overflow-x:auto;min-height:125px;padding:12px 4px 20px;direction:ltr}
+.unoHand .unoCard{width:clamp(48px,10vw,76px);height:clamp(77px,15vw,112px);margin-inline:-5px;transition:transform .15s;flex-shrink:0}
+.unoHand .unoCard:not(:disabled):hover{transform:translateY(-12px)}
+.unoHand .unoCard:disabled{opacity:.65;cursor:default}
+.unoModal .c4Actions button:disabled{opacity:.4}
+.unoRules{font-size:12px!important;line-height:1.7;color:#ffdda6}
+@media(max-width:500px){.unoModal{padding:9px}.unoPiles{gap:20px}.unoCard{width:62px;height:95px}.unoHand .unoCard{margin-inline:-9px}.unoPlayer{font-size:12px;padding:7px}}
