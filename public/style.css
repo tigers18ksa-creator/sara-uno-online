@@ -295,3 +295,15 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 .messages .bubble .mediaActions{margin-top:4px}
 .messages.lightChat .bubble .who{color:#8c5b15!important;text-shadow:none!important}
 @media(max-width:650px){.messages{gap:6px!important;padding:7px 7px 11px!important}.messages .bubble{max-width:82%!important;padding:5px 8px 4px!important}.messages .bubble .who{font-size:17px!important}.messages .bubble .body{font-size:12px!important;line-height:1.4!important}}
+
+/* Approved luminous white-glass chat design */
+.messages .bubble,.messages .bubble.mine{position:relative;isolation:isolate;background:linear-gradient(165deg,rgba(255,255,255,.99) 0%,rgba(255,255,255,.91) 37%,rgba(223,218,239,.93) 72%,rgba(255,255,255,.97) 100%)!important;color:#14101b!important;border:1px solid rgba(255,255,255,.96)!important;border-right:2px solid rgba(255,255,255,.98)!important;box-shadow:inset 0 2px 2px #ffffff,inset 0 -2px 3px #a9a0b680,0 2px 8px #0006,0 0 9px #edcfff55!important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.messages .bubble::before{content:"";position:absolute;inset:1px 2px auto;height:36%;border-radius:11px 11px 45% 45%;background:linear-gradient(180deg,#ffffffaa,#ffffff05);pointer-events:none;z-index:-1}
+.messages .bubble .who{color:var(--name-color,#f6be53)!important;font-weight:950!important;text-shadow:0 1px 1px #0008,0 0 7px var(--name-color,#f6be53)!important;font-size:18px!important}
+.messages .bubble .body{color:#101015!important;font-size:12px!important;font-weight:500!important;line-height:1.48!important}
+.messages .bubble .time{color:#55515c!important;font-size:9px!important}
+.messages .bubble .body a{color:#1260c9!important}
+.messages .bubble .quotedReply{color:#25202d!important;background:#ffffff90!important}
+.messages.lightChat .bubble,.messages.lightChat .bubble.mine{background:linear-gradient(160deg,#fff,#e9e5f1 75%,#fff)!important}
+.messages.lightChat .bubble .who{color:var(--name-color,#d68c2c)!important;text-shadow:0 1px 1px #0005,0 0 5px var(--name-color,#d68c2c)!important}
+@media(max-width:650px){.messages .bubble .who{font-size:17px!important}.messages .bubble .body{font-size:12px!important}}
