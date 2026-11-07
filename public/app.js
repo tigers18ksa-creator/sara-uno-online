@@ -43,13 +43,13 @@ $('c4Overlay').addEventListener('click',e=>{if(e.target===$('c4Overlay'))$('c4Ov
 $('c4Join').onclick=()=>{c4EnableAudio();s.emit('connect4Join')};
 $('c4Restart').onclick=()=>s.emit('connect4Restart');
 $('c4Leave').onclick=()=>s.emit('connect4Leave');
-s.on('connect4State',state=>{const old=c4Previous;c4=state;if(old&&!$('c4Overlay').hidden){const oldCount=old.board.flat().filter(Boolean).length,newCount=state.board.flat().filter(Boolean).length;if(state.status==='won'&&old.status!=='won')c4Play('win');else if(state.status==='draw'&&old.status!=='draw')c4Play('draw');else if(newCount>oldCount){c4Play('drop');if(state.players[state.turn]?.id===me&&state.status==='playing')setTimeout(()=>c4Play('turn'),230)}else if(state.status==='playing'&&old.status!=='playing')c4Play('start')}c4Previous=state;renderC4()});
+s.on('connect4State',state=>{const old=c4Previous;c4=state;if(old&&!$('c4Overlay').hidden){const oldCount=old.board.flat().filter(Boolean).length,newCount=state.board.flat().filter(Boolean).length;if(state.status==='won'&&old.status!=='won'){c4Play('win');saraCelebrate('c4Overlay',state.players?.[state.winner-1]?.name||'الفائز',c4SoundOn)}else if(state.status==='draw'&&old.status!=='draw')c4Play('draw');else if(newCount>oldCount){c4Play('drop');if(state.players[state.turn]?.id===me&&state.status==='playing'){setTimeout(()=>c4Play('turn'),230);saraTurnAlert('c4Overlay',state.players[state.turn]?.name,c4SoundOn)}}else if(state.status==='playing'&&old.status!=='playing')c4Play('start')}c4Previous=state;renderC4()});
 function renderC4(){
  if(!c4)return;
  const p=c4.players||[],myIndex=p.findIndex(x=>x.id===me);
- $('c4Players').textContent='🟡 '+(p[0]?.name||'بانتظار اللاعب الأول')+'     🔴 '+(p[1]?.name||'بانتظار اللاعب الثاني');
+ $('c4Players').replaceChildren();p.forEach((player,i)=>{const tag=document.createElement('span');tag.className='saraPlayerTag'+(c4.status==='playing'&&c4.turn===i?' activeTurn':'');tag.textContent=(i===0?'🟡 ':'🔴 ')+player.name;$('c4Players').append(tag)});
  const status=c4.status;
- $('c4Status').textContent=status==='waiting'?'بانتظار لاعبين للبدء':status==='won'?'🏆 الفائز: '+(p[c4.winner-1]?.name||'اللاعب'):status==='draw'?'تعادل!':'الدور الآن: '+(p[c4.turn]?.name||'اللاعب');
+ $('c4Status').classList.toggle('turnNotice',status==='playing'); $('c4Status').textContent=status==='waiting'?'بانتظار لاعبين للبدء':status==='won'?'🏆 الفائز: '+(p[c4.winner-1]?.name||'اللاعب'):status==='draw'?'تعادل!':'الدور الآن: '+(p[c4.turn]?.name||'اللاعب');
  $('c4Join').hidden=myIndex!==-1||p.length>=2;
  $('c4Restart').hidden=myIndex===-1;
  $('c4Leave').hidden=myIndex===-1;
