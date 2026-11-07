@@ -1,0 +1,25 @@
+/* SARA UNO — real-time two/four player card table */
+let uno=null,unoAudio=null,unoMuted=localStorage.getItem('saraUnoMute')==='1',unoLastCount=0;
+const un=$=>document.getElementById($);
+function unoTone(f=500,d=.1,delay=0){if(unoMuted||!unoAudio)return;try{const t=unoAudio.currentTime+delay,o=unoAudio.createOscillator(),g=unoAudio.createGain();o.type='triangle';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(unoAudio.destination);o.start(t);o.stop(t+d)}catch{}}
+function unoSound(kind){if(kind==='card'){unoTone(480,.07);unoTone(340,.09,.06)}else if(kind==='win'){[523,659,784,1047].forEach((f,i)=>unoTone(f,.22,i*.15))}else if(kind==='turn'){unoTone(680,.1);unoTone(850,.12,.11)}else unoTone(400,.1)}
+function unoAudioStart(){try{const C=window.AudioContext||window.webkitAudioContext;if(!unoAudio&&C)unoAudio=new C();unoAudio?.resume()}catch{}}
+un('gameToggle').onclick=()=>{un('gameChooser').hidden=false};
+un('gameChooserClose').onclick=()=>un('gameChooser').hidden=true;
+un('openC4').onclick=()=>{un('gameChooser').hidden=true;un('c4Overlay').hidden=false;renderC4()};
+un('openUno').onclick=()=>{un('gameChooser').hidden=true;un('unoOverlay').hidden=false;unoAudioStart();s.emit('unoSync');unoRender()};
+un('unoClose').onclick=()=>un('unoOverlay').hidden=true;
+un('unoJoin2').onclick=()=>{unoAudioStart();s.emit('unoJoin',{capacity:2})};
+un('unoJoin4').onclick=()=>{unoAudioStart();s.emit('unoJoin',{capacity:4})};
+un('unoDraw').onclick=()=>s.emit('unoDraw');
+un('unoPass').onclick=()=>s.emit('unoPass');
+un('unoCall').onclick=()=>s.emit('unoCall');
+un('unoLeave').onclick=()=>{if(confirm('تبي تغادر مباراة UNO؟'))s.emit('unoLeave')};
+un('unoSound').onclick=()=>{unoMuted=!unoMuted;localStorage.setItem('saraUnoMute',unoMuted?'1':'0');un('unoSound').textContent=unoMuted?'🔇':'🔊';if(!unoMuted)unoAudioStart()};
+un('unoSound').textContent=unoMuted?'🔇':'🔊';
+s.on('unoError',msg=>toast(msg));
+s.on('unoState',state=>{if(state&&uno&&!un('unoOverlay').hidden){const prev=uno.players.reduce((n,p)=>n+p.count,0),now=state.players.reduce((n,p)=>n+p.count,0);if(state.status==='finished'&&uno.status!=='finished')unoSound('win');else if(now!==prev)unoSound('card');else if(state.turn!==uno.turn)unoSound('turn')}uno=state;unoRender()});
+s.on('connect',()=>{if(me)s.emit('unoSync')});
+function unoCard(card){const b=document.createElement('button');b.type='button';b.className='unoCard uno-'+card.color;const v=card.value;const labels={skip:'⊘',reverse:'↺',draw2:'+2',draw4:'+4',wild:'🌈'};const label=labels[v]||v;b.textContent=label;b.setAttribute('aria-label',card.color+' '+v);return b}
+function unoRender(){const active=!!uno,playing=active&&uno.status==='playing',my=active&&uno.players.findIndex(p=>p.id===me),myTurn=playing&&my===uno.turn;un('unoLobby').hidden=active;un('unoLeave').hidden=!active;un('unoStatus').textContent=!active?'اختر لاعبين أو 4 لاعبين للبدء':uno.status==='waiting'?'بانتظار اللاعبين ('+uno.players.length+'/'+uno.capacity+')':uno.status==='finished'?'🏆 الفائز: '+(uno.players.find(p=>p.id===uno.winner)?.name||'اللاعب'):(myTurn?'🟢 دورك الآن':'الدور: '+uno.players[uno.turn]?.name);un('unoTurn').textContent=active?'الاتجاه '+(uno.direction===1?'↻':'↺')+' • اللون: '+({red:'أحمر',yellow:'أصفر',green:'أخضر',blue:'أزرق'}[uno.color]||'—'):'';un('unoPlayers').replaceChildren();if(active)for(const p of uno.players){const el=document.createElement('button');el.type='button';el.className='unoPlayer'+(uno.players[uno.turn]?.id===p.id?' current':'');el.textContent=p.name+' • '+p.count+' 🃏'+(p.uno?' • UNO!':'');el.onclick=()=>{if(p.id!==me&&p.count===1&&!p.uno)s.emit('unoCatch',{id:p.id})};un('unoPlayers').append(el)}un('unoTop').replaceChildren();un('unoTop').className='unoCard';if(active&&uno.top){const card=unoCard(uno.top);un('unoTop').className=card.className;un('unoTop').textContent=card.textContent;un('unoTop').style.outline='4px solid '+({red:'#f53c49',yellow:'#ffd12b',green:'#44d77b',blue:'#3297ff'}[uno.color]||'#fff')}else{un('unoTop').textContent='UNO';un('unoTop').style.outline='none'}un('unoHand').replaceChildren();if(active)uno.hand.forEach((card,i)=>{const b=unoCard(card);b.disabled=!myTurn||(uno.drawn&&i!==uno.hand.length-1);b.onclick=()=>{let color;if(card.color==='wild'){color=prompt('اختر لونًا: أحمر / أصفر / أخضر / أزرق','أحمر');const map={'أحمر':'red','اصفر':'yellow','أصفر':'yellow','أخضر':'green','اخضر':'green','أزرق':'blue','ازرق':'blue',red:'red',yellow:'yellow',green:'green',blue:'blue'};color=map[color?.trim()];if(!color)return toast('اختر لونًا صحيحًا')}s.emit('unoPlay',{index:i,color})};un('unoHand').append(b)});un('unoDraw').disabled=!myTurn||!!uno?.drawn;un('unoPass').disabled=!myTurn||!uno?.drawn;un('unoCall').disabled=!active||!uno.hand||uno.hand.length!==1}
+unoRender();
