@@ -283,3 +283,15 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 #back:not([hidden]){display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;max-width:48%;padding:11px 14px;border:1px solid #d5ad69;border-radius:12px;background:#d5ad69;color:#1c1a20;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 2px 12px #0003}
 #back[hidden]{display:none!important}
 @media(max-width:600px){#back:not([hidden]){font-size:12px;padding:10px 9px;max-width:49%}.top h2{font-size:15px}}
+
+/* SARA compact WhatsApp-inspired bubbles — approved Nov 7 */
+.messages{gap:7px!important;padding:10px 9px 12px!important;align-items:stretch}
+.messages .bubble{box-sizing:border-box;width:fit-content!important;min-width:0!important;max-width:min(78%,460px)!important;align-self:flex-start;padding:6px 9px 5px!important;border:1px solid var(--bubble-color,#d9b77b)!important;border-right-width:2px!important;border-radius:13px 13px 5px 13px!important;box-shadow:0 2px 5px #0004!important;overflow-wrap:anywhere}
+.messages .bubble.mine{align-self:flex-end;border-radius:13px 13px 13px 5px!important}
+.messages .bubble .who{font-size:18px!important;font-weight:950!important;line-height:1.2!important;color:#f8d078!important;text-shadow:0 1px 5px #000b!important;letter-spacing:.1px;display:inline-block;max-width:100%;overflow-wrap:anywhere}
+.messages .bubble .body{font-size:12px!important;line-height:1.48!important;font-weight:400!important;margin-top:3px;white-space:pre-wrap}
+.messages .bubble .time{font-size:9px!important;font-weight:400!important;opacity:.8}
+.messages .bubble img,.messages .bubble video{max-width:100%;height:auto;margin-top:5px}
+.messages .bubble .mediaActions{margin-top:4px}
+.messages.lightChat .bubble .who{color:#8c5b15!important;text-shadow:none!important}
+@media(max-width:650px){.messages{gap:6px!important;padding:7px 7px 11px!important}.messages .bubble{max-width:82%!important;padding:5px 8px 4px!important}.messages .bubble .who{font-size:17px!important}.messages .bubble .body{font-size:12px!important;line-height:1.4!important}}
