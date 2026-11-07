@@ -144,3 +144,24 @@ main{height:100dvh;display:flex;flex-direction:column;min-height:0;padding:6px 1
 .bulkSelectable{cursor:pointer;outline-offset:2px}
 .bulkSelected{outline:3px solid #f6d18a!important;box-shadow:0 0 16px #f6c46b66!important}
 .bulkCheck{width:20px;height:20px;accent-color:#d9ad61;margin-left:9px;vertical-align:middle;cursor:pointer}
+
+
+/* Connect Four royal lounge */
+#gameToggle{border:1px solid #e9b95e;border-radius:22px;background:linear-gradient(135deg,#321024,#150e1b);color:#ffdda0;font-weight:900;padding:10px 15px;box-shadow:0 0 12px #e8a94855}
+.c4Overlay{position:fixed;inset:0;z-index:11000;background:#08050bdc;display:flex;align-items:center;justify-content:center;padding:12px;overflow-y:auto}
+.c4Overlay[hidden]{display:none!important}
+.c4Modal{width:min(100%,650px);max-height:96dvh;overflow-y:auto;box-sizing:border-box;background:radial-gradient(ellipse at top,#531226,#190b19 70%,#0b0811);border:2px solid #e6af55;border-radius:25px;box-shadow:0 0 35px #f2aa4b60,inset 0 0 30px #b7683820;padding:15px;color:#fff3db;text-align:center;font-family:'Tajawal','Cairo',sans-serif}
+.c4Head{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#ffd78a}
+.c4Head h2{font-size:clamp(19px,5vw,30px);margin:8px 0;font-weight:900}
+.c4Head button{border:1px solid #e6b05b;border-radius:50%;width:36px;height:36px;background:#2c0c19;color:#ffd78a;font-size:19px}
+.c4Modal p{font-size:13px;margin:5px 0 12px}
+.c4Players{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;color:#ffdfae;font-size:15px;font-weight:800;margin:8px 0}
+.c4Status{color:#fff;font-weight:900;padding:7px;font-size:16px}
+.c4Board{direction:ltr;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(3px,1vw,8px);padding:clamp(6px,2vw,14px);background:linear-gradient(135deg,#1477ff,#0341be 60%,#082c91);border:4px solid #66b2ff;border-radius:15px;box-shadow:0 12px 22px #0009,inset 0 0 15px #00256b;width:min(100%,480px);margin:10px auto;box-sizing:border-box}
+.c4Slot{aspect-ratio:1;border-radius:50%;border:2px solid #529cff;background:#140b20;box-shadow:inset 2px 3px 7px #000b,0 1px 3px #a7d4ff;min-width:0;padding:0;cursor:pointer}
+.c4Slot.yellow{background:radial-gradient(circle at 35% 28%,#fff7a1,#ffd21d 55%,#b67a00);border-color:#ffe986}
+.c4Slot.red{background:radial-gradient(circle at 35% 28%,#ff9994,#f1262c 55%,#9e081b);border-color:#ff8585}
+.c4Slot:disabled{cursor:default}
+.c4Actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;padding:9px 0}
+.c4Actions button{background:linear-gradient(120deg,#6d2d35,#32101d);border:1px solid #e3ac58;border-radius:18px;color:#ffe0a4;padding:10px 14px;font-weight:900}
+.c4Actions button[hidden]{display:none!important}
