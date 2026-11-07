@@ -190,3 +190,18 @@ main{height:100dvh;display:flex;flex-direction:column;min-height:0;padding:6px 1
 .unoModal .c4Actions button:disabled{opacity:.4}
 .unoRules{font-size:12px!important;line-height:1.7;color:#ffdda6}
 @media(max-width:500px){.unoModal{padding:9px}.unoPiles{gap:20px}.unoCard{width:62px;height:95px}.unoHand .unoCard{margin-inline:-9px}.unoPlayer{font-size:12px;padding:7px}}
+
+
+/* Personal radio — floating control beside Games */
+#radioToggle{border:1px solid #e9b95e;border-radius:22px;background:linear-gradient(135deg,#321024,#150e1b);color:#ffdda0;font-weight:900;padding:10px 15px;box-shadow:0 0 12px #e8a94855}
+.radioPanel{position:fixed;z-index:9500;top:75px;left:12px;width:min(340px,calc(100vw - 24px));box-sizing:border-box;padding:18px;border:2px solid #e4ae58;border-radius:20px;background:linear-gradient(145deg,#4c1029,#190b1b);box-shadow:0 12px 35px #000a;color:#ffdfaa;direction:rtl;font-family:'Tajawal',sans-serif}
+.radioPanel[hidden]{display:none!important}
+.radioHead{display:flex;align-items:center;justify-content:space-between;font-size:18px;margin-bottom:14px}
+.radioHead button{background:transparent;border:1px solid #dba65d;color:#ffdfaa;border-radius:50%;width:32px;height:32px}
+.radioPanel label{display:block;margin:12px 0 7px;font-weight:800}
+.radioPanel select{width:100%;padding:11px;background:#210e1e;color:#fff;border:1px solid #d6a259;border-radius:12px;font-size:15px}
+.radioActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:13px}
+.radioActions button,.radioActions a{border:1px solid #d9a65b;background:#351323;color:#ffe3ad;padding:9px 11px;border-radius:12px;font-weight:800;text-decoration:none;font-size:13px}
+#radioVolume{width:100%;accent-color:#e7b259}
+#radioStatus{font-size:12px;line-height:1.7;margin-top:10px;color:#f4d8a8}
+@media(max-width:480px){.radioPanel{top:115px;left:8px;width:calc(100vw - 16px)}#radioToggle{padding:8px}}
