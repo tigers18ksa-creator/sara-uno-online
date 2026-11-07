@@ -7,7 +7,9 @@ const stations={
 'Rotana FM':{query:'Rotana FM',link:'https://www.rotana.net/'},
 'Alif Alif FM':{query:'Alif Alif FM',link:'https://alifaliffm.com/'},
 'Mix FM':{query:'Mix FM Saudi Arabia',link:'https://www.mixfm.sa/'},
-'UFM':{query:'UFM 95.5',link:'https://www.ufmradio.com/'}
+'UFM':{query:'UFM 95.5',link:'https://www.ufmradio.com/'},
+'Bahrain FM 93.3':{query:'Bahrain FM 93.3',link:'https://www.mia.gov.bh/bahrain-fm-93-3/'},
+'Bahrain Radio 102.3':{query:'Bahrain Radio 102.3',link:'https://www.mia.gov.bh/radio-bahrain-102-3/'}
 };
 let request=0;
 const status=t=>el('radioStatus').textContent=t;
