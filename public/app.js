@@ -28,14 +28,20 @@ let voiceRecorder=null,voiceStream=null,voiceParts=[],voiceTimer=null;const reco
 
 
 /* Multiplayer Connect Four — state and moves verified by server */
-let c4=null;
-$('gameToggle').onclick=()=>{$('c4Overlay').hidden=false;renderC4()};
+let c4=null,c4Audio=null,c4SoundOn=localStorage.getItem('saraC4Sound')!=='off',c4Previous=null;
+function c4Tone(freq,duration=0.11,delay=0,type='sine',volume=0.085){if(!c4SoundOn||!c4Audio)return;const t=c4Audio.currentTime+delay,o=c4Audio.createOscillator(),g=c4Audio.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(0.001,t);g.gain.exponentialRampToValueAtTime(volume,t+0.015);g.gain.exponentialRampToValueAtTime(0.001,t+duration);o.connect(g);g.connect(c4Audio.destination);o.start(t);o.stop(t+duration+0.015)}
+function c4Play(kind){try{if(kind==='drop'){c4Tone(460,.09,0,'triangle');c4Tone(260,.14,.07,'triangle')}else if(kind==='turn'){c4Tone(620,.09);c4Tone(830,.12,.12)}else if(kind==='win'){[523,659,784,1047].forEach((n,i)=>c4Tone(n,.25,i*.15,'sine',.1))}else if(kind==='draw'){c4Tone(450,.16);c4Tone(350,.24,.19)}else if(kind==='start'){c4Tone(440,.12);c4Tone(660,.15,.14)}}catch{}}
+function c4EnableAudio(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!c4Audio&&AC)c4Audio=new AC();if(c4Audio?.state==='suspended')c4Audio.resume()}catch{}}
+function c4UpdateSoundButton(){const b=$('c4Sound');b.textContent=c4SoundOn?'🔊 الصوت شغال':'🔇 الصوت مكتوم';b.setAttribute('aria-pressed',String(c4SoundOn))}
+$('c4Sound').onclick=()=>{c4SoundOn=!c4SoundOn;localStorage.setItem('saraC4Sound',c4SoundOn?'on':'off');if(c4SoundOn)c4EnableAudio();c4UpdateSoundButton()};
+c4UpdateSoundButton();
+$('gameToggle').onclick=()=>{c4EnableAudio();$('c4Overlay').hidden=false;renderC4()};
 $('c4Close').onclick=()=>{$('c4Overlay').hidden=true};
 $('c4Overlay').addEventListener('click',e=>{if(e.target===$('c4Overlay'))$('c4Overlay').hidden=true});
-$('c4Join').onclick=()=>s.emit('connect4Join');
+$('c4Join').onclick=()=>{c4EnableAudio();s.emit('connect4Join')};
 $('c4Restart').onclick=()=>s.emit('connect4Restart');
 $('c4Leave').onclick=()=>s.emit('connect4Leave');
-s.on('connect4State',state=>{c4=state;renderC4()});
+s.on('connect4State',state=>{const old=c4Previous;c4=state;if(old&&!$('c4Overlay').hidden){const oldCount=old.board.flat().filter(Boolean).length,newCount=state.board.flat().filter(Boolean).length;if(state.status==='won'&&old.status!=='won')c4Play('win');else if(state.status==='draw'&&old.status!=='draw')c4Play('draw');else if(newCount>oldCount){c4Play('drop');if(state.players[state.turn]?.id===me&&state.status==='playing')setTimeout(()=>c4Play('turn'),230)}else if(state.status==='playing'&&old.status!=='playing')c4Play('start')}c4Previous=state;renderC4()});
 function renderC4(){
  if(!c4)return;
  const p=c4.players||[],myIndex=p.findIndex(x=>x.id===me);
