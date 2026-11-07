@@ -278,3 +278,8 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 .gameViewerList{margin:8px auto 12px;padding:10px 12px;border:1px solid #c8a45c;border-radius:12px;background:#211a36;color:#f8e7c2;text-align:center;font-size:14px;line-height:1.7;max-width:95%;overflow-wrap:anywhere}.gameViewerList strong{color:#ffe092}
 
 .guestAdmin{border:1px solid #d5b16c;border-radius:12px;padding:12px;margin:12px 0;background:#211a32}.guestAdmin button{padding:10px;border-radius:10px}.guestAdmin #guestCodeResult{margin-top:10px;color:#f4dba0}.guestAdmin #guestCodeResult strong{display:block;font-size:23px;letter-spacing:3px;margin:8px 0}
+
+/* Clear return action inside private conversations */
+#back:not([hidden]){display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;max-width:48%;padding:11px 14px;border:1px solid #d5ad69;border-radius:12px;background:#d5ad69;color:#1c1a20;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 2px 12px #0003}
+#back[hidden]{display:none!important}
+@media(max-width:600px){#back:not([hidden]){font-size:12px;padding:10px 9px;max-width:49%}.top h2{font-size:15px}}
