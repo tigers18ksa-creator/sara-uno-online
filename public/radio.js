@@ -18,24 +18,18 @@ el('radioClose').onclick=()=>el('radioPanel').hidden=true;
 el('radioVolume').value=localStorage.getItem('saraRadioVolume')||'50';
 const volume=()=>{audio.volume=Number(el('radioVolume').value)/100;el('radioVolumeText').textContent=el('radioVolume').value+'%';localStorage.setItem('saraRadioVolume',el('radioVolume').value)};
 el('radioVolume').oninput=volume;volume();
-el('radioStation').onchange=()=>{request++;audio.pause();audio.removeAttribute('src');audio.load();updateLink();status('اختر تشغيل للاستماع إلى '+el('radioStation').value)};
+el('radioStation').onchange=()=>{request++;candidates=[];candidateIndex=0;audio.pause();audio.removeAttribute('src');audio.load();updateLink();status('اختر تشغيل للاستماع إلى '+el('radioStation').value)};
 el('radioStop').onclick=()=>{request++;audio.pause();audio.removeAttribute('src');audio.load();el('radioPlay').textContent='▶ تشغيل';status('تم إيقاف الراديو')};
 audio.onplaying=()=>{el('radioPlay').textContent='⏸ إيقاف مؤقت';status('🔴 بث مباشر • '+el('radioStation').value)};
 audio.onpause=()=>{el('radioPlay').textContent='▶ تشغيل'};
 audio.onerror=()=>status('تعذر تشغيل البث هنا. جرّب فتح موقع الإذاعة أو اختر محطة ثانية');
+let candidates=[],candidateIndex=0,trying=false;
+const tryCandidate=async(seq)=>{if(seq!==request)return;while(candidateIndex<candidates.length){const url=candidates[candidateIndex++];try{audio.src=url;audio.load();await Promise.race([audio.play(),new Promise((_,reject)=>setTimeout(()=>reject(Error('timeout')),7000))]);if(seq===request){status('🔴 بث مباشر • '+el('radioStation').value);return}}catch(e){audio.pause();audio.removeAttribute('src');audio.load()}}if(seq===request)status('تعذر تشغيل روابط البث المتاحة. جرّب موقع الإذاعة الرسمي')};
 el('radioPlay').onclick=async()=>{
  if(!audio.paused){audio.pause();status('تم إيقاف الصوت مؤقتًا');return}
- if(audio.src){try{await audio.play()}catch{status('تعذر استئناف البث، جرّب محطة ثانية')}return}
- const seq=++request,station=chosen();status('جاري البحث عن بث '+el('radioStation').value+'...');
- try{
- const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8500);
- let data;try{const response=await fetch('https://de1.api.radio-browser.info/json/stations/byname/'+encodeURIComponent(station.query)+'?limit=35&hidebroken=true',{signal:controller.signal});if(!response.ok)throw Error('network');data=await response.json()}finally{clearTimeout(timer)}
- if(seq!==request)return;
- const matches=data.filter(x=>x.countrycode==='SA'||/Saudi/i.test(x.country||''));
- const candidates=(matches.length?matches:data).filter(x=>/^https:\/\//.test(x.url_resolved||x.url||'')&&!/\.m3u8(?:\?|$)/i.test(x.url_resolved||x.url||'')&&!/\.pls(?:\?|$)/i.test(x.url_resolved||x.url||'')).sort((a,b)=>(b.votes||0)-(a.votes||0));
- if(!candidates.length)throw Error('stream');
- audio.src=candidates[0].url_resolved||candidates[0].url;await audio.play();
- }catch(e){if(seq===request)status('ما قدرنا نشغّل البث داخل المجلس. استخدم «فتح موقع الإذاعة» للاستماع مباشرة')}
+ if(audio.src){try{await audio.play();return}catch{audio.removeAttribute('src')}}
+ const seq=++request;status('جاري البحث عن بث '+el('radioStation').value+'...');
+ try{const r=await fetch('/api/radio/stations?name='+encodeURIComponent(el('radioStation').value));if(!r.ok)throw Error('lookup');const data=await r.json();if(seq!==request)return;candidates=(data.stations||[]).map(x=>x.url);candidateIndex=0;if(!candidates.length)throw Error('empty');await tryCandidate(seq)}catch(e){if(seq===request)status('ما لقينا رابط بث متاح حاليًا. افتح موقع الإذاعة للاستماع')}
 };
 updateLink();
 })();
