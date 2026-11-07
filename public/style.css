@@ -331,3 +331,9 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 /* User update: message text 13px regular */
 .messages .bubble .body,.messages .bubble.mine .body,.messages.lightChat .bubble .body{font-size:13px!important;font-weight:400!important;line-height:1.5!important}
 @media(max-width:650px){.messages .bubble .body,.messages .bubble.mine .body{font-size:13px!important;font-weight:400!important}}
+
+/* Royal Tiger owner identity — gold only, no green */
+.messages .bubble .who.tigerOwnerName{position:relative;display:inline-flex!important;align-items:center;gap:7px;max-width:100%;padding:4px 10px!important;margin:4px 0 6px;border:2px solid #e5b84b!important;border-radius:999px;background:linear-gradient(120deg,#241506,#57330b 45%,#201306)!important;color:#ffe19a!important;font-size:18px!important;font-weight:950!important;letter-spacing:.4px!important;box-shadow:0 0 0 1px #fff2a533,inset 0 1px 4px #ffeaa766,0 0 10px #e9b44c77!important;text-shadow:0 1px 2px #000!important}
+.messages .bubble .who.tigerOwnerName::before{content:"♛";position:absolute;top:-19px;left:12px;font-size:23px;color:#ffd66b;text-shadow:0 1px 3px #000,0 0 8px #e6b648}
+.messages .bubble .tigerOwnerLabel{font-size:10px!important;font-weight:900!important;color:#fff0bc!important;background:#6d350b;border:1px solid #d5a53e;border-radius:20px;padding:2px 7px;white-space:nowrap}
+.messages .bubble.tigerOwnerMessage{border:1px solid #e1b450!important;box-shadow:0 2px 6px #0004,0 0 9px #e1b45055!important}
