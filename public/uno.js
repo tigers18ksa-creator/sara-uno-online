@@ -27,5 +27,5 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)unoReconne
 window.addEventListener('pageshow',()=>unoReconnectNow());
 window.addEventListener('online',()=>unoReconnectNow());window.addEventListener('focus',()=>unoReconnectNow());
 if(s.connected)unoReconnectNow();
-s.on('unoSessionLost',msg=>{$('error').textContent=msg;console.warn(msg)});s.on('unoEntered',()=>{unoAuthorizedSocketId=s.id;if(sessionStorage.getItem('saraUnoActiveGame'))s.emit('unoSync',{resumeToken:unoResumeToken()})});
+s.on('unoSessionLost',msg=>{$('error').textContent=msg;console.warn(msg)});s.on('unoEntered',()=>{unoAuthorizedSocketId=s.id});
 
