@@ -49,6 +49,24 @@ body.poolActive #board{width:min(100%,1450px)}
 body.poolActive #controls{max-width:1400px;margin:auto;justify-content:center}
 body.poolActive #controls .slider{accent-color:#e2b26b;max-width:160px}
 @media(orientation:landscape){body.poolActive header{padding:4px 10px}body.poolActive .poolHud{margin:1px auto 4px}body.poolActive .poolAvatar{height:28px;width:28px;font-size:18px}body.poolActive .poolTable{max-height:calc(100dvh - 155px)}}
+
+/* Billiards-only immersive landscape: reserve the viewport for the table */
+body.poolActive{height:100dvh;min-height:0;overflow:hidden}
+body.poolActive>header{display:none!important}
+body.poolActive .shell{height:100dvh!important;min-height:0!important;display:flex;flex-direction:column;overflow:hidden!important;padding:3px!important}
+body.poolActive #game{display:flex!important;flex-direction:column;flex:1;min-height:0!important;height:100%;padding:2px!important;overflow:hidden}
+body.poolActive #game>.row{flex:0 0 auto;margin:0!important;min-height:25px}
+body.poolActive #game>.row button{font-size:11px;padding:4px 7px}
+body.poolActive #status,body.poolActive #spectators{font-size:10px;padding:1px!important;margin:0!important;min-height:0;flex:0 0 auto}
+body.poolActive #board{flex:1 1 auto;min-height:0;width:100%!important;max-width:none!important;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+body.poolActive .poolHud{flex:0 0 auto;width:min(100%,1100px);height:clamp(30px,7dvh,52px);margin:0 auto 3px!important}
+body.poolActive .poolPlayer{padding:2px 7px;font-size:clamp(10px,1.6vw,16px)}
+body.poolActive .poolAvatar{width:clamp(25px,5dvh,40px);height:clamp(25px,5dvh,40px)}
+body.poolActive .poolTable{flex:0 1 auto;width:min(100%,calc((100dvh - 115px)*2))!important;max-width:none!important;max-height:calc(100dvh - 115px)!important;aspect-ratio:2/1!important;margin:auto!important;min-height:0}
+body.poolActive #controls{flex:0 0 auto;max-height:38px;overflow:auto;display:flex;align-items:center;gap:5px;flex-wrap:nowrap;font-size:11px}
+body.poolActive #controls input{max-width:105px}
+body.poolActive #hand,body.poolActive .gameExtras{display:none!important}
+@media(max-height:430px){body.poolActive #status,body.poolActive #spectators{display:none!important}body.poolActive #game>.row{max-height:25px}body.poolActive .poolTable{width:min(100%,calc((100dvh - 90px)*2))!important;max-height:calc(100dvh - 90px)!important}}
 </style><style id="saraRoyalBaloot20261108">
 body.balootActive{background:radial-gradient(ellipse at 50% 28%,#491329,#210917 75%)!important;color:#ffebc2!important}
 body.balootActive header{background:linear-gradient(90deg,#270915,#50172c,#270915)!important;border-bottom:2px solid #f5c45e!important}
