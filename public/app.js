@@ -43,7 +43,7 @@ function c4EnableAudio(){try{const AC=window.AudioContext||window.webkitAudioCon
 function c4UpdateSoundButton(){const b=$('c4Sound');b.textContent=c4SoundOn?'🔊 الصوت شغال':'🔇 الصوت مكتوم';b.setAttribute('aria-pressed',String(c4SoundOn))}
 $('c4Sound').onclick=()=>{c4SoundOn=!c4SoundOn;localStorage.setItem('saraC4Sound',c4SoundOn?'on':'off');if(c4SoundOn)c4EnableAudio();c4UpdateSoundButton()};
 c4UpdateSoundButton();
-$('gameToggle').onclick=()=>{c4EnableAudio();$('c4Overlay').hidden=false;s.emit('gameWatch',{game:'c4',watching:true});renderC4()};
+// Game button opens the shared games lobby; Connect Four opens only from its own game card.
 $('c4Close').onclick=()=>{$('c4Overlay').hidden=true;s.emit('gameWatch',{game:'c4',watching:false})};
 $('c4Overlay').addEventListener('click',e=>{if(e.target===$('c4Overlay')){$('c4Overlay').hidden=true;s.emit('gameWatch',{game:'c4',watching:false})}});
 $('c4Join').onclick=()=>{c4EnableAudio();s.emit('connect4Join')};
