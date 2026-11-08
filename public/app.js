@@ -69,7 +69,7 @@ function renderC4(){
  $('c4Players').replaceChildren();p.forEach((player,i)=>{const tag=document.createElement('span');tag.className='saraPlayerTag'+(c4.status==='playing'&&c4.turn===i?' activeTurn':'');tag.textContent=(i===0?'🟡 ':'🔴 ');if(player.avatar){const img=document.createElement('img');img.src=player.avatar;img.alt='';img.style.cssText='width:36px;height:36px;object-fit:cover;border-radius:50%;border:2px solid #e5b964;vertical-align:middle;margin-inline:5px';tag.append(img)}tag.append(document.createTextNode(player.name));$('c4Players').append(tag)});
  const status=c4.status;
  $('c4Status').classList.toggle('turnNotice',status==='playing'); $('c4Status').textContent=status==='waiting'?'بانتظار لاعبين للبدء':status==='won'?'🏆 الفائز: '+(p[c4.winner-1]?.name||'اللاعب'):status==='draw'?'تعادل!':'الدور الآن: '+(p[c4.turn]?.name||'اللاعب');
- $('c4Join').hidden=myIndex!==-1||p.length>=2;
+ const humanSeats=p.filter(x=>!x.bot).length,botSeat=p.some(x=>x.bot);$('c4Join').hidden=myIndex!==-1||humanSeats>=2;$('c4Join').textContent=botSeat&&humanSeats===1?'👥 العب مع عضو بدل الكمبيوتر':humanSeats===1?'👥 انضم للاعب الموجود':'👥 العب مع عضو';
  $('c4Restart').hidden=myIndex===-1;
  $('c4Leave').hidden=myIndex===-1;
  const board=$('c4Board');board.replaceChildren();
