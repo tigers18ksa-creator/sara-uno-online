@@ -28,4 +28,11 @@ body:has(#xoOverlay:not([hidden])),body:has(#c4Overlay:not([hidden])),body:has(#
 #unoOverlay .c4Modal,#salonOverlay .c4Modal{height:100dvh!important;max-height:100dvh!important;overflow:hidden!important}
 #unoOverlay iframe,#salonOverlay iframe{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
 @media(max-height:650px){#xoOverlay .xoBoard{width:min(72vw,34dvh)!important}#c4Overlay .c4Board{width:min(88vw,42dvh)!important}#xoOverlay .c4Modal,#c4Overlay .c4Modal{gap:1px!important}#c4Overlay .c4Modal>p{display:none!important}}
+</style><style id="saraProminentPlayers">
+#xoOverlay .xoPlayers,#c4Overlay .c4Players{display:flex!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:center!important;gap:clamp(5px,1.8vw,12px)!important;width:100%!important;margin:4px auto!important;flex-shrink:0!important}
+#xoOverlay .xoPlayers>div,#c4Overlay .c4Players>.saraPlayerTag{display:flex!important;align-items:center!important;justify-content:center!important;gap:clamp(4px,1vw,9px)!important;flex:1 1 0!important;min-width:0!important;max-width:48%!important;min-height:54px!important;padding:5px 8px!important;border:2px solid #d9ad59!important;border-radius:14px!important;background:linear-gradient(135deg,#37243d,#151224)!important;box-shadow:0 3px 12px #0006!important;color:#ffe9ac!important;font-size:clamp(12px,3.3vw,17px)!important;font-weight:900!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#xoOverlay .xoPlayers img,#c4Overlay .c4Players img{width:clamp(34px,5dvh,47px)!important;height:clamp(34px,5dvh,47px)!important;object-fit:cover!important;border:2px solid #f6cf79!important;border-radius:50%!important;flex-shrink:0!important;box-shadow:0 0 9px #e6b85b88!important}
+#xoOverlay .xoPlayers .turnX>div:first-child,#xoOverlay .xoPlayers.turnX>div:first-child,#xoOverlay .xoPlayers.turnO>div:last-child,#c4Overlay .c4Players .activeTurn{border-color:#ffe37d!important;box-shadow:0 0 0 2px #ffd15e66,0 0 16px #eebf57aa!important}
+#unoOverlay iframe{width:100%!important}
+@media(max-height:650px){#xoOverlay .xoPlayers>div,#c4Overlay .c4Players>.saraPlayerTag{min-height:42px!important;padding:2px 5px!important}#xoOverlay .xoPlayers img,#c4Overlay .c4Players img{width:32px!important;height:32px!important}}
 </style></body></html>
