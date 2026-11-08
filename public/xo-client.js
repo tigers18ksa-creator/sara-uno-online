@@ -15,7 +15,14 @@ s.on('gameViewers',({game,viewers}={})=>{if(game!=='xo')return;const el=xoEl('xo
  const css=document.createElement('style');css.textContent=`
 .saraGameChat{position:fixed;right:12px;left:auto;bottom:75px;width:min(300px,88vw);height:min(410px,62dvh);max-height:62dvh;display:flex;flex-direction:column;z-index:12;background:#21142eee;border:2px solid #c99a51;border-radius:14px;box-shadow:0 5px 20px #0008;color:#fff;overflow:hidden;direction:rtl}
 .saraGameChat[hidden]{display:none}.saraGameChatTitle{display:flex;justify-content:space-between;padding:7px 10px;background:#45263f;color:#f6d38e;font-weight:bold}.saraGameChatMessages{min-height:65px;overflow:auto;flex:1;padding:7px;font-size:12px}.saraGameChatMessages div{background:#3a2849;padding:6px;border-radius:8px;margin-bottom:5px;overflow-wrap:anywhere}.saraGameChatMessages b{color:#f5d087}.saraGameChatReactions{display:flex;justify-content:space-around;padding:3px}.saraGameChatReactions button{border:0;background:none;font-size:19px}.saraGameChatForm{display:flex;gap:4px;padding:6px}.saraGameChatForm input{min-width:0;flex:1;border-radius:8px;padding:7px;background:#150e21;color:white;border:1px solid #99734d}.saraGameChatForm button{border-radius:8px;background:#eac783;padding:6px}.saraGameChatToggle{position:fixed;bottom:15px;right:15px;left:auto;z-index:13;background:#eac783;color:#23152b;border-radius:18px;padding:8px;font-weight:bold;border:1px solid #99734d}
-@media(max-width:650px){.saraGameChat{width:min(310px,90vw);height:min(350px,55dvh);max-height:55dvh}}
+.saraGameChat{box-sizing:border-box;max-height:calc(100dvh - 95px);z-index:40}
+.saraGameChatTitle{flex:0 0 auto;align-items:center;min-height:38px;box-sizing:border-box}
+.saraGameChatMessages{flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.saraGameChatReactions{flex:0 0 auto;flex-wrap:wrap;gap:3px;max-height:85px;overflow-y:auto}
+.saraGameChatForm{flex:0 0 auto;min-height:52px;box-sizing:border-box;width:100%;background:#2b1934;border-top:1px solid #b48b51;align-items:stretch}
+.saraGameChatForm input{width:0;flex:1 1 0;min-width:0;min-height:39px;font-size:16px;box-sizing:border-box}
+.saraGameChatForm button{flex:0 0 auto;position:static!important;min-width:52px}
+@media(max-width:650px){.saraGameChat{right:10px;left:auto;bottom:10px;width:min(350px,calc(100vw - 20px));height:min(440px,65dvh);max-height:calc(100dvh - 95px)}.saraGameChatToggle{right:12px;bottom:14px}.c4Modal:has(.saraGameChat:not([hidden])) .saraGameChatToggle{display:none!important}}
 `;document.head.append(css);
  const logs={xo:[],c4:[]};const nodes={};
  for(const [game,overlay] of [['xo','xoOverlay'],['c4','c4Overlay']]){
