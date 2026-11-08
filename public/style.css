@@ -364,3 +364,11 @@ body:has(#welcome:not([hidden])) #welcome.saraLogin::-webkit-scrollbar{display:n
 .saraLogin .loginSubmit{height:clamp(43px,6.5dvh,55px);margin-top:4px}
 .saraLogin .adminEntry{min-height:clamp(39px,5.5dvh,48px);margin-top:2px}
 @media(max-height:650px){body:has(#welcome:not([hidden])) #welcome.saraLogin{padding:10px 16px!important}.saraLogin .loginCrown{font-size:32px}.saraLogin .loginBrand{font-size:37px}.saraLogin .loginOrnament{margin-bottom:3px}.saraLogin #loginForm{gap:6px}}
+
+/* Light conversation option: muted ivory-beige only; keep dark mode and the rest of the interface unchanged. */
+#messages.messages.lightChat{background:#f0ebe7!important;background-image:linear-gradient(145deg,#f3efeb 0%,#ede7e2 100%)!important;color:#251f1b!important}
+#messages.messages.lightChat .bubble,#messages.messages.lightChat .bubble.mine{background:#fffaf6!important;background-image:none!important;color:#251f1b!important;border:1px solid #e2d8d1!important;box-shadow:0 3px 9px #33231c20!important}
+#messages.messages.lightChat .bubble.mine{background:#f8ebdc!important;border-color:#e3cba8!important}
+#messages.messages.lightChat .bubble .body{color:#211d1a!important}
+#messages.messages.lightChat .bubble .time{color:#72685f!important}
+#messages.messages.lightChat .empty{color:#71665d!important}
