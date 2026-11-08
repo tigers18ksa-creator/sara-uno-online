@@ -16,7 +16,7 @@ function renderTeamSetup(st){let overlay=document.getElementById('unoTeamsSetup'
 
 function unoResumeToken(){let t=localStorage.getItem('saraUnoResumeToken');if(!t||!/^[a-zA-Z0-9_-]{24,100}$/.test(t)){t=Array.from(crypto.getRandomValues(new Uint8Array(24)),x=>x.toString(16).padStart(2,'0')).join('');localStorage.setItem('saraUnoResumeToken',t)}return t}
 let unoAuthorizedSocketId=null;
-const unoLaunchParams=new URLSearchParams(location.hash.replace(/^#/,''));const unoLaunchTicket=unoLaunchParams.get('ticket');const unoLaunchName=unoLaunchParams.get('name')||localStorage.getItem('saraName')||getUnoGuest()?.name||'لاعب';if(unoLaunchTicket){$('login').hidden=true;$('lobby').hidden=false;$('name').value=unoLaunchName;localStorage.setItem('saraName',unoLaunchName)}
+const unoLaunchParams=new URLSearchParams(location.search||location.hash.replace(/^#/,''));const unoLaunchTicket=unoLaunchParams.get('ticket');const unoLaunchName=unoLaunchParams.get('name')||localStorage.getItem('saraName')||getUnoGuest()?.name||'لاعب';if(unoLaunchTicket){$('login').hidden=true;$('lobby').hidden=false;$('name').value=unoLaunchName;localStorage.setItem('saraName',unoLaunchName)}
 function unoResume(){if(!s.connected)return;const name=unoLaunchName||$('name').value.trim()||localStorage.getItem('saraName')||getUnoGuest()?.name||'';if(!name)return;
 if(unoAuthorizedSocketId===s.id){if(state?.roomId)s.emit('unoSync',{resumeToken:unoResumeToken()});return}
 const g=getUnoGuest();s.emit('unoEnter',{name,code:unoLaunchTicket||'guest',roomPassword:'guest',avatar:g?.name===name?g.avatar||'':localStorage.getItem('saraMyAvatar')||'',resumeToken:unoResumeToken()})}
