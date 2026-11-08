@@ -14,3 +14,5 @@ html,body{width:100%;overflow-x:hidden}main{width:100%;max-width:760px;min-width
 
 /* Fully visible UNO card fan, centered within fixed thumbnail */
 #guestGameNav .saraGamePic .guestUnoArtwork{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;overflow:visible!important;filter:drop-shadow(0 3px 3px #0008)}
+
+.guestLogout{margin:0 auto 0 0!important;padding:8px 12px!important;border-radius:12px!important;background:#342339!important;color:#f5d7a1!important;border:1px solid #d3a45d!important;font-size:13px!important}.guestIdentity{flex-wrap:wrap}
