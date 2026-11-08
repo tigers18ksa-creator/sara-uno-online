@@ -349,3 +349,18 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 .messages .bubble .who:not(.tigerOwnerName){display:inline-flex!important;align-items:center!important;gap:6px!important;vertical-align:middle!important}
 .messages .bubble .who:not(.tigerOwnerName)>.saraMemberAvatar{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 32px!important;width:32px!important;height:32px!important;box-sizing:border-box!important;overflow:hidden!important;border:2px solid #d8af6d!important;border-radius:50%!important;background:#27172c!important;box-shadow:0 0 8px #e1b15d55!important;margin:0 0 0 3px!important;padding:0!important}
 .messages .bubble .who:not(.tigerOwnerName)>.saraMemberAvatar img{display:block!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;margin:0!important;padding:0!important;border:0!important;border-radius:50%!important}
+
+/* Fixed login viewport: keep the full sign-in card visible without page scrolling */
+body:has(#welcome:not([hidden])){height:100dvh;overflow:hidden}
+body:has(#welcome:not([hidden])) main{height:100dvh!important;min-height:0!important;overflow:hidden!important;padding:8px 12px!important;justify-content:center!important}
+body:has(#welcome:not([hidden])) #welcome.saraLogin{width:min(100%,510px);max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:clamp(12px,2.4dvh,30px) 20px!important;margin:0 auto!important}
+body:has(#welcome:not([hidden])) #welcome.saraLogin::-webkit-scrollbar{display:none}
+.saraLogin .loginCrown{font-size:clamp(35px,7dvh,68px);line-height:1}
+.saraLogin .loginBrand{font-size:clamp(38px,7dvh,60px)}
+.saraLogin .loginSub{margin:3px 0 7px;font-size:clamp(8px,1.3dvh,11px)}
+.saraLogin .loginOrnament{margin-bottom:clamp(4px,1.3dvh,14px);font-size:20px}
+.saraLogin #loginForm{gap:clamp(7px,1.5dvh,14px)}
+.saraLogin input:not([type=color]){height:clamp(40px,6.5dvh,54px)}
+.saraLogin .loginSubmit{height:clamp(43px,6.5dvh,55px);margin-top:4px}
+.saraLogin .adminEntry{min-height:clamp(39px,5.5dvh,48px);margin-top:2px}
+@media(max-height:650px){body:has(#welcome:not([hidden])) #welcome.saraLogin{padding:10px 16px!important}.saraLogin .loginCrown{font-size:32px}.saraLogin .loginBrand{font-size:37px}.saraLogin .loginOrnament{margin-bottom:3px}.saraLogin #loginForm{gap:6px}}
