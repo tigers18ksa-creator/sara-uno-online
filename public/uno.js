@@ -27,5 +27,5 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)unoReconne
 window.addEventListener('pageshow',()=>unoReconnectNow());
 window.addEventListener('online',()=>unoReconnectNow());window.addEventListener('focus',()=>unoReconnectNow());
 if(s.connected)unoReconnectNow();else s.connect()
-s.on('unoSessionLost',msg=>{$('error').textContent=msg;console.warn(msg)});s.on('unoJoinNew',({mode,teams})=>chooseUno('unoJoin',{mode,teams}));s.on('unoEntered',()=>{clearTimeout(unoChoiceTimer);$('error').textContent='';unoAuthorizedSocketId=s.id;$('login').hidden=true;if($('game').hidden)$('lobby').hidden=false;if(pendingUnoChoice){const choice=pendingUnoChoice;pendingUnoChoice=null;s.emit(choice.event,choice.payload)}});
+s.on('unoSessionLost',msg=>{$('error').textContent=msg;console.warn(msg);if(s.connected){unoAuthorizedSocketId=null;unoResume()}});s.on('unoJoinNew',({mode,teams})=>chooseUno('unoJoin',{mode,teams}));s.on('unoEntered',()=>{clearTimeout(unoChoiceTimer);$('error').textContent='';unoAuthorizedSocketId=s.id;$('login').hidden=true;if($('game').hidden)$('lobby').hidden=false;if(pendingUnoChoice){const choice=pendingUnoChoice;pendingUnoChoice=null;s.emit(choice.event,choice.payload)}});
 
