@@ -50,6 +50,7 @@ $('c4Bot').onclick=()=>{c4EnableAudio();s.emit('connect4Bots')};$('c4Join').oncl
 $('c4Restart').onclick=()=>s.emit('connect4Restart');
 $('c4Leave').onclick=()=>s.emit('connect4Leave');
 s.on('connect4State',state=>{const old=c4Previous;c4=state;if(old&&!$('c4Overlay').hidden){const oldCount=old.board.flat().filter(Boolean).length,newCount=state.board.flat().filter(Boolean).length;if(state.status==='won'&&old.status!=='won'){c4Play('win');saraCelebrate('c4Overlay',state.players?.[state.winner-1]?.name||'الفائز',c4SoundOn)}else if(state.status==='draw'&&old.status!=='draw')c4Play('draw');else if(newCount>oldCount){c4Play('drop');if(state.players[state.turn]?.id===me&&state.status==='playing'){setTimeout(()=>c4Play('turn'),230);saraTurnAlert('c4Overlay',state.players[state.turn]?.name,c4SoundOn)}}else if(state.status==='playing'&&old.status!=='playing')c4Play('start')}c4Previous=state;renderC4()});
+function c4FindWinningFour(grid){if(!Array.isArray(grid))return null;for(let row=0;row<6;row++)for(let col=0;col<7;col++){const color=grid[row]?.[col];if(!color)continue;for(const [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]){const cells=Array.from({length:4},(_,i)=>[row+i*dr,col+i*dc]);if(cells.every(([y,x])=>y>=0&&y<6&&x>=0&&x<7&&grid[y]?.[x]===color))return cells}}return null}
 function renderC4(){
  if(!c4)return;
  const p=c4.players||[],myIndex=p.findIndex(x=>x.id===me);
@@ -67,6 +68,22 @@ function renderC4(){
   slot.disabled=status!=='playing'||myIndex!==c4.turn||!!c4.board[0][col];
   slot.onclick=()=>s.emit('connect4Move',{col});
   board.append(slot);
+ }
+ const four=status==='won'?c4FindWinningFour(c4.board):null;
+ if(four){
+  const winnerColor=c4.winner===1?'yellow':'red';
+  for(const [row,col] of four)board.children[row*7+col]?.classList.add('c4WinningPiece','c4Winning'+winnerColor);
+  requestAnimationFrame(()=>{if(!board.isConnected||!four.every(([row,col])=>board.children[row*7+col]))return;
+   board.querySelector('.c4WinningLine')?.remove();
+   const first=board.children[four[0][0]*7+four[0][1]],last=board.children[four[3][0]*7+four[3][1]];
+   const bounds=board.getBoundingClientRect(),a=first.getBoundingClientRect(),b=last.getBoundingClientRect();
+   if(!bounds.width||!bounds.height)return;
+   const line=document.createElementNS('http://www.w3.org/2000/svg','svg');line.classList.add('c4WinningLine');line.setAttribute('viewBox','0 0 100 100');line.setAttribute('preserveAspectRatio','none');
+   const stroke=document.createElementNS('http://www.w3.org/2000/svg','line');
+   stroke.setAttribute('x1',String((a.left+a.width/2-bounds.left)/bounds.width*100));stroke.setAttribute('y1',String((a.top+a.height/2-bounds.top)/bounds.height*100));
+   stroke.setAttribute('x2',String((b.left+b.width/2-bounds.left)/bounds.width*100));stroke.setAttribute('y2',String((b.top+b.height/2-bounds.top)/bounds.height*100));
+   line.append(stroke);board.append(line);
+  });
  }
 }
 
