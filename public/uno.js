@@ -16,7 +16,16 @@ s.on('unoReaction',({emoji})=>{if(!unoReactions.includes(emoji))return;const e=d
 function renderTeamSetup(st){let overlay=document.getElementById('unoTeamsSetup');if(!overlay)return;const ready=st.teams&&st.status==='waiting'&&st.players.length===4;overlay.hidden=!ready;if(!ready)return;const host=st.myId===st.hostId;const slots=overlay.querySelectorAll('[data-team-slot]');if(!overlay.dataset.room||overlay.dataset.room!==st.roomId){overlay.dataset.room=st.roomId;overlay.dataset.order=''}let order;try{order=JSON.parse(overlay.dataset.order||'null')}catch{}if(!Array.isArray(order)||order.length!==4||!order.every(id=>st.players.some(p=>p.id===id)))order=st.players.map(p=>p.id);overlay.dataset.order=JSON.stringify(order);slots.forEach((slot,i)=>{const p=st.players.find(p=>p.id===order[i]);slot.textContent=(i%2===0?'🔴 A — ':'🔵 B — ')+(p?.name||'');slot.disabled=!host;slot.onclick=()=>{if(!host)return;const other=Number(prompt('بدّل مع لاعب رقم (1 إلى 4):')||0)-1;if(other<0||other>3||other===i)return;[order[i],order[other]]=[order[other],order[i]];overlay.dataset.order=JSON.stringify(order);renderTeamSetup(st)}});overlay.querySelector('#unoTeamsConfirm').disabled=!host;overlay.querySelector('#unoTeamsConfirm').onclick=()=>s.emit('unoTeamsConfirm',order);overlay.querySelector('#unoTeamsHelp').textContent=host?'اضغط على أي لاعب لتبديله مع لاعب آخر، ثم أكد الفرق':'بانتظار صاحب الطاولة يوزّع الفريقين ويبدأ المباراة'}
 
 function unoResumeToken(){let t=localStorage.getItem('saraUnoResumeToken');if(!t||!/^[a-zA-Z0-9_-]{24,100}$/.test(t)){t=Array.from(crypto.getRandomValues(new Uint8Array(24)),x=>x.toString(16).padStart(2,'0')).join('');localStorage.setItem('saraUnoResumeToken',t)}return t}
-function unoResume(){if(!s.connected)return;if(state?.roomId){s.emit('unoSync');return}const name=$('name').value.trim()||localStorage.getItem('saraName')||'';if(!name)return;const g=getUnoGuest();s.emit('unoEnter',{name,code:'guest',roomPassword:'guest',avatar:g?.name===name?g.avatar||'':localStorage.getItem('saraMyAvatar')||'',resumeToken:unoResumeToken()})}
-let unoResumePending=false;function unoReconnectNow(){if(!s.connected){unoResumePending=true;s.connect();return}unoResumePending=false;unoResume()}s.on('connect',()=>unoReconnectNow());document.addEventListener('visibilitychange',()=>{if(!document.hidden)unoReconnectNow()});window.addEventListener('pageshow',()=>unoReconnectNow());window.addEventListener('online',()=>unoReconnectNow());if(s.connected)unoReconnectNow();
-s.on('unoEntered',()=>{if(sessionStorage.getItem('saraUnoActiveGame'))s.emit('unoSync')});
+let unoAuthorizedSocketId=null;
+function unoResume(){if(!s.connected)return;const name=$('name').value.trim()||localStorage.getItem('saraName')||getUnoGuest()?.name||'';if(!name)return;
+if(unoAuthorizedSocketId===s.id){if(state?.roomId)s.emit('unoSync');return}
+const g=getUnoGuest();s.emit('unoEnter',{name,code:'guest',roomPassword:'guest',avatar:g?.name===name?g.avatar||'':localStorage.getItem('saraMyAvatar')||'',resumeToken:unoResumeToken()})}
+function unoReconnectNow(){if(!s.connected){s.connect();return}unoResume()}
+s.on('disconnect',()=>{unoAuthorizedSocketId=null});
+s.on('connect',()=>{unoAuthorizedSocketId=null;unoReconnectNow()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)unoReconnectNow()});
+window.addEventListener('pageshow',()=>unoReconnectNow());
+window.addEventListener('online',()=>unoReconnectNow());
+if(s.connected)unoReconnectNow();
+s.on('unoEntered',()=>{unoAuthorizedSocketId=s.id;if(sessionStorage.getItem('saraUnoActiveGame'))s.emit('unoSync')});
 
