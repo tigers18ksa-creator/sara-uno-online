@@ -80,7 +80,7 @@ const guestPassToggle=$('guestPassToggle'),guestPassOverlay=$('guestPassOverlay'
 
 $('openUNO').onclick=()=>{if(!me)return toast('ادخل المجلس أولاً');$('gameChooser').hidden=true;s.emit('requestUnoTicket')};s.on('unoTicket',({code})=>{$('unoFrame').src='/uno.html#ticket='+encodeURIComponent(code)+'&name='+encodeURIComponent(localStorage.getItem('saraName')||'لاعب');$('unoOverlay').hidden=false});$('unoClose').onclick=()=>{$('unoOverlay').hidden=true;$('unoFrame').src='about:blank'};
 
-$('logout').onclick=()=>{if(!confirm('تبي تسجّل خروج من مجلس سارة؟'))return;localStorage.removeItem('saraSessionProof');localStorage.removeItem('saraToken');localStorage.removeItem('saraOwnerProof');sessionStorage.removeItem('saraActiveChat');me=null;isAdmin=false;s.disconnect();location.reload()};
+$('logout').onclick=()=>{localStorage.removeItem('saraSessionProof');localStorage.removeItem('saraToken');localStorage.removeItem('saraOwnerProof');sessionStorage.removeItem('saraActiveChat');me=null;isAdmin=false;s.disconnect();location.reload()};
 
 // Connect only after all session restoration listeners are registered.
 s.connect();
