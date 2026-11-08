@@ -18,14 +18,14 @@ function renderTeamSetup(st){let overlay=document.getElementById('unoTeamsSetup'
 function unoResumeToken(){let t=localStorage.getItem('saraUnoResumeToken');if(!t||!/^[a-zA-Z0-9_-]{24,100}$/.test(t)){t=Array.from(crypto.getRandomValues(new Uint8Array(24)),x=>x.toString(16).padStart(2,'0')).join('');localStorage.setItem('saraUnoResumeToken',t)}return t}
 let unoAuthorizedSocketId=null;
 function unoResume(){if(!s.connected)return;const name=$('name').value.trim()||localStorage.getItem('saraName')||getUnoGuest()?.name||'';if(!name)return;
-if(unoAuthorizedSocketId===s.id){if(state?.roomId)s.emit('unoSync');return}
+if(unoAuthorizedSocketId===s.id){if(state?.roomId)s.emit('unoSync',{resumeToken:unoResumeToken()});return}
 const g=getUnoGuest();s.emit('unoEnter',{name,code:'guest',roomPassword:'guest',avatar:g?.name===name?g.avatar||'':localStorage.getItem('saraMyAvatar')||'',resumeToken:unoResumeToken()})}
-function unoReconnectNow(){if(!s.connected){s.connect();return}unoResume()}
+function unoReconnectNow(){if(!s.connected){s.connect();return}if(state?.roomId){s.emit('unoSync',{resumeToken:unoResumeToken()});return}unoResume()}
 s.on('disconnect',()=>{unoAuthorizedSocketId=null});
 s.on('connect',()=>{unoAuthorizedSocketId=null;unoReconnectNow()});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)unoReconnectNow()});
 window.addEventListener('pageshow',()=>unoReconnectNow());
-window.addEventListener('online',()=>unoReconnectNow());
+window.addEventListener('online',()=>unoReconnectNow());window.addEventListener('focus',()=>unoReconnectNow());
 if(s.connected)unoReconnectNow();
-s.on('unoEntered',()=>{unoAuthorizedSocketId=s.id;if(sessionStorage.getItem('saraUnoActiveGame'))s.emit('unoSync')});
+s.on('unoSessionLost',msg=>{$('error').textContent=msg;console.warn(msg)});s.on('unoEntered',()=>{unoAuthorizedSocketId=s.id;if(sessionStorage.getItem('saraUnoActiveGame'))s.emit('unoSync',{resumeToken:unoResumeToken()})});
 
