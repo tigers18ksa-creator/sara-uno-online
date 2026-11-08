@@ -337,3 +337,10 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 .messages .bubble .who.tigerOwnerName::before{content:"♛";position:absolute;top:-19px;left:12px;font-size:23px;color:#ffd66b;text-shadow:0 1px 3px #000,0 0 8px #e6b648}
 .messages .bubble .tigerOwnerLabel{font-size:10px!important;font-weight:900!important;color:#fff0bc!important;background:#6d350b;border:1px solid #d5a53e;border-radius:20px;padding:2px 7px;white-space:nowrap}
 .messages .bubble.tigerOwnerMessage{border:1px solid #e1b450!important;box-shadow:0 2px 6px #0004,0 0 9px #e1b45055!important}
+
+/* Owner avatar: prominent full-bleed circle fitted into royal nameplate */
+.messages .bubble .who.tigerOwnerName{gap:8px!important;overflow:visible!important;min-height:48px!important;padding:4px 12px 4px 5px!important}
+.messages .bubble .who.tigerOwnerName>.saraMemberAvatar{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 43px!important;width:43px!important;height:43px!important;min-width:43px!important;min-height:43px!important;max-width:43px!important;max-height:43px!important;box-sizing:border-box!important;overflow:hidden!important;border:3px solid #f6d16d!important;border-radius:50%!important;margin:0 0 0 3px!important;padding:0!important;box-shadow:0 0 0 2px #41210d,0 0 14px #ffd65e99!important;background:#251325!important;vertical-align:middle!important}
+.messages .bubble .who.tigerOwnerName>.saraMemberAvatar>img{display:block!important;width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important;border-radius:50%!important;box-shadow:none!important}
+.messages .bubble .who.tigerOwnerName::before{z-index:2}
+@media(max-width:650px){.messages .bubble .who.tigerOwnerName>.saraMemberAvatar{flex-basis:40px!important;width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important}}
