@@ -5,7 +5,7 @@ try{const params=new URLSearchParams(location.hash.slice(1));const ticket=params
 // Room-scoped realtime chat and quick reactions; spectators may participate without seeing hands.
 const unoReactions=['❤️','👍','😂','🤣','😮','😢','👏','🔥','👑','🎉','😎','💪'];
 unoReactions.forEach(emoji=>{const b=document.createElement('button');b.type='button';b.textContent=emoji;b.onclick=()=>s.emit('unoReaction',emoji);$('unoReactions').append(b)});
-$('unoChatForm').onsubmit=e=>{e.preventDefault();const v=$('unoChatInput').value.trim();if(!v)return;s.emit('unoChat',v);$('unoChatInput').value=''};
+$('unoChatForm').onsubmit=e=>{e.preventDefault();const v=$('unoChatInput').value.trim();if(!v)return;s.emit('unoChat',{text:v,avatar:localStorage.getItem('saraMyAvatar')||''});$('unoChatInput').value=''};
 $('unoSideToggle').onclick=()=>$('unoSide').classList.toggle('open');
 s.on('unoChat',({name,text,avatar})=>{const row=document.createElement('div');row.className='unoMsg';const who=document.createElement('b');who.textContent=name+':';if(avatar){const img=document.createElement('img');img.src=avatar;img.alt='';img.style.cssText='width:28px;height:28px;object-fit:cover;border-radius:50%;border:2px solid #dfb65c;vertical-align:middle;margin-inline-end:6px';row.append(img)}row.append(who,document.createTextNode(text));$('unoMessages').append(row);while($('unoMessages').children.length>80)$('unoMessages').firstChild.remove();$('unoMessages').scrollTop=$('unoMessages').scrollHeight});
 s.on('unoReaction',({emoji})=>{if(!unoReactions.includes(emoji))return;const e=document.createElement('div');e.className='unoFloat';e.textContent=emoji;document.body.append(e);setTimeout(()=>e.remove(),1800)});
