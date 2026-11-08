@@ -20,7 +20,7 @@ const unoLaunchParams=new URLSearchParams(location.search||location.hash.replace
 function unoResume(){if(!s.connected)return;const name=unoLaunchName||$('name').value.trim()||localStorage.getItem('saraName')||getUnoGuest()?.name||'';if(!name)return;
 if(unoAuthorizedSocketId===s.id){if(state?.roomId)s.emit('unoSync',{resumeToken:unoResumeToken()});return}
 const g=getUnoGuest();s.emit('unoEnter',{name,code:unoLaunchTicket||'guest',roomPassword:'guest',avatar:g?.name===name?g.avatar||'':localStorage.getItem('saraMyAvatar')||'',resumeToken:unoResumeToken()})}
-function unoReconnectNow(){if(!s.connected){s.connect();return}if(state?.roomId){s.emit('unoSync',{resumeToken:unoResumeToken()});return}unoResume()}
+function unoReconnectNow(){if(!s.connected){s.connect();return}if(unoAuthorizedSocketId!==s.id){unoResume();return}if(state?.roomId)s.emit('unoSync',{resumeToken:unoResumeToken()})}
 s.on('disconnect',()=>{unoAuthorizedSocketId=null});
 s.on('connect',()=>{unoAuthorizedSocketId=null;unoReconnectNow()});s.on('connect_error',()=>{if(unoLaunchTicket){$('login').hidden=true;$('lobby').hidden=false}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)unoReconnectNow()});
