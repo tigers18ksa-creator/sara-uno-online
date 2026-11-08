@@ -46,7 +46,7 @@ c4UpdateSoundButton();
 // Game button opens the shared games lobby; Connect Four opens only from its own game card.
 $('c4Close').onclick=()=>{$('c4Overlay').hidden=true;s.emit('gameWatch',{game:'c4',watching:false})};
 $('c4Overlay').addEventListener('click',e=>{if(e.target===$('c4Overlay')){$('c4Overlay').hidden=true;s.emit('gameWatch',{game:'c4',watching:false})}});
-$('c4Join').onclick=()=>{c4EnableAudio();s.emit('connect4Join')};
+$('c4Bot').onclick=()=>{c4EnableAudio();s.emit('connect4Bots')};$('c4Join').onclick=()=>{c4EnableAudio();s.emit('connect4Join')};
 $('c4Restart').onclick=()=>s.emit('connect4Restart');
 $('c4Leave').onclick=()=>s.emit('connect4Leave');
 s.on('connect4State',state=>{const old=c4Previous;c4=state;if(old&&!$('c4Overlay').hidden){const oldCount=old.board.flat().filter(Boolean).length,newCount=state.board.flat().filter(Boolean).length;if(state.status==='won'&&old.status!=='won'){c4Play('win');saraCelebrate('c4Overlay',state.players?.[state.winner-1]?.name||'الفائز',c4SoundOn)}else if(state.status==='draw'&&old.status!=='draw')c4Play('draw');else if(newCount>oldCount){c4Play('drop');if(state.players[state.turn]?.id===me&&state.status==='playing'){setTimeout(()=>c4Play('turn'),230);saraTurnAlert('c4Overlay',state.players[state.turn]?.name,c4SoundOn)}}else if(state.status==='playing'&&old.status!=='playing')c4Play('start')}c4Previous=state;renderC4()});
