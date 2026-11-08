@@ -344,3 +344,8 @@ body:has(#welcome:not([hidden])) #welcome{flex:0 1 auto;max-height:none}
 .messages .bubble .who.tigerOwnerName>.saraMemberAvatar>img{display:block!important;width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important;border-radius:50%!important;box-shadow:none!important}
 .messages .bubble .who.tigerOwnerName::before{z-index:2}
 @media(max-width:650px){.messages .bubble .who.tigerOwnerName>.saraMemberAvatar{flex-basis:40px!important;width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important}}
+
+/* Profile pictures for all members, preserving the owner's royal variant */
+.messages .bubble .who:not(.tigerOwnerName){display:inline-flex!important;align-items:center!important;gap:6px!important;vertical-align:middle!important}
+.messages .bubble .who:not(.tigerOwnerName)>.saraMemberAvatar{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 32px!important;width:32px!important;height:32px!important;box-sizing:border-box!important;overflow:hidden!important;border:2px solid #d8af6d!important;border-radius:50%!important;background:#27172c!important;box-shadow:0 0 8px #e1b15d55!important;margin:0 0 0 3px!important;padding:0!important}
+.messages .bubble .who:not(.tigerOwnerName)>.saraMemberAvatar img{display:block!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;margin:0!important;padding:0!important;border:0!important;border-radius:50%!important}
