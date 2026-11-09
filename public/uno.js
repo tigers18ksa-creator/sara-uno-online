@@ -46,12 +46,34 @@ function saraPaperSound(draw=false){
  try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();audio.resume();const n=Math.floor(audio.sampleRate*(draw?.19:.14)),b=audio.createBuffer(1,n,audio.sampleRate),d=b.getChannelData(0);let last=0;for(let i=0;i<n;i++){let noise=Math.random()*2-1;last=last*.65+noise*.35;let env=Math.pow(1-i/n,2)*(draw?.24:.32);d[i]=last*env}const src=audio.createBufferSource(),f=audio.createBiquadFilter(),g=audio.createGain();f.type='bandpass';f.frequency.value=draw?1150:1700;f.Q.value=.6;src.buffer=b;src.connect(f);f.connect(g);g.connect(audio.destination);g.gain.value=.8;src.start()}catch(e){}
 }
 let saraSelectedCardRect=null,saraSelectedCardAt=0;
+/* Four visible draw-pile cards fly to the penalized player; display only, never reveal hand. */
+function saraAnimateDrawFour(playerIndex,mode){
+ const deck=document.getElementById('deck');
+ const seat=mode===2?(playerIndex===0?0:2):playerIndex;
+ const recipient=document.querySelector('#players .player.seat-'+seat+' .playerCards')||document.querySelector('#players .player.seat-'+seat+' .avatar');
+ if(!deck||!recipient)return;
+ const a=deck.getBoundingClientRect(),b=recipient.getBoundingClientRect();
+ if(!a.width||!b.width)return;
+ for(let n=0;n<4;n++)setTimeout(()=>{
+  const card=deck.cloneNode(true);card.removeAttribute('id');card.classList.add('saraFlyingCard');
+  card.style.position='fixed';card.style.left=a.left+'px';card.style.top=a.top+'px';card.style.width=a.width+'px';card.style.height=a.height+'px';
+  card.style.margin='0';card.style.pointerEvents='none';card.style.zIndex='99999';
+  card.style.transition='transform .53s cubic-bezier(.22,.75,.25,1),opacity .53s ease';
+  document.body.appendChild(card);saraPaperSound(true);
+  const dx=b.left+b.width/2-(a.left+a.width/2),dy=b.top+b.height/2-(a.top+a.height/2);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{card.style.transform='translate('+dx+'px,'+dy+'px) rotate('+(n%2?14:-14)+'deg) scale(.35)';card.style.opacity='.18'}));
+  setTimeout(()=>card.remove(),650);
+ },n*190);
+}
 function saraUnoCardEvent(prev,st){
  if(!prev||!st||prev.roomId!==st.roomId||prev.status!=='playing')return;
  const old=prev.top||{},now=st.top||{};
  const changed=old.value!==now.value||old.color!==now.color||prev.turn!==st.turn;
  const played=changed&&(old.value!==now.value||old.color!==now.color||((prev.log||'')!==(st.log||'')&&st.top));
  const drew=st.players?.some(p=>{const before=prev.players?.find(x=>x.id===p.id);return before&&p.count>before.count})&&!played;
+ const penalizedIndex=st.players?.findIndex(p=>{const oldP=prev.players?.find(x=>x.id===p.id);return oldP&&p.count-oldP.count>=4});
+ const drawFourApplied=st.top?.value==='draw4'&&penalizedIndex>=0;
+ if(drawFourApplied)setTimeout(()=>saraAnimateDrawFour(penalizedIndex,st.mode),160);
  if(!played&&!drew)return;
  setTimeout(()=>{
  if(played){saraPaperSound(false);const target=document.getElementById('discard');if(!target)return;const end=target.getBoundingClientRect();const from=document.querySelector('#players .player.seat-'+(st.mode===2?(prev.turn===0?0:2):prev.turn))||document.getElementById('hand');if(!from)return;const isOwnPlay=prev.players?.[prev.turn]?.id===prev.myId;const useSelected=isOwnPlay&&saraSelectedCardRect&&Date.now()-saraSelectedCardAt<12000;const start=useSelected?saraSelectedCardRect:from.getBoundingClientRect();if(useSelected)saraSelectedCardRect=null;const clone=target.cloneNode(true);clone.removeAttribute('id');clone.classList.add('saraFlyingCard');clone.style.left=end.left+'px';clone.style.top=end.top+'px';clone.style.width=end.width+'px';clone.style.height=end.height+'px';const dx=start.left+start.width/2-(end.left+end.width/2),dy=start.top+start.height/2-(end.top+end.height/2);clone.style.transform='translate('+dx+'px,'+dy+'px) rotate(-20deg) scale(.85)';document.body.append(clone);requestAnimationFrame(()=>requestAnimationFrame(()=>{clone.style.transform='translate(0,0) rotate(0deg) scale(1)';clone.style.opacity='.98'}));setTimeout(()=>clone.remove(),540)}
