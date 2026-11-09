@@ -248,6 +248,11 @@ if(lobby){lobby.hidden=false;lobby.style.removeProperty('display');lobby.style.r
 #radioVolumeControlTop #radioActionsTop{display:flex!important;flex-wrap:wrap;gap:8px;justify-content:center;margin:2px 0 4px}
 #radioVolumeControlTop #radioActionsTop #radioPlay,#radioVolumeControlTop #radioActionsTop #radioStop{display:inline-flex!important;visibility:visible!important;opacity:1!important;flex:1 1 110px;justify-content:center;align-items:center;min-height:42px}
 #radioVolumeControlTop #radioActionsTop #radioExternal{display:none!important}
+/* Show every station in one continuous scroll area; keep controls visible. */
+#radioPanel.radioPanel{max-height:calc(100dvh - 155px)!important;overflow-y:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:24px!important}
+#radioPanel .saraRadioChoices{max-height:none!important;overflow:visible!important;grid-auto-rows:minmax(64px,auto);padding-bottom:18px!important}
+#radioPanel #radioVolumeControlTop{position:sticky;top:0;z-index:15;background:linear-gradient(145deg,#2c1835,#381b31)!important;box-shadow:0 4px 15px #0006,inset 0 1px 4px #ffffff14}
+@media(max-width:390px){#radioPanel .saraRadioChoices{grid-auto-rows:minmax(58px,auto)}}
 </style><script id="saraRadioVolumeTop20261109">(function(){
 function init(){const panel=document.getElementById('radioPanel'),slider=document.getElementById('radioVolume'),label=panel?.querySelector('label[for="radioVolume"]'),choices=document.getElementById('radioChoices');if(!panel||!slider||!label||!choices||document.getElementById('radioVolumeControlTop'))return;
 const wrap=document.createElement('div');wrap.id='radioVolumeControlTop';wrap.append(label,slider);choices.before(wrap);
