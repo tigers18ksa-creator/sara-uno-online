@@ -38,3 +38,6 @@ html,body{height:auto!important;min-height:100%!important;overflow-y:auto!import
 #guestRadio .radioActions button{border-radius:13px;background:linear-gradient(#e8c17d,#b98a47);color:#251629;font-weight:900;padding:10px 15px}
 #guestRadio .guestRadioTop label{display:block;margin:10px 0 5px;font-weight:800}#guestRadio #guestVolume{display:block;width:100%;max-width:none;accent-color:#e7b259}#guestRadioStatus{font-size:12px;line-height:1.7;margin-top:10px;color:#f4d8a8}
 @media(max-width:390px){#guestRadio .saraRadioChoices{gap:6px}#guestRadio .saraStationChoice{min-height:58px;padding:5px}#guestRadio .stationLabel{font-size:12px}}
+
+/* Emphasize the guest page Home label only. */
+.guestHome{font-weight:900!important;text-shadow:0 1px 2px #0009!important}
