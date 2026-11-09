@@ -169,4 +169,22 @@ body:has(#xoOverlay:not([hidden])),body:has(#c4Overlay:not([hidden])),body:has(#
  box-shadow:inset 0 1px 0 #fff5,0 0 14px #ffc36c,0 0 24px #c9276c!important;
  filter:brightness(1.08)!important;
 }
-</style><script id="returnToGamesFromSnakes20261109">(function(){if(new URLSearchParams(location.search).get('openGames')!=='1')return;function show(){const menu=document.getElementById('gamesMenu');if(!menu)return;menu.hidden=false;menu.style.setProperty('display','flex','important');}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show,{once:true});else show();window.addEventListener('pageshow',show);setTimeout(show,700);history.replaceState(null,'',location.pathname);})();</script></body></html>
+</style><script id="returnToGamesFromSnakes20261109">(function(){if(new URLSearchParams(location.search).get('openGames')!=='1')return;function show(){const menu=document.getElementById('gamesMenu');if(!menu)return;menu.hidden=false;menu.style.setProperty('display','flex','important');}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show,{once:true});else show();window.addEventListener('pageshow',show);setTimeout(show,700);history.replaceState(null,'',location.pathname);})();</script><style id="saraUnoReliableClose20261109">
+#unoOverlay[hidden]{display:none!important}
+#unoOverlay:not([hidden]){display:flex!important}
+#unoOverlay .c4Head{position:relative!important;z-index:100!important;flex-shrink:0!important}
+#unoClose{position:relative!important;z-index:101!important;pointer-events:auto!important;touch-action:manipulation!important;min-width:44px!important;min-height:44px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+</style><script id="saraUnoReliableLaunch20261109">(function(){
+function init(){
+const card=document.getElementById('gamesUNO'),open=document.getElementById('openUNO'),close=document.getElementById('unoClose'),overlay=document.getElementById('unoOverlay'),frame=document.getElementById('unoFrame');
+if(!card||!open||!close||!overlay)return;
+let pending=false,retryTimer=null;
+function clearPending(){pending=false;if(retryTimer){clearTimeout(retryTimer);retryTimer=null}}
+function closeUno(e){if(e){e.preventDefault();e.stopImmediatePropagation()}clearPending();overlay.hidden=true;overlay.style.removeProperty('display');if(frame)frame.src='about:blank';const menu=document.getElementById('gamesMenu');if(menu){menu.hidden=false;menu.style.removeProperty('display')}}
+close.addEventListener('click',closeUno,true);
+card.addEventListener('click',function(){if(pending)return;pending=true;retryTimer=setTimeout(function(){if(!pending)return;pending=false;const sock=window.saraSocket||window.socket;/* Ticket handler in app.js remains authoritative; allow another tap when the server does not respond. */},6500)},false);
+const observer=new MutationObserver(function(){if(!overlay.hidden)clearPending()});observer.observe(overlay,{attributes:true,attributeFilter:['hidden']});
+window.addEventListener('pageshow',clearPending);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();</script></body></html>
