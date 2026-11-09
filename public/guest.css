@@ -24,3 +24,17 @@ html,body{height:auto!important;min-height:100%!important;overflow-y:auto!import
 #guestGames button,#xoGame button,#c4Game button,#guestGameNav button{pointer-events:auto!important;touch-action:manipulation!important;position:relative;z-index:2}#xoGame,#c4Game{height:auto!important;max-height:none!important;overflow:visible!important}#xoGame .actions,#c4Game .actions{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:6px}#xoGame .actions button,#c4Game .actions button{flex:1 1 145px;min-height:48px;margin:3px!important}#guestGameNav{padding-bottom:30px!important}
 
 .guestTableChat{margin:15px auto;padding:12px;border:1px solid #8f6f48;border-radius:14px;background:#201b2c;max-width:680px}.guestChatLog{height:165px;overflow-y:auto;overflow-x:hidden;background:#14121e;border-radius:10px;padding:10px;text-align:right}.guestChatLine{padding:5px 2px;overflow-wrap:anywhere;border-bottom:1px solid #ffffff12}.guestChatLine b{color:#eac17b}.guestTableChat .actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.guestTableChat input{flex:1 1 170px;min-width:0;padding:12px;border-radius:9px}.guestTableChat button{min-height:44px;cursor:pointer}
+
+/* Guest radio matches the SARA room station-grid player; existing audio controls remain functional. */
+#guestRadio.radioPanel{position:relative;top:auto;left:auto;width:100%;max-width:520px;margin:18px auto 0;text-align:right;background:linear-gradient(145deg,#23132f,#40152e 60%,#170e22)!important;border:2px solid #e1b66a!important;border-radius:22px;box-shadow:0 18px 50px #0008,0 0 22px #d59e4833;color:#ffe6b6;padding:18px;direction:rtl}
+#guestRadio .radioHead{display:flex;align-items:center;justify-content:space-between;font-size:18px;border-bottom:1px solid #d8a54e55;padding-bottom:10px}
+#guestRadio .saraRadioHint{text-align:center;color:#f8d18b;font-weight:800;margin:12px 0}
+#guestRadio .saraRadioChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;max-height:min(42vh,360px);overflow:auto;padding:5px 2px 12px}
+#guestRadio .saraStationChoice{display:flex;align-items:center;gap:7px;min-height:64px;border:1px solid #b9875d;border-radius:15px;background:linear-gradient(145deg,#48273f,#26152e);color:#fbe2b8;padding:8px;cursor:pointer;text-align:right;font-weight:800}
+#guestRadio .saraStationChoice.selected{border:2px solid #ffe0a0;background:linear-gradient(145deg,#753351,#402143);box-shadow:0 0 14px #f6c66b77,inset 0 0 10px #ffc56824}
+#guestRadio .stationIcon{font-size:24px}#guestRadio .stationLabel{flex:1;font-size:13px}#guestRadio .stationSignal{color:#e2b06c}#guestRadio .saraStationChoice.selected .stationSignal{color:#58ec98}
+#guestRadio .radioHiddenLabel,#guestRadio .radioHiddenSelect{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+#guestRadio .radioActions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-start;margin:12px 0}
+#guestRadio .radioActions button{border-radius:13px;background:linear-gradient(#e8c17d,#b98a47);color:#251629;font-weight:900;padding:10px 15px}
+#guestRadio .guestRadioTop label{display:block;margin:10px 0 5px;font-weight:800}#guestRadio #guestVolume{display:block;width:100%;max-width:none;accent-color:#e7b259}#guestRadioStatus{font-size:12px;line-height:1.7;margin-top:10px;color:#f4d8a8}
+@media(max-width:390px){#guestRadio .saraRadioChoices{gap:6px}#guestRadio .saraStationChoice{min-height:58px;padding:5px}#guestRadio .stationLabel{font-size:12px}}
