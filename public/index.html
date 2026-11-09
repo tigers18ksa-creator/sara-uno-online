@@ -239,4 +239,14 @@ if(mafia){const frame=document.getElementById('salonFrame');if(frame)frame.src='
 const lobby=document.getElementById('gamesMenu');
 if(lobby){lobby.hidden=false;lobby.style.removeProperty('display');lobby.style.removeProperty('z-index');lobby.style.removeProperty('pointer-events')}
 },{capture:true});
+})();</script><style id="saraRadioVolumeVisible20261109">
+#radioVolumeControlTop{display:flex;flex-direction:column;gap:8px;margin:10px 0 14px;padding:11px 14px;border:1px solid #d5a65b;border-radius:14px;background:#140f2380;box-shadow:inset 0 1px 4px #ffffff14}
+#radioVolumeControlTop label{display:flex;justify-content:space-between;align-items:center;font-weight:800;color:#ffe5ae}
+#radioVolumeControlTop #radioVolume{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;min-height:30px!important;margin:0!important;accent-color:#e9b969;touch-action:pan-x}
+#radioVolumeControlTop #radioVolumeText{font-weight:900;color:#fff}
+</style><script id="saraRadioVolumeTop20261109">(function(){
+function init(){const panel=document.getElementById('radioPanel'),slider=document.getElementById('radioVolume'),label=panel?.querySelector('label[for="radioVolume"]'),choices=document.getElementById('radioChoices');if(!panel||!slider||!label||!choices||document.getElementById('radioVolumeControlTop'))return;
+const wrap=document.createElement('div');wrap.id='radioVolumeControlTop';wrap.append(label,slider);choices.before(wrap);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();</script></body></html>
