@@ -1,16 +1,17 @@
 export function installSnakes(io){
  const ns=io.of('/snakes'), rooms=new Map();
  const clean=x=>String(x||'').trim().slice(0,22);
- const ladders={3:22,8:30,20:41,28:55,36:57,51:72,71:92,80:99};
- const snakes={17:7,34:12,48:26,62:19,64:60,79:43,87:54,93:73,98:78};
+ const ladders={3:22,8:30,14:35,20:41,27:50,36:57,42:63,51:72,61:82,71:92,80:99,86:97};
+ const snakes={17:7,34:12,48:26,64:45,79:43,87:54,93:73,98:78};
  const publish=()=>ns.emit('rooms',[...rooms.values()].map(r=>({id:r.id,count:r.players.length,status:r.status,viewers:r.viewers.size})));
  function send(r){ns.to(r.id).emit('state',{id:r.id,players:r.players.map(p=>({name:p.name,pos:p.pos,id:p.id})),turn:r.turn,status:r.status,last:r.last,winner:r.winner,viewers:r.viewers.size});publish()}
  ns.on('connection',s=>{
   s.on('list',publish);
   s.on('create',({name}={})=>{name=clean(name)||'لاعب';const id=Math.random().toString(36).slice(2,8).toUpperCase();const r={id,players:[{id:s.id,name,pos:0}],viewers:new Set(),turn:0,status:'waiting',last:null,winner:null};rooms.set(id,r);s.join(id);s.data.snakes={id,role:'player'};s.emit('joined',{id,playerId:s.id});send(r)});
-  s.on('join',({id,name,watch}={})=>{const r=rooms.get(String(id||'').toUpperCase());if(!r)return s.emit('errorMsg','الطاولة غير موجودة');if(!watch&&(r.status!=='waiting'||r.players.length>=4))return s.emit('errorMsg','الطاولة ممتلئة أو بدأت');s.join(r.id);s.data.snakes={id:r.id,role:watch?'viewer':'player'};if(watch)r.viewers.add(s.id);else r.players.push({id:s.id,name:clean(name)||'لاعب',pos:0});s.emit('joined',{id:r.id,playerId:s.id});send(r)});
+  s.on('join',({id,name,watch}={})=>{const r=rooms.get(String(id||'').toUpperCase());if(!r)return s.emit('errorMsg','الطاولة غير موجودة');if(!watch&&(r.status!=='waiting'||r.players.length>=2))return s.emit('errorMsg','الطاولة ممتلئة أو بدأت');s.join(r.id);s.data.snakes={id:r.id,role:watch?'viewer':'player'};if(watch)r.viewers.add(s.id);else r.players.push({id:s.id,name:clean(name)||'لاعب',pos:0});s.emit('joined',{id:r.id,playerId:s.id});send(r)});
+  s.on('computer',()=>{const r=rooms.get(s.data.snakes?.id);if(!r||r.players[0]?.id!==s.id||r.players.length!==1||r.status!=='waiting')return;r.players.push({id:'cpu',name:'الكمبيوتر',pos:0});r.status='playing';send(r)});
   s.on('start',()=>{const r=rooms.get(s.data.snakes?.id);if(!r||r.players[0]?.id!==s.id||r.players.length<2||r.status!=='waiting')return;r.status='playing';send(r)});
-  s.on('roll',()=>{const r=rooms.get(s.data.snakes?.id);if(!r||r.status!=='playing'||r.players[r.turn]?.id!==s.id)return;const p=r.players[r.turn],dice=1+Math.floor(Math.random()*6),from=p.pos;let landing=from+dice;if(landing>100)landing=from;const to=ladders[landing]||snakes[landing]||landing;p.pos=to;r.last={player:p.name,dice,from,landing,to,type:ladders[landing]?'ladder':snakes[landing]?'snake':'normal',at:Date.now()};if(to===100){r.status='finished';r.winner=p.name}else r.turn=(r.turn+1)%r.players.length;send(r)});
+  s.on('roll',()=>{const r=rooms.get(s.data.snakes?.id);if(!r||r.status!=='playing'||r.players[r.turn]?.id!==s.id)return;const p=r.players[r.turn],dice=1+Math.floor(Math.random()*6),from=p.pos;let landing=from+dice;if(landing>100)landing=from;const to=ladders[landing]||snakes[landing]||landing;p.pos=to;r.last={player:p.name,dice,from,landing,to,type:ladders[landing]?'ladder':snakes[landing]?'snake':'normal',at:Date.now()};if(to===100){r.status='finished';r.winner=p.name}else r.turn=(r.turn+1)%r.players.length;send(r);if(r.status==='playing'&&r.players[r.turn]?.id==='cpu'){setTimeout(()=>{if(r.status!=='playing'||r.players[r.turn]?.id!=='cpu')return;const cpu=r.players[r.turn],d=1+Math.floor(Math.random()*6),f=cpu.pos;let l=f+d;if(l>100)l=f;const dest=ladders[l]||snakes[l]||l;cpu.pos=dest;r.last={player:cpu.name,dice:d,from:f,landing:l,to:dest,type:ladders[l]?'ladder':snakes[l]?'snake':'normal',at:Date.now()};if(dest===100){r.status='finished';r.winner=cpu.name}else r.turn=0;send(r)},1400)}});
   s.on('disconnect',()=>{const r=rooms.get(s.data.snakes?.id);if(!r)return;r.viewers.delete(s.id);const idx=r.players.findIndex(p=>p.id===s.id);if(idx>=0){r.players.splice(idx,1);if(idx<r.turn)r.turn--;r.turn=Math.max(0,r.turn%Math.max(1,r.players.length));if(r.status==='playing'&&r.players.length<2)r.status='waiting'}if(!r.players.length)rooms.delete(r.id);else send(r);publish()});
  });
 }
