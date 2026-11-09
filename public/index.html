@@ -205,4 +205,18 @@ card.addEventListener('click',function(){menu.hidden=true;menu.style.removePrope
 const obs=new MutationObserver(function(){if(menu.hidden)menu.style.removeProperty('display')});obs.observe(menu,{attributes:true,attributeFilter:['hidden']});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();</script><script id="saraXoMafiaBackToLobby20261109">(function(){
+function init(){
+const lobby=document.getElementById('gamesMenu');if(!lobby)return;
+function back(e,overlayId,frameId){
+e.preventDefault();e.stopImmediatePropagation();
+const overlay=document.getElementById(overlayId);if(overlay){overlay.hidden=true;overlay.style.removeProperty('display');overlay.style.removeProperty('z-index')}
+if(frameId){const frame=document.getElementById(frameId);if(frame)frame.src='about:blank'}
+lobby.hidden=false;lobby.style.removeProperty('display');lobby.style.removeProperty('z-index');
+}
+const xo=document.getElementById('xoClose'),mafia=document.getElementById('salonClose');
+xo?.addEventListener('click',e=>back(e,'xoOverlay',null),true);
+mafia?.addEventListener('click',e=>back(e,'salonOverlay','salonFrame'),true);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();</script></body></html>
