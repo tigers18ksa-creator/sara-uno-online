@@ -152,4 +152,21 @@ body:has(#xoOverlay:not([hidden])),body:has(#c4Overlay:not([hidden])),body:has(#
 #c4Overlay .c4Modal{overflow-y:auto!important;overflow-x:hidden!important}
 #c4Overlay .c4Board{flex-shrink:0!important}
 #c4Overlay .saraC4Chat{z-index:3!important}
-</style><style id="saraC4RemoveDuplicateFloatingChat">#c4Overlay .saraGameChatToggle{display:none!important}</style></body></html>
+</style><style id="saraC4RemoveDuplicateFloatingChat">#c4Overlay .saraGameChatToggle{display:none!important}</style><style id="saraSettingsHighlight20261109">
+/* Keep the existing menu layout; accent only the settings row. */
+#councilMenu .settingsPanel>summary{
+ background:linear-gradient(115deg,#510522 0%,#790c35 47%,#4d0928 100%)!important;
+ color:#ffe3a5!important;
+ border:2px solid #f1b95f!important;
+ border-radius:15px!important;
+ padding:14px 15px!important;
+ font-weight:800!important;
+ text-shadow:0 1px 4px #0008!important;
+ box-shadow:inset 0 1px 0 #fff3,0 0 0 1px #a66b35aa,0 0 12px #ffbd5677,0 0 20px #a80e4770!important;
+ transition:box-shadow .2s ease,filter .2s ease!important;
+}
+#councilMenu .settingsPanel>summary:active,#councilMenu .settingsPanel[open]>summary{
+ box-shadow:inset 0 1px 0 #fff5,0 0 14px #ffc36c,0 0 24px #c9276c!important;
+ filter:brightness(1.08)!important;
+}
+</style></body></html>
