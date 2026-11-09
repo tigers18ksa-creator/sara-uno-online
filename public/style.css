@@ -390,3 +390,6 @@ body:has(#chat:not([hidden])) .layout{margin-top:2px!important}
 
 /* Quoted messages inherit the original sender's assigned account color. */
 .quotedReply{background:var(--reply-owner-color,#e9c88c)!important;border-right:5px solid var(--reply-owner-color,#e9c88c)!important;border-radius:11px!important;color:#111!important;font-weight:750!important;box-shadow:inset 0 1px 2px #ffffff77,0 2px 5px #0002!important;line-height:1.6!important;padding:9px 12px!important}
+
+/* Strong visual distinction for replies on both light and dark chat themes. */
+#messages .bubble .quotedReply{display:block!important;min-height:38px!important;background:var(--reply-owner-color,#e9c88c)!important;color:#101016!important;border:2px solid var(--reply-owner-color,#e9c88c)!important;border-right:6px solid #19101b!important;border-radius:12px!important;padding:10px 12px!important;margin:9px 0!important;font-size:13px!important;font-weight:850!important;opacity:1!important;filter:none!important;box-shadow:0 2px 8px #0003,inset 0 1px 0 #fff8!important}
