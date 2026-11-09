@@ -10,7 +10,7 @@ const stations={
 'UFM':{query:'UFM 95.5',link:'https://www.ufmradio.com/'},
 'Bahrain FM 93.3':{query:'Bahrain FM 93.3',link:'https://www.mia.gov.bh/bahrain-fm-93-3/'},
 'Iraqi Songs':{query:'SumerFm Iraq',link:'https://www.alsumaria.tv/SumerFm',direct:['https://l3.itworkscdn.net/itwaudio/9012/stream']},
-'Gulf Songs':{query:'Rotana FM',link:'https://rotanaradios.com/'},
+'Gulf Songs':{query:'Rotana FM',link:'https://rotanaradios.com/',direct:['/api/radio/rotana']},
 'Egyptian Songs':{query:'Nogoum FM Mix',link:'https://www.nogoumfm.net/',direct:['https://stream.zeno.fm/wvqgc9kb1d0uv']},
 'Arabic Hits':{query:'Nogoum FM Mix',link:'https://www.nogoumfm.net/',direct:['https://stream.zeno.fm/wvqgc9kb1d0uv']}
 };
