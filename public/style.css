@@ -387,3 +387,6 @@ body:has(#chat:not([hidden])) #menuToggle{flex:1.2 1 0!important}
 body:has(#chat:not([hidden])) #logout{flex:.8 1 0!important}
 body:has(#chat:not([hidden])) .layout{margin-top:2px!important}
 @media(max-width:380px){body:has(#chat:not([hidden])) main>header .headerControls{gap:3px!important}body:has(#chat:not([hidden])) main>header .headerControls>button:not([hidden]){font-size:10px!important;padding:6px 2px!important}body:has(#chat:not([hidden])) #onlineToggle{font-size:9px!important;padding:3px 5px!important}}
+
+/* Quoted messages inherit the original sender's assigned account color. */
+.quotedReply{background:var(--reply-owner-color,#e9c88c)!important;border-right:5px solid var(--reply-owner-color,#e9c88c)!important;border-radius:11px!important;color:#111!important;font-weight:750!important;box-shadow:inset 0 1px 2px #ffffff77,0 2px 5px #0002!important;line-height:1.6!important;padding:9px 12px!important}
