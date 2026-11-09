@@ -285,7 +285,183 @@ max-width:108px!important;
 flex-shrink:0!important;
 }
 @media(max-width:600px){#game .table .center .card,#game .table .center #deck,#game .table .center #discard{width:clamp(76px,20vw,95px)!important;height:clamp(116px,30vw,144px)!important;max-width:95px!important}}
-</style></head><body><div id="saraUnoLoading" role="status" aria-live="polite"><div class="saraLoadingCrown">♛</div><div class="saraLoadingName">مجلس سارة</div><div class="saraLoadingSpinner"></div><div class="saraLoadingText">جاري تجهيز لعبة الأونو…</div></div><script>(()=>{const el=document.getElementById('saraUnoLoading');let closed=false;const close=()=>{if(closed)return;closed=true;el.classList.add('done');setTimeout(()=>el.remove(),420)};window.addEventListener('load',()=>setTimeout(close,250),{once:true});setTimeout(close,8500)})();</script><div class="top"><a href="/guest.html" style="color:#f2d38b">⌂ البداية</a><div class="brand">♛ SARA ♛</div><div class="saraTopControls"><button id="sound">🔊 الصوت شغال</button><button type="button" id="saraRadioToggle" hidden>📻 الراديو</button></div></div><div style="text-align:center" class="logo">UNO</div><section id="login" class="modal" hidden><h2>🎟️ دخول لعبة UNO</h2><div id="unoGuestAvatarWrap" style="text-align:center;margin:14px auto"><img id="unoGuestAvatar" alt="صورتك الشخصية" style="width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #e8c17d;display:none;margin:auto"><div id="unoGuestAvatarFallback" style="font-size:52px">👤</div><small style="display:block;color:#dfc59a;margin-top:7px">صورتك الشخصية</small></div><input id="name" placeholder="اسم اللاعب" maxlength="24"><input id="secret" type="hidden" value="guest"><button id="enter">دخول للطاولة</button><p class="hint">الدخول باسم المستخدم فقط، بدون رمز أو كلمة مرور</p><p id="error"></p></section><section id="lobby" class="modal"><h2>اختر عدد اللاعبين</h2><button id="two">👥 لاعبان</button><button id="unoBot">🤖 اللعب مع الكمبيوتر</button><button id="three">👥 ثلاثة لاعبين</button><button id="four">👑 أربعة لاعبين</button><button id="teams">🤝 فريق 2 ضد 2</button><button id="watchTwo">👁️ مشاهدة طاولة لاعبين</button><button id="watchThree">👁️ مشاهدة طاولة 3 لاعبين</button><button id="watchFour">👁️ مشاهدة طاولة 4 لاعبين</button><p class="hint">تبدأ الجولة تلقائيًا عند اكتمال اللاعبين</p></section><section id="game" hidden><button class="unoSideToggle" id="unoSideToggle" type="button">💬 الشات والتفاعل</button><aside class="unoSide" id="unoSide"><h3>💬 دردشة الطاولة وردود الفعل <button type="button" id="unoChatClose" style="float:left;padding:3px 9px;font-size:15px" aria-label="إغلاق الشات">✕</button></h3><div class="unoMessages" id="unoMessages" aria-live="polite"></div><div class="unoReactions" id="unoReactions"></div><form class="unoCompose" id="unoChatForm"><input id="unoChatInput" maxlength="280" placeholder="اكتب رسالتك..." aria-label="رسالة الطاولة"><button type="submit">➤</button></form></aside><div id="viewers" class="status" style="font-size:14px">👁️ المشاهدون: 0</div><div class="table"><div class="players" id="players"></div><div class="status" id="status"></div><div class="center"><div class="card back" id="deck"><span>UNO</span></div><div class="card red" id="discard"><span>7</span></div></div><div id="colorName" class="status"></div><div id="log" class="hint"></div></div><div class="controls"><button id="draw" aria-label="سحب ورقة" title="سحب ورقة"><span class="unoDrawStack" aria-hidden="true"><i>UNO</i><i>UNO</i><i>UNO</i><i>UNO</i></span></button><button id="uno" style="background:linear-gradient(#e52226,#78040d);font-size:22px;font-weight:bold">🔔 UNO!</button><button id="leave">مغادرة الطاولة</button></div><div class="hand" id="hand"></div></section><div id="unoTeamsSetup" class="overlay" hidden><div class="modal" style="max-width:450px;width:92%;text-align:center;border:2px solid #e6b954"><h2>👥 توزيع الفرق</h2><p id="unoTeamsHelp"></p><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0"><button data-team-slot="0"></button><button data-team-slot="1"></button><button data-team-slot="2"></button><button data-team-slot="3"></button></div><p style="font-size:12px;color:#e5c887">الفريق A: الخانتان الحمراوان — الفريق B: الخانتان الزرقاوان</p><button id="unoTeamsConfirm">✔ تأكيد الفرق وبدء اللعب</button></div></div><div id="pick" class="overlay" hidden><div class="modal"><h2>اختر اللون</h2><div class="colorPicker"><button style="background:#e42327" data-color="red"></button><button style="background:#0875d9" data-color="blue"></button><button style="background:#139a51" data-color="green"></button><button style="background:#e5ae08" data-color="yellow"></button></div><button id="cancel">إلغاء</button></div></div><div id="win" class="overlay" hidden><div><div class="winner" id="winnerText"></div><div style="text-align:center;margin:25px"><button id="closeWin">🎉 إغلاق الاحتفال</button></div></div></div><script src="/socket.io/socket.io.js"></script><script src="/uno.js?v=20261109drawfourflight1"></script><style>
+</style></head><body><style id="guestLobbyStyles"></style><style>.saraGamesList{display:grid;grid-template-columns:1fr;gap:10px;padding:14px;max-height:min(65vh,610px);overflow-y:auto;overscroll-behavior:contain}
+.saraGameCard{width:100%;min-height:84px;display:flex;align-items:center;gap:13px;text-align:right;border:1px solid rgba(225,182,106,.5);border-radius:16px;padding:8px 10px;background:linear-gradient(110deg,#2d1827,#1b1521);color:#ffe5b2;box-shadow:0 4px 13px #0004;cursor:pointer}
+.saraGameCard:active{transform:scale(.985)}
+.saraGamePic{position:relative;display:grid;place-items:center;width:95px;min-width:95px;height:68px;border-radius:11px;overflow:hidden;box-shadow:inset 0 0 0 1px #ffffff33,0 2px 10px #0007}
+.saraGameSymbol{font-size:44px;filter:drop-shadow(2px 4px 2px #0008);z-index:1}
+.saraGameShine{position:absolute;width:140%;height:40%;top:-20%;transform:rotate(-18deg);background:#ffffff25;filter:blur(10px)}
+.saraGameWords{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px}
+.saraGameWords strong{font-size:19px;font-weight:800}
+.saraGameWords small{font-size:12px;color:#d8bca5}
+.saraGameArrow{font-size:31px;color:#e9bb6d}
+.saraGamesList{grid-template-columns:1fr 1fr;max-height:65vh}
+.saraGameCard{min-height:95px}
+.saraGamePic{width:75px;min-width:75px}
+.saraGameWords strong{font-size:17px}
+</style><style id="saraFixedGameFrames">#salonOverlay,#unoOverlay,#xoOverlay,#c4Overlay{position:fixed!important;inset:0!important;overscroll-behavior:contain!important;align-items:center!important;justify-content:center!important}
+#salonOverlay .c4Modal,#unoOverlay .c4Modal,#xoOverlay .c4Modal,#c4Overlay .c4Modal{position:relative!important;top:auto!important;bottom:auto!important;transform:none!important;max-height:calc(100dvh - 12px)!important;height:min(94dvh,920px)!important;overflow:hidden!important;overscroll-behavior:contain!important}
+#salonOverlay .c4Head,#unoOverlay .c4Head,#xoOverlay .c4Head,#c4Overlay .c4Head{flex-shrink:0!important}
+#salonOverlay .c4Modal,#unoOverlay .c4Modal,#xoOverlay .c4Modal,#c4Overlay .c4Modal{width:100vw!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;margin:0!important}
+</style><style>.saraGameCard.saraGameSoon{opacity:.65;cursor:not-allowed;filter:saturate(.6);position:relative}
+.saraGameCard.saraGameSoon:active{transform:none}
+.saraGameSoon .saraGameWords small{color:#e1c8b0}
+</style><style id="saraUnoCardsArt">.saraUnoDeck{position:relative;display:block;width:90px;height:66px;transform:translateY(3px)}
+.saraUnoDeck .unoCard{position:absolute;bottom:2px;left:30px;width:38px;height:57px;border:3px solid #fff;border-radius:5px;box-shadow:1px 3px 5px #0009;display:grid;place-items:center;color:white;font:900 25px Arial,sans-serif;text-shadow:1px 1px 2px #0007;font-style:normal}
+.saraUnoDeck .unoBlack{background:#111;transform:rotate(24deg) translateX(10px);width:40px}
+.saraUnoDeck{transform:scale(.78);transform-origin:center}
+</style><style id="saraLiveLobbyStyle">.saraLobbyStats{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px 0}
+.saraLobbyStats span{background:#262338;color:#f6d49a;border:1px solid #66523b;border-radius:12px;padding:8px 11px;font-size:12px;font-weight:800}
+.saraLiveTabs{display:flex;gap:7px;padding:10px 14px 0}
+.saraLiveTabs button{flex:1;border:1px solid #705b45;border-radius:10px;padding:9px 5px;background:#211d2b;color:#f5ddb4;font-size:12px;font-weight:700}
+.saraLiveTabs button.active{background:#76502c;color:white}
+.saraLiveIndicator{display:inline-flex;align-items:center;gap:5px;color:#8af0ad;font-weight:800}
+.saraLiveIndicator:before{content:"";height:7px;width:7px;background:#44e18a;border-radius:50%;box-shadow:0 0 0 0 #44e18a99;animation:saraPulse 1.7s infinite}
+.saraLiveGameMeta{display:block;font-size:12px;color:#e6d1a9}
+.saraGameCard.saraLobbyHidden{display:none!important}
+.saraGameCard.saraHasPlayers{border-color:#55d89a;box-shadow:0 0 14px #39c78638}
+.saraLobbyNote{font-size:11px;color:#c6b8ac;padding:0 14px 12px}
+</style><style id="saraC4MobileNoOverlap20261108">
+/* Keep all six rows and action buttons in separate normal-flow areas on iOS/Android. */
+#c4Overlay{overflow-y:auto!important;overscroll-behavior:contain!important;align-items:safe center!important;padding:8px!important}
+
+#c4Overlay .c4Modal{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:clamp(3px,.8dvh,8px)!important;min-height:0!important;height:auto!important;max-height:calc(100dvh - 16px)!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;padding:clamp(7px,2vw,15px)!important}
+
+#c4Overlay .c4Head,#c4Overlay .c4Players,#c4Overlay #c4Viewers,#c4Overlay #c4Status,#c4Overlay #c4Sound,#c4Overlay .c4Actions{position:relative!important;inset:auto!important;transform:none!important;flex-shrink:0!important;margin-block:0!important}
+
+#c4Overlay .c4Board{position:relative!important;inset:auto!important;transform:none!important;flex:0 0 auto!important;width:min(100%,min(64dvh,480px))!important;max-width:100%!important;aspect-ratio:7/6!important;margin:5px auto!important;gap:clamp(2px,.7vw,6px)!important;padding:clamp(4px,1vw,9px)!important;overflow:visible!important}
+
+#c4Overlay .c4Slot{min-height:0!important;aspect-ratio:1!important}
+
+#c4Overlay .c4Actions{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:center!important;gap:6px!important;padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px))!important;z-index:1!important}
+
+#c4Overlay .c4Actions button{position:static!important;flex:0 1 auto!important;min-width:0!important;padding:8px 10px!important;font-size:clamp(12px,3.2vw,15px)!important;line-height:1.3!important}
+
+#c4Overlay #c4Sound{align-self:center!important;padding:7px 12px!important}
+
+#c4Overlay{align-items:flex-start!important;padding:0!important}
+
+#c4Overlay .c4Modal{width:100%!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important}
+
+#c4Overlay .c4Board{width:min(100%,min(56dvh,460px))!important}
+
+#c4Overlay .c4Head h2{font-size:clamp(16px,4vw,22px)!important}
+
+#c4Overlay .c4Players{gap:6px!important}
+
+#c4Overlay .saraPlayerTag{padding:5px 8px!important;font-size:clamp(11px,3vw,14px)!important}
+
+#c4Overlay .c4Status{padding:3px!important;font-size:clamp(12px,3.2vw,15px)!important}
+
+#c4Overlay .c4Modal{height:100dvh!important;max-height:100dvh!important}
+
+#c4Overlay .c4Board{width:min(100%,min(68dvh,420px))!important}
+
+#c4Overlay .c4Actions{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))!important}
+#salonOverlay.poolFullscreen .c4Modal{position:absolute!important;inset:0!important;width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#salonOverlay.poolFullscreen .c4Head{display:none!important}
+#salonOverlay.poolFullscreen .c4Modal{width:100dvh!important;height:100vw!important;inset:auto!important;left:100vw!important;top:0!important;transform-origin:top left!important;transform:rotate(90deg)!important}
+
+</style><style id="saraC4BoardRestore">
+/* Keep the seven-by-six board proportional and prevent chat/actions from squeezing the cells. */
+#c4Overlay .c4Modal{display:flex!important;flex-direction:column!important;overflow-y:auto!important;overflow-x:hidden!important;justify-content:flex-start!important;align-items:center!important;gap:8px!important;padding-bottom:20px!important;scrollbar-width:thin}
+
+#c4Overlay .c4Board{flex:0 0 auto!important;align-self:center!important;width:min(calc(100% - 12px),680px)!important;height:auto!important;aspect-ratio:7 / 6!important;max-height:none!important;min-height:0!important;display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important;overflow:hidden!important}
+
+#c4Overlay .c4Board>button,#c4Overlay .c4Board>.c4Cell{min-width:0!important;min-height:0!important;aspect-ratio:1 / 1!important}
+
+#c4Overlay .c4Players{flex:0 0 auto!important;min-height:62px!important}
+
+#c4Overlay .c4Status,#c4Overlay .gameViewerList,#c4Overlay .c4Actions,#c4Overlay #saraC4Chat{flex-shrink:0!important}
+
+#c4Overlay #saraC4Chat{margin:5px auto!important;max-width:390px!important}
+
+#c4Overlay .c4Actions{padding-bottom:12px!important}
+#c4Overlay .c4Modal{height:100dvh!important;max-height:100dvh!important;padding:12px 12px 24px!important;gap:7px!important}
+#c4Overlay .c4Board{width:min(calc(100vw - 26px),680px)!important;height:auto!important;aspect-ratio:7 / 6!important;max-height:none!important}
+#c4Overlay .c4Board>button,#c4Overlay .c4Board>.c4Cell{aspect-ratio:1 / 1!important}
+const card=document.getElementById(ids[game]);if(!card)continue;const st=state[game],p=Array.isArray(st?.players)?st.players.length:0,v=viewers[game];players+=p;if(Number.isFinite(v))watch+=v;let meta=card.querySelector('.saraLiveGameMeta');if(!meta){meta=document.createElement('span');meta.className='saraLiveGameMeta';card.querySelector('.saraGameWords')?.appendChild(meta)}
+meta.textContent=st?(p>0?'🟢 '+p+' / 2 لاعبين':'بانتظار اللاعبين')+(Number.isFinite(v)?' · 👁 '+v+' يشاهدون':''): 'جاري تحديث الطاولة…';card.classList.toggle('saraHasPlayers',p>0);let dot=card.querySelector('.saraLiveIndicator');if(p>0&&!dot){dot=document.createElement('span');dot.className='saraLiveIndicator';dot.textContent='مباشر';card.querySelector('.saraGameWords')?.appendChild(dot)}
+document.getElementById('saraLobbyPlayers').textContent='اللاعبون الآن: '+(state.xo&&state.c4?players:'—');document.getElementById('saraLobbyViewers').textContent='المشاهدون: '+(viewers.xo!==null&&viewers.c4!==null?watch:'—');cards.forEach(card=>{const soon=card.classList.contains('saraGameSoon');const active=card.classList.contains('saraHasPlayers');card.classList.toggle('saraLobbyHidden',filter==='soon'?!soon:filter==='live'?!active:false)}
+menu.querySelectorAll('#saraLiveTabs button').forEach(btn=>btn.addEventListener('click',()=>{filter=btn.dataset.filter;menu.querySelectorAll('#saraLiveTabs button').forEach(b=>b.classList.toggle('active',b===btn));render()}
+)();
+</script><style id="saraGamesMenuVisibilityFix">#gamesMenu[hidden]{display:none!important}
+const overlay=document.getElementById(card==='gamesC4'?'c4Overlay':'xoOverlay');if(overlay){overlay.hidden=false;overlay.style.setProperty('display','flex','important');overlay.style.setProperty('z-index','99995','important')}
+)();</script><style id="saraGameExitRepair">#xoOverlay #xoClose,#c4Overlay #c4Close{position:relative!important;z-index:2147483000!important;pointer-events:auto!important;touch-action:manipulation!important;min-width:44px!important;min-height:44px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important}
+#xoOverlay .c4Head,#c4Overlay .c4Head{position:relative!important;z-index:100!important}
+)();</script><style id="saraFixedAllGameTables2026">
+html:has(#xoOverlay:not([hidden])),html:has(#c4Overlay:not([hidden])),html:has(#unoOverlay:not([hidden])),html:has(#salonOverlay:not([hidden])){overflow:hidden!important}
+
+body:has(#xoOverlay:not([hidden])),body:has(#c4Overlay:not([hidden])),body:has(#unoOverlay:not([hidden])),body:has(#salonOverlay:not([hidden])){overflow:hidden!important;height:100dvh!important}
+
+#xoOverlay:not([hidden]),#c4Overlay:not([hidden]),#unoOverlay:not([hidden]),#salonOverlay:not([hidden]){overscroll-behavior:none!important}
+
+#xoOverlay .c4Modal,#c4Overlay .c4Modal{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:clamp(2px,.5dvh,7px)!important;overflow:hidden!important;overscroll-behavior:none!important;height:100dvh!important;max-height:100dvh!important;padding:clamp(5px,1dvh,12px)!important}
+
+#xoOverlay .c4Modal>*,#c4Overlay .c4Modal>*{flex-shrink:0}
+
+#xoOverlay .c4Head,#c4Overlay .c4Head{min-height:38px!important;flex-shrink:0!important}
+
+#xoOverlay .c4Head h2,#c4Overlay .c4Head h2{font-size:clamp(14px,2.2dvh,21px)!important;margin:0!important}
+
+#c4Overlay .c4Board{width:min(96vw,52dvh,480px)!important;max-height:43dvh!important;margin:2px auto!important;flex-shrink:1!important;min-height:0!important}
+
+#xoOverlay .xoPlayers,#c4Overlay .c4Players,#xoOverlay .xoStatus,#c4Overlay .c4Status{margin-block:0!important;padding-block:2px!important}
+
+#xoOverlay .xoActions,#c4Overlay .c4Actions{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:5px!important;margin:2px 0!important}
+
+#xoOverlay .xoActions button,#c4Overlay .c4Actions button{padding:5px 9px!important;min-height:32px!important}
+
+#xoOverlay .saraGameChatPanel,#c4Overlay .saraGameChatPanel{max-height:min(35dvh,270px)!important;overscroll-behavior:contain!important}
+
+#xoOverlay .saraGameAudioBar,#c4Overlay .saraGameAudioBar{flex-shrink:0!important}
+
+#unoOverlay .c4Modal,#salonOverlay .c4Modal{height:100dvh!important;max-height:100dvh!important;overflow:hidden!important}
+#c4Overlay .c4Board{width:min(88vw,42dvh)!important}
+#xoOverlay .c4Modal,#c4Overlay .c4Modal{gap:1px!important}
+#c4Overlay .c4Modal>p{display:none!important}
+
+</style><style id="saraProminentPlayers">
+#xoOverlay .xoPlayers,#c4Overlay .c4Players{display:flex!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:center!important;gap:clamp(5px,1.8vw,12px)!important;width:100%!important;margin:4px auto!important;flex-shrink:0!important}
+
+#xoOverlay .xoPlayers>div,#c4Overlay .c4Players>.saraPlayerTag{display:flex!important;align-items:center!important;justify-content:center!important;gap:clamp(4px,1vw,9px)!important;flex:1 1 0!important;min-width:0!important;max-width:48%!important;min-height:54px!important;padding:5px 8px!important;border:2px solid #d9ad59!important;border-radius:14px!important;background:linear-gradient(135deg,#37243d,#151224)!important;box-shadow:0 3px 12px #0006!important;color:#ffe9ac!important;font-size:clamp(12px,3.3vw,17px)!important;font-weight:900!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+
+#xoOverlay .xoPlayers img,#c4Overlay .c4Players img{width:clamp(34px,5dvh,47px)!important;height:clamp(34px,5dvh,47px)!important;object-fit:cover!important;border:2px solid #f6cf79!important;border-radius:50%!important;flex-shrink:0!important;box-shadow:0 0 9px #e6b85b88!important}
+
+#xoOverlay .xoPlayers .turnX>div:first-child,#xoOverlay .xoPlayers.turnX>div:first-child,#xoOverlay .xoPlayers.turnO>div:last-child,#c4Overlay .c4Players .activeTurn{border-color:#ffe37d!important;box-shadow:0 0 0 2px #ffd15e66,0 0 16px #eebf57aa!important}
+#xoOverlay .xoPlayers>div,#c4Overlay .c4Players>.saraPlayerTag{min-height:42px!important;padding:2px 5px!important}
+#xoOverlay .xoPlayers img,#c4Overlay .c4Players img{width:32px!important;height:32px!important}
+)();</script><style id="saraC4ReferenceBlueBoard">
+/* Restore the reference screenshot's full-width royal-blue 7x6 Connect Four board. */
+#c4Overlay .c4Board{width:min(calc(100vw - 24px),680px)!important;max-width:100%!important;max-height:none!important;min-height:0!important;height:auto!important;aspect-ratio:7 / 6!important;flex:0 0 auto!important;align-self:center!important;margin:12px auto!important;padding:7px!important;gap:5px!important;border:6px solid #64b9ff!important;border-radius:20px!important;background:linear-gradient(145deg,#1178ee,#0751b8 65%,#093c9c)!important;box-shadow:inset 0 0 0 3px #227bdf,0 0 13px #399dff88!important;display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important}
+
+#c4Overlay .c4Board>.c4Slot,#c4Overlay .c4Board>.c4Cell,#c4Overlay .c4Board>button{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:1!important;border-radius:50%!important}
+
+#c4Overlay .c4Modal{overflow-y:auto!important;overflow-x:hidden!important}
+
+#c4Overlay .c4Board{flex-shrink:0!important}
+
+#c4Overlay .saraC4Chat{z-index:3!important}
+
+</style><style id="saraC4RemoveDuplicateFloatingChat">#c4Overlay .saraGameChatToggle{display:none!important}
+
+#unoOverlay .c4Head{position:relative!important;z-index:100!important;flex-shrink:0!important}
+)();</script><style id="saraOverlayHiddenPriorityRepair20261109">
+/* Hidden overlays must never intercept taps, even after older inline display overrides. */
+#gamesMenu[hidden],#gameChooser[hidden],#unoOverlay[hidden],#xoOverlay[hidden],#c4Overlay[hidden],#salonOverlay[hidden]{display:none!important;pointer-events:none!important;visibility:hidden!important}
+
+#gamesMenu .c4Head{position:relative!important;z-index:3!important}
+#gamesSnakes .saraLiveIndicator{display:inline-flex;background:#087a39;color:white;border-radius:18px;padding:3px 11px;font-weight:900;animation:snakePulse 1.8s infinite}
+else label?.remove();let info=card.querySelector('.saraLiveGameMeta');if(!info){info=document.createElement('span');info.className='saraLiveGameMeta';card.querySelector('.saraGameWords')?.append(info)}
+#guestGamesMenu{position:fixed!important;inset:0!important;z-index:99999!important;display:flex!important;justify-content:center;align-items:center;background:#100914e8;padding:12px;overflow:auto}
+#guestGamesMenu[hidden]{display:none!important}
+#guestGamesMenu .c4Modal{width:min(96vw,650px);max-height:95vh;overflow-y:auto;background:linear-gradient(160deg,#352038,#170e20);border:2px solid #cba45b;border-radius:22px;padding:16px;color:#f9e6bb}
+#guestGamesMenu .saraGamesList{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px}
+#guestGamesMenu .saraGameCard{min-height:84px}
+#guestGamesMenu .saraLiveTabs{display:flex;gap:7px;margin:12px 0;flex-wrap:wrap}
+#guestGamesMenu .saraLiveTabs button.active{background:#bd9750;color:#1b1020}
+#guestGamesMenu .saraLobbyHidden{display:none!important}
+</style><div id="guestGamesMenu" class="c4Overlay"><section class="c4Modal" role="dialog" aria-modal="true"><div class="c4Head"><button id="guestGamesClose" type="button">✕</button><h2>🎮 ألعاب مجلس سارة</h2><span>♛</span></div><div class="saraLobbyStats" id="saraLobbyStats"><span>🎮 صالة الألعاب</span><span id="saraLobbyPlayers">اللاعبون الآن: —</span><span id="saraLobbyViewers">المشاهدون: —</span></div><div class="saraLiveTabs" id="saraLiveTabs"><button type="button" class="active" data-filter="all">كل الألعاب</button><button type="button" data-filter="live">طاولات مباشرة</button><button type="button" data-filter="soon">قريبًا</button></div><div class="saraGamesList"><button id="gamesUNO" type="button" class="saraGameCard" ><span class="saraGamePic" style="background:linear-gradient(140deg,#e53935,#f4a82e)"><span class="saraUnoDeck" aria-label="ورق أونو الملون"><i class="unoCard unoYellow">1</i><i class="unoCard unoBlue">7</i><i class="unoCard unoGreen">2</i><i class="unoCard unoRed">5</i><i class="unoCard unoBlack"><b>UNO</b></i></span></span><span class="saraGameWords"><strong>أونو</strong><small>ورق ملون وتحدي الأصدقاء</small></span><span class="saraReadyTag">متاحة الآن</span></button><button id="gamesC4" type="button" class="saraGameCard" ><span class="saraGamePic" style="background:linear-gradient(140deg,#1268a5,#213a73)"><span class="saraGameSymbol">🔴</span><span class="saraGameShine"></span></span><span class="saraGameWords"><strong>أربعة صف</strong><small>وصّل أربع قطع للفوز</small></span><span class="saraReadyTag">متاحة الآن</span></button><button id="gamesXO" type="button" class="saraGameCard" ><span class="saraGamePic" style="background:linear-gradient(140deg,#4d4db0,#b23b8a)"><span class="saraGameSymbol">❌</span><span class="saraGameShine"></span></span><span class="saraGameWords"><strong>إكس أو</strong><small>تحدي الذكاء السريع</small></span><span class="saraReadyTag">متاحة الآن</span></button><button class="saraGameCard" id="gamesMafia" type="button"><span class="saraGamePic" style="background:linear-gradient(140deg,#6b1329,#130b15)"><span class="saraGameSymbol">🎭</span><span class="saraGameShine"></span></span><span class="saraGameWords"><strong>المافيا</strong><small>4–12 لاعب • أدوار سرية وتصويت</small></span><span class="saraReadyTag">متاحة الآن</span></button><button class="saraGameCard" id="gamesSnakes" type="button" onclick="window.location.href='/snakes.html'"><span class="saraGamePic" style="background:linear-gradient(140deg,#6c287a,#2b1738)"><span class="saraGameSymbol">🐍</span><span class="saraGameShine"></span></span><span class="saraGameWords"><strong>السلم والثعبان الملكية</strong><small>2–4 لاعبين • طاولات متعددة • مشاهدة مباشرة</small></span><span class="saraReadyTag">متاحة الآن</span></button><button class="saraGameCard saraGameSoon" data-salon="domino" type="button" disabled aria-disabled="true" title="SOON — اللعبة قيد التطوير"><span class="saraGamePic" style="background:linear-gradient(140deg,#5e3422,#1b1114)"><span class="saraGameSymbol saraRealDomino" aria-label="حجر دومينو أبيض بنقاط سوداء"><svg viewBox="0 0 92 66" width="83" height="60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ivoryDom" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffef5"/><stop offset=".55" stop-color="#eee6d3"/><stop offset="1" stop-color="#bcb5a5"/></linearGradient></defs><g transform="translate(46 33) rotate(-16) translate(-38 -22)"><rect x="3" y="5" width="78" height="44" rx="6" fill="#16120e" opacity=".6"/><rect x="0" y="0" width="78" height="44" rx="5" fill="url(#ivoryDom)" stroke="#8c8070" stroke-width="2"/><path d="M39 3V41" stroke="#7c7064" stroke-width="2"/><g fill="#171717"><circle cx="12" cy="12" r="4"/><circle cx="27" cy="31" r="4"/><circle cx="50" cy="11" r="4"/><circle cx="67" cy="11" r="4"/><circle cx="58" cy="22" r="4"/><circle cx="50" cy="33" r="4"/><circle cx="67" cy="33" r="4"/></g><path d="M5 5H73" stroke="#fff" opacity=".8" stroke-width="2"/></g></svg></span><span class="saraGameShine"></span></span><span class="saraGameWords"><strong>دومينو</strong><small>أحجار وتحديات جماعية</small></span><span class="saraSoonTag">SOON</span></button><button class="saraGameCard saraGameSoon" data-game="monopoly" type="button" disabled aria-disabled="true" title="SOON — مونوبولي قيد التطوير"><span class="saraGamePic" style="background:linear-gradient(140deg,#87192a,#190d16)"><span class="saraGameSymbol">🎩🎲</span><span class="saraGameShine"></span></span><span class="saraGameWords"><strong>مونوبولي</strong><small>4 لاعبين فقط • مشاهدون • عقارات وتجارة</small></span><span class="saraSoonTag">SOON</span></button></div><div class="saraLobbyNote">● المؤشرات تعرض اللاعبين الحقيقيين فقط. المشاهدة لا تكشف أوراق اللاعبين.</div></section></div><script>(()=>{const panel=document.getElementById('guestGamesMenu');if(!panel)return;const guest=location.hash.includes('ticket=guest');if(!guest){panel.hidden=true;return}const urls={gamesUNO:null,gamesC4:'/connect4.html',gamesXO:'/xo.html',gamesMafia:'/mafia.html',gamesSnakes:'/snakes.html'};panel.querySelector('#guestGamesClose')?.addEventListener('click',()=>panel.hidden=true);for(const [id,url] of Object.entries(urls)){const el=panel.querySelector('#'+id);if(!el)continue;el.onclick=()=>{if(url){location.href=url+location.hash}else panel.hidden=true}}const tabs=panel.querySelectorAll('#saraLiveTabs button');tabs.forEach(b=>b.onclick=()=>{tabs.forEach(t=>t.classList.toggle('active',t===b));panel.querySelectorAll('.saraGameCard').forEach(c=>{const soon=c.classList.contains('saraGameSoon');c.classList.toggle('saraLobbyHidden',b.dataset.filter==='soon'?!soon:b.dataset.filter==='live'?true:false)})});const s=window.io?.({transports:['websocket','polling']});if(s){s.on('connect',()=>s.emit('list'));s.on('rooms',rooms=>{if(!Array.isArray(rooms))return;const active=rooms.filter(r=>r&&r.status!=='finished');panel.querySelector('#saraLobbyPlayers').textContent='اللاعبون الآن: '+active.reduce((n,r)=>n+(r.players?.length||0),0);panel.querySelector('#saraLobbyViewers').textContent='الطاولات النشطة: '+active.length;})}})();</script><div id="saraUnoLoading" role="status" aria-live="polite"><div class="saraLoadingCrown">♛</div><div class="saraLoadingName">مجلس سارة</div><div class="saraLoadingSpinner"></div><div class="saraLoadingText">جاري تجهيز لعبة الأونو…</div></div><script>(()=>{const el=document.getElementById('saraUnoLoading');let closed=false;const close=()=>{if(closed)return;closed=true;el.classList.add('done');setTimeout(()=>el.remove(),420)};window.addEventListener('load',()=>setTimeout(close,250),{once:true});setTimeout(close,8500)})();</script><div class="top"><a href="/guest.html" style="color:#f2d38b">⌂ البداية</a><div class="brand">♛ SARA ♛</div><div class="saraTopControls"><button id="sound">🔊 الصوت شغال</button><button type="button" id="saraRadioToggle" hidden>📻 الراديو</button></div></div><div style="text-align:center" class="logo">UNO</div><section id="login" class="modal" hidden><h2>🎟️ دخول لعبة UNO</h2><div id="unoGuestAvatarWrap" style="text-align:center;margin:14px auto"><img id="unoGuestAvatar" alt="صورتك الشخصية" style="width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #e8c17d;display:none;margin:auto"><div id="unoGuestAvatarFallback" style="font-size:52px">👤</div><small style="display:block;color:#dfc59a;margin-top:7px">صورتك الشخصية</small></div><input id="name" placeholder="اسم اللاعب" maxlength="24"><input id="secret" type="hidden" value="guest"><button id="enter">دخول للطاولة</button><p class="hint">الدخول باسم المستخدم فقط، بدون رمز أو كلمة مرور</p><p id="error"></p></section><section id="lobby" class="modal"><h2>اختر عدد اللاعبين</h2><button id="two">👥 لاعبان</button><button id="unoBot">🤖 اللعب مع الكمبيوتر</button><button id="three">👥 ثلاثة لاعبين</button><button id="four">👑 أربعة لاعبين</button><button id="teams">🤝 فريق 2 ضد 2</button><button id="watchTwo">👁️ مشاهدة طاولة لاعبين</button><button id="watchThree">👁️ مشاهدة طاولة 3 لاعبين</button><button id="watchFour">👁️ مشاهدة طاولة 4 لاعبين</button><p class="hint">تبدأ الجولة تلقائيًا عند اكتمال اللاعبين</p></section><section id="game" hidden><button class="unoSideToggle" id="unoSideToggle" type="button">💬 الشات والتفاعل</button><aside class="unoSide" id="unoSide"><h3>💬 دردشة الطاولة وردود الفعل <button type="button" id="unoChatClose" style="float:left;padding:3px 9px;font-size:15px" aria-label="إغلاق الشات">✕</button></h3><div class="unoMessages" id="unoMessages" aria-live="polite"></div><div class="unoReactions" id="unoReactions"></div><form class="unoCompose" id="unoChatForm"><input id="unoChatInput" maxlength="280" placeholder="اكتب رسالتك..." aria-label="رسالة الطاولة"><button type="submit">➤</button></form></aside><div id="viewers" class="status" style="font-size:14px">👁️ المشاهدون: 0</div><div class="table"><div class="players" id="players"></div><div class="status" id="status"></div><div class="center"><div class="card back" id="deck"><span>UNO</span></div><div class="card red" id="discard"><span>7</span></div></div><div id="colorName" class="status"></div><div id="log" class="hint"></div></div><div class="controls"><button id="draw" aria-label="سحب ورقة" title="سحب ورقة"><span class="unoDrawStack" aria-hidden="true"><i>UNO</i><i>UNO</i><i>UNO</i><i>UNO</i></span></button><button id="uno" style="background:linear-gradient(#e52226,#78040d);font-size:22px;font-weight:bold">🔔 UNO!</button><button id="leave">مغادرة الطاولة</button></div><div class="hand" id="hand"></div></section><div id="unoTeamsSetup" class="overlay" hidden><div class="modal" style="max-width:450px;width:92%;text-align:center;border:2px solid #e6b954"><h2>👥 توزيع الفرق</h2><p id="unoTeamsHelp"></p><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0"><button data-team-slot="0"></button><button data-team-slot="1"></button><button data-team-slot="2"></button><button data-team-slot="3"></button></div><p style="font-size:12px;color:#e5c887">الفريق A: الخانتان الحمراوان — الفريق B: الخانتان الزرقاوان</p><button id="unoTeamsConfirm">✔ تأكيد الفرق وبدء اللعب</button></div></div><div id="pick" class="overlay" hidden><div class="modal"><h2>اختر اللون</h2><div class="colorPicker"><button style="background:#e42327" data-color="red"></button><button style="background:#0875d9" data-color="blue"></button><button style="background:#139a51" data-color="green"></button><button style="background:#e5ae08" data-color="yellow"></button></div><button id="cancel">إلغاء</button></div></div><div id="win" class="overlay" hidden><div><div class="winner" id="winnerText"></div><div style="text-align:center;margin:25px"><button id="closeWin">🎉 إغلاق الاحتفال</button></div></div></div><script src="/socket.io/socket.io.js"></script><script src="/uno.js?v=20261109drawfourflight1"></script><style>
 .saraInGameRadio{position:fixed;top:105px;left:50%;transform:translateX(-50%);z-index:90;direction:rtl;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
 .saraInGameRadio>*{pointer-events:auto}.saraTopControls{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}.saraTopControls button{font-size:clamp(11px,2.6vw,14px);padding:8px 10px;white-space:nowrap}#saraRadioToggle[hidden]{display:none!important}.saraTopControls #saraRadioToggle{border-color:#edc66c;box-shadow:0 0 9px #f3c76d55}
 .saraRadioPanel{width:min(360px,92vw);max-height:65dvh;overflow:auto;background:#26132f;border:2px solid #d6ae62;border-radius:17px;padding:12px;box-shadow:0 8px 25px #000a;color:#fff}.saraRadioPanel[hidden]{display:none}.saraRadioPanel select,.saraRadioPanel audio{width:100%;margin:7px 0}.saraRadioPanel small{color:#d8c7ad}.saraRadioActions{display:flex;gap:7px;align-items:center;margin:8px 0}.saraRadioActions button{padding:7px;border-radius:10px;background:#a47840;color:white}.saraRadioPanel input[type=range]{width:100%}
