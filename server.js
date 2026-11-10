@@ -89,7 +89,7 @@ function saraAnnouncementAttach(socket,ownerCheck){
   socket.on('saraAnnouncementJoin',()=>{
     if(!saraAnnouncer||socket.id===saraAnnouncer)return;
     saraAnnounceListeners.add(socket.id);
-    io.to(saraAnnouncer).emit('saraAnnouncementListener',{id:socket.id});
+    io.sockets.sockets.get(saraAnnouncer)?.emit('saraAnnouncementListener',{id:socket.id});
   });
   socket.on('saraAnnouncementSignal',({to,data}={})=>{
     if(typeof to!=='string'||!data||typeof data!=='object'||JSON.stringify(data).length>20000)return;
