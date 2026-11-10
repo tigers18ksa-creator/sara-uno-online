@@ -46,7 +46,7 @@ io.on('connection',s=>{
       await reactionReady;
       const reactions=saraMessageReactions.get(id)||{};
       const remove=reactions[u.id]?.emoji===emoji||reactions[u.id]===emoji;
-      await store('add',{message:{id:'reaction-'+uid(),from:REACTION_STORE_FROM,to:REACTION_STORE_TO,name:'Reaction log',text:JSON.stringify({id,user:u.id,name:u.name,emoji,remove}),time:new Date().toISOString()}});
+      await store('add',{message:{id:'reaction-'+uid(),from:REACTION_STORE_FROM,to:REACTION_STORE_TO,name:'Reaction log',text:JSON.stringify({id,user:u.id,name:u.name,emoji,remove}),image:'',video:'',color:'#000000',time:Date.now()}});
       if(remove)delete reactions[u.id];else reactions[u.id]={emoji,name:u.name};
       if(Object.keys(reactions).length)saraMessageReactions.set(id,reactions);else saraMessageReactions.delete(id);
       io.emit('saraReactionUpdate',{id,reactions});
