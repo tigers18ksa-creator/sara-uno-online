@@ -423,21 +423,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #saraRamadanBanner{background:#07132b url('/ramadan_canva_clean_strip-1.png?v=2') center center / 100% 100% no-repeat!important}
 #saraRamadanBanner::before,#saraRamadanBanner::after{content:none!important;display:none!important}
 #saraRamadanBanner .saraRamadanClearHeading{background:transparent!important;background-color:transparent!important;box-shadow:none!important;border:0!important;border-radius:0!important}
-</style><style id="saraSeaChatOnly20261110">
-/* Reversible: sea photograph confined strictly to scrolling messages, never header/composer. */
-#chat #messages.messages{
- background-image:url('/shamsalmallaofficial_4026742720708338724_211778549.jpg')!important;
- background-position:center center!important;
- background-size:cover!important;
- background-repeat:no-repeat!important;
- background-attachment:scroll!important;
- background-color:#d6e7e8!important;
-}
-#chat #messages.messages.lightChat{
- background-image:url('/shamsalmallaofficial_4026742720708338724_211778549.jpg')!important;
-}
 </style><style id="saraSharedWallpaperCSS20261110">
-#chat #messages.messages.saraSharedWallpaper{background-image:var(--sara-shared-wallpaper)!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;background-attachment:scroll!important}
+#chat #messages.messages.saraSharedWallpaper,#chat #messages.messages.saraSharedWallpaper.lightChat{background:var(--sara-shared-wallpaper) center center / cover no-repeat scroll!important;background-color:#dbe9ec!important}
+#chat #messages.messages:not(.saraSharedWallpaper).lightChat{background:#f0ebe7!important;background-image:none!important;color:#251f1b!important}
+#chat #messages.messages:not(.saraSharedWallpaper):not(.lightChat){background-image:none!important}
 </style><style id="saraRamadanRestorePlain20261110">
 /* Restore user's previous clean navy countdown; keep live timer and all other UI unchanged. */
 #saraRamadanBanner{display:flex!important;position:absolute!important;top:calc(100% + 2px)!important;left:8px!important;right:8px!important;width:auto!important;height:42px!important;max-height:none!important;min-height:0!important;margin:0!important;padding:2px 10px!important;box-sizing:border-box!important;overflow:hidden!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:center!important;gap:5px!important;direction:rtl!important;background:#131a30!important;background-image:none!important;border:1.5px solid #d2a84e!important;border-radius:16px!important;box-shadow:0 0 4px #c89d4855!important}
