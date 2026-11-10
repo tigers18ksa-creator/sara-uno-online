@@ -36,7 +36,7 @@ const reactionReady=store('private',{sender:REACTION_STORE_FROM,other:REACTION_S
       if(Object.keys(reactions).length)saraMessageReactions.set(event.id,reactions);else saraMessageReactions.delete(event.id);
     }catch(e){}
   }
-}).catch(e=>{console.error('Could not load saved reactions:',e);throw e});
+}).catch(e=>{console.error('Could not load saved reactions:',e)});
 io.on('connection',s=>{
   reactionReady.then(()=>s.emit('saraReactionSnapshot',Object.fromEntries(saraMessageReactions))).catch(()=>{});
   s.on('saraReactMessage',async({id,emoji}={})=>{
@@ -46,10 +46,11 @@ io.on('connection',s=>{
       await reactionReady;
       const reactions=saraMessageReactions.get(id)||{};
       const remove=reactions[u.id]?.emoji===emoji||reactions[u.id]===emoji;
-      await store('add',{message:{id:'reaction-'+uid(),from:REACTION_STORE_FROM,to:REACTION_STORE_TO,name:'Reaction log',text:JSON.stringify({id,user:u.id,name:u.name,emoji,remove}),time:new Date().toISOString()}});
+      const persist=store('add',{message:{id:'reaction-'+uid(),from:REACTION_STORE_FROM,to:REACTION_STORE_TO,name:'Reaction log',text:JSON.stringify({id,user:u.id,name:u.name,emoji,remove}),time:new Date().toISOString()}});
       if(remove)delete reactions[u.id];else reactions[u.id]={emoji,name:u.name};
       if(Object.keys(reactions).length)saraMessageReactions.set(id,reactions);else saraMessageReactions.delete(id);
       io.emit('saraReactionUpdate',{id,reactions});
+      persist.catch(e=>console.error('Reaction persistence failed:',e));
     }catch(e){console.error('Could not save reaction:',e);s.emit('saraReactionError','تعذر حفظ التفاعل، حاول مرة ثانية')}
   });
   s.on('enter',async({name,token,color,roomPassword,sessionProof,roleProof:providedRoleProof}={})=>{const roomSecret=process.env.SARA_ROOM_PASSWORD;if(!roomSecret)return s.emit('chatError','لم يتم إعداد رمز دخول المجلس في الخادم');const signature=t=>createHmac('sha256',roomSecret).update('sara-session:'+t).digest('hex');const validSession=typeof token==='string'&&token.length>=12&&typeof sessionProof==='string'&&/^[a-f0-9]{64}$/.test(sessionProof)&&timingSafeEqual(Buffer.from(signature(token),'hex'),Buffer.from(sessionProof,'hex'));if(!validSession&&String(roomPassword||'')!==roomSecret)return s.emit('chatError','الرقم السري للمجلس غير صحيح');name=String(name||'').trim().slice(0,24);if(!name)return s.emit('chatError','اكتب اسمك');if(banned.has(token))return s.emit('chatError','تم حظرك من المجلس');if(!users.has(token)&&!(validSession&&typeof token==='string'&&/^[a-f0-9]{24}$/.test(token)))token=uid();let u=users.get(token);if(!u){u={id:token,name,color:validColor(color)};users.set(token,u)}u.name=name;u.color=validColor(color||u.color);u.sid=s.id;const restoredRole=(u.roleRevoked||revokedRoles.has(token))?null:verifiedRole(token,providedRoleProof);if(restoredRole){u.admin=true;u.owner=true;u.primary=restoredRole==='primary';ownerRegistry.set(u.id,{name:u.name,primary:!!u.primary});saveOwners()}if(ownerRegistry.has(token)&&!revokedRoles.has(token)){const reg=ownerRegistry.get(token);u.admin=true;u.owner=true;u.primary=!!reg.primary;reg.name=u.name;saveOwners()}s.data.token=token;s.join('user:'+token);let history;try{history=(await store('public')).map(decodeMessage)}catch(e){console.error(e);return s.emit('chatError','تعذر تحميل الرسائل، حاول مرة ثانية')}s.emit('roomWallpaper',{image:sharedWallpaper});s.emit('entered',{id:token,token,sessionProof:signature(token),color:u.color,admin:!!u.admin,owner:!!u.owner,primary:!!u.primary,history});s.emit('connect4State',c4State());roster()});
