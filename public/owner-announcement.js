@@ -29,6 +29,9 @@ sock.on('saraAnnouncementState',state=>{active=!!state.active;badge.style.displa
 sock.on('saraAnnouncementListener',async({id})=>{if(!started||!stream||!owner())return;return;try{const pc=peer(id);for(const track of processedStream.getTracks())pc.addTrack(track,processedStream);await pc.setLocalDescription(await pc.createOffer());sock.emit('saraAnnouncementSignal',{to:id,data:{description:pc.localDescription}})}catch(e){console.warn('Announcement listener:',e)}});
 sock.on('saraAnnouncementSignal',async({from,data})=>{try{const pc=peer(from);if(data.description){await pc.setRemoteDescription(data.description);if(data.description.type==='offer'){await pc.setLocalDescription(await pc.createAnswer());sock.emit('saraAnnouncementSignal',{to:from,data:{description:pc.localDescription}})}}else if(data.candidate)await pc.addIceCandidate(data.candidate)}catch(e){console.warn('Announcement signal:',e)}});
 sock.on('saraAnnouncementError',message=>{alert(message);stop()});
-sock.on('connect',()=>{if(!owner())sock.emit('saraAnnouncementJoin')});
+sock.on('connect',()=>{sock.emit('saraAnnouncementGetState');if(!owner())sock.emit('saraAnnouncementJoin')});
+if(sock.connected){sock.emit('saraAnnouncementGetState');if(!owner())sock.emit('saraAnnouncementJoin')}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&sock.connected){sock.emit('saraAnnouncementGetState');if(!owner())sock.emit('saraAnnouncementJoin');if(playCtx?.state==='suspended')playCtx.resume().catch(()=>{})}});
+document.addEventListener('pointerdown',()=>{if(playCtx?.state==='suspended')playCtx.resume().catch(()=>{})},{passive:true});
 window.addEventListener('pagehide',()=>{if(stream)stop()});
 })();
