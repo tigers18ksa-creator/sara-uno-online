@@ -92,7 +92,9 @@ function saraAnnouncementAttach(socket,ownerCheck){
     for(const id of saraAnnounceListeners){const target=io.sockets.sockets.get(id)||io.of('/guest').sockets.get(id);if(target)target.volatile.emit('saraAnnouncementAudio',chunk)}
   });
   socket.on('saraAnnouncementStop',()=>{if(saraAnnouncer===socket.id)saraAnnouncementStop()});
+  socket.on('saraAnnouncementGetState',()=>socket.emit('saraAnnouncementState',{active:!!saraAnnouncer,name:'Tiger'}));
   socket.on('saraAnnouncementJoin',()=>{
+    socket.emit('saraAnnouncementState',{active:!!saraAnnouncer,name:'Tiger'});
     if(!saraAnnouncer||socket.id===saraAnnouncer)return;
     saraAnnounceListeners.add(socket.id);
     io.sockets.sockets.get(saraAnnouncer)?.emit('saraAnnouncementListener',{id:socket.id});
