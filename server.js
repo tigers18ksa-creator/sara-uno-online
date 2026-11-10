@@ -85,6 +85,12 @@ function saraAnnouncementAttach(socket,ownerCheck){
     io.emit('saraAnnouncementState',{active:true,name:'Tiger'});
     io.of('/guest').emit('saraAnnouncementState',{active:true,name:'Tiger'});
   });
+  socket.on('saraAnnouncementAudio',chunk=>{
+    if(socket.id!==saraAnnouncer||!chunk||!(chunk instanceof ArrayBuffer||ArrayBuffer.isView(chunk)))return;
+    const bytes=chunk.byteLength;
+    if(bytes<1||bytes>12000)return;
+    for(const id of saraAnnounceListeners){const target=io.sockets.sockets.get(id)||io.of('/guest').sockets.get(id);if(target)target.volatile.emit('saraAnnouncementAudio',chunk)}
+  });
   socket.on('saraAnnouncementStop',()=>{if(saraAnnouncer===socket.id)saraAnnouncementStop()});
   socket.on('saraAnnouncementJoin',()=>{
     if(!saraAnnouncer||socket.id===saraAnnouncer)return;
