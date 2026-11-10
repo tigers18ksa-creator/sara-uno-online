@@ -37,6 +37,31 @@ sock.on('saraAnnouncementError',message=>{alert(message);stop()});
 sock.on('connect',()=>{sock.emit('saraAnnouncementGetState');if(!owner())sock.emit('saraAnnouncementJoin')});
 if(sock.connected){sock.emit('saraAnnouncementGetState');if(!owner())sock.emit('saraAnnouncementJoin')}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&sock.connected){sock.emit('saraAnnouncementGetState');if(!owner())sock.emit('saraAnnouncementJoin');if(playCtx?.state==='suspended')playCtx.resume().catch(()=>{})}});
-document.addEventListener('pointerdown',()=>{if(playCtx?.state==='suspended')playCtx.resume().catch(()=>{})},{passive:true});
+// Best-effort background listening: keep the audio session active where supported.
+let backgroundAudio=null;
+function ensureBackgroundAudio(){
+  if(started||!active||backgroundAudio)return;
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    // AudioContext remains the actual PCM output; avoid starting a second audible stream.
+    if(playCtx?.state==='suspended')playCtx.resume().catch(()=>{});
+    if('mediaSession' in navigator){
+      navigator.mediaSession.metadata=new MediaMetadata({title:'مجلس سارة',artist:'البث الصوتي المباشر'});
+      navigator.mediaSession.playbackState='playing';
+    }
+  }catch(e){console.warn('Background audio:',e)}
+}
+function resumeAnnouncement(){
+  if(!sock.connected)sock.connect();
+  else {sock.emit('saraAnnouncementGetState');if(!owner())sock.emit('saraAnnouncementJoin')}
+  if(playCtx?.state==='suspended')playCtx.resume().catch(()=>{});
+  ensureBackgroundAudio();
+}
+document.addEventListener('pointerdown',resumeAnnouncement,{passive:true});
+window.addEventListener('focus',resumeAnnouncement);
+window.addEventListener('pageshow',resumeAnnouncement);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)resumeAnnouncement()});
+
 window.addEventListener('pagehide',()=>{if(stream)stop()});
 })();
