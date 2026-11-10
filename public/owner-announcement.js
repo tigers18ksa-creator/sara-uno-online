@@ -1,0 +1,22 @@
+(()=>{'use strict';
+const isCouncil=!!document.getElementById('chat');
+const sock=isCouncil?window.saraBroadcastSocket:io();
+if(!sock)return;
+let active=false,stream=null,peers=new Map(),audio=null,started=false;
+const config={iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
+const badge=document.createElement('div');badge.id='saraAnnouncementBadge';badge.style.cssText='position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:2147482900;background:#29192c;color:#ffdfa2;border:1px solid #d8ae63;border-radius:16px;padding:9px 13px;font:700 13px sans-serif;box-shadow:0 5px 22px #0007;display:none;white-space:nowrap';badge.textContent='🎙️ Tiger يتحدث الآن';document.body.append(badge);
+const btn=document.createElement('button');btn.id='saraOwnerAnnouncement';btn.type='button';btn.textContent='🎙️ نداء الأونر';btn.style.cssText='position:fixed;bottom:86px;right:12px;z-index:2147482800;background:linear-gradient(135deg,#f6d894,#a9762e);color:#24172a;border:2px solid #ffe8b1;border-radius:25px;padding:11px 14px;font:800 13px sans-serif;box-shadow:0 5px 20px #0007;display:none';document.body.append(btn);
+const owner=()=>isCouncil&&window.saraBroadcastIsPrimary?.()===true;
+const syncOwner=()=>{btn.style.display=owner()?'block':'none';if(!owner()&&stream)stop()};
+setInterval(syncOwner,1300);syncOwner();
+function clearPeers(){for(const p of peers.values())p.close();peers.clear();if(audio){audio.pause();audio.srcObject=null;audio.remove();audio=null}}
+function stop(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}sock.emit('saraAnnouncementStop');btn.textContent='🎙️ نداء الأونر';clearPeers()}
+btn.onclick=async()=>{if(stream){stop();return}if(!owner())return;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:false});sock.emit('saraAnnouncementStart');btn.textContent='⏹ إيقاف النداء';}catch(e){alert('تعذر فتح الميكروفون. اسمح للموقع باستخدام المايك.')}};
+function peer(id){if(peers.has(id))return peers.get(id);const pc=new RTCPeerConnection(config);peers.set(id,pc);pc.onicecandidate=e=>{if(e.candidate)sock.emit('saraAnnouncementSignal',{to:id,data:{candidate:e.candidate}})};pc.onconnectionstatechange=()=>{if(['failed','closed','disconnected'].includes(pc.connectionState)){pc.close();peers.delete(id)}};pc.ontrack=e=>{if(!audio){audio=document.createElement('audio');audio.autoplay=true;audio.playsInline=true;audio.style.display='none';document.body.append(audio)}audio.srcObject=e.streams[0];audio.play().catch(()=>{badge.textContent='🎙️ Tiger يتحدث — اضغط هنا لتشغيل الصوت';badge.style.cursor='pointer';badge.onclick=()=>audio.play().catch(()=>{})})};return pc}
+sock.on('saraAnnouncementState',state=>{active=!!state.active;badge.style.display=active?'block':'none';badge.textContent='🎙️ Tiger يتحدث الآن';if(!active){clearPeers();if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;btn.textContent='🎙️ نداء الأونر'}}else if(!stream){sock.emit('saraAnnouncementJoin')}});
+sock.on('saraAnnouncementListener',async({id})=>{if(!stream||!owner())return;try{const pc=peer(id);for(const track of stream.getTracks())pc.addTrack(track,stream);await pc.setLocalDescription(await pc.createOffer());sock.emit('saraAnnouncementSignal',{to:id,data:{description:pc.localDescription}})}catch(e){console.warn('Announcement listener:',e)}});
+sock.on('saraAnnouncementSignal',async({from,data})=>{try{const pc=peer(from);if(data.description){await pc.setRemoteDescription(data.description);if(data.description.type==='offer'){await pc.setLocalDescription(await pc.createAnswer());sock.emit('saraAnnouncementSignal',{to:from,data:{description:pc.localDescription}})}}else if(data.candidate)await pc.addIceCandidate(data.candidate)}catch(e){console.warn('Announcement signal:',e)}});
+sock.on('saraAnnouncementError',message=>{alert(message);stop()});
+sock.on('connect',()=>{if(!owner())sock.emit('saraAnnouncementJoin')});
+window.addEventListener('pagehide',()=>{if(stream)stop()});
+})();
