@@ -642,4 +642,28 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 .who:is(.saraFrame-lipstick,.saraFrame-makeup,.saraFrame-perfume,.saraFrame-rose,.saraFrame-diamond,.saraFrame-butterfly),.saraFrameSample:is(.saraFrame-lipstick,.saraFrame-makeup,.saraFrame-perfume,.saraFrame-rose,.saraFrame-diamond,.saraFrame-butterfly){background:linear-gradient(110deg,#250f25,#733054,#250f25)!important;background-image:none!important;border:2px solid #f0a8cf!important;border-radius:18px!important;box-shadow:0 0 9px #e87cb988!important;color:#fff!important}
 .who:is(.saraFrame-hilal,.saraFrame-ittihad,.saraFrame-ahli,.saraFrame-lipstick,.saraFrame-makeup,.saraFrame-perfume,.saraFrame-rose,.saraFrame-diamond,.saraFrame-butterfly):not(.tigerOwnerName):not(.tigerOwnerCustomFrame){min-height:34px!important;min-width:0!important;padding:5px 9px 5px 37px!important;position:relative!important;overflow:visible!important;display:inline-flex!important;align-items:center!important;white-space:nowrap!important}
 .saraFrameSample:is(.saraFrame-hilal,.saraFrame-ittihad,.saraFrame-ahli,.saraFrame-lipstick,.saraFrame-makeup,.saraFrame-perfume,.saraFrame-rose,.saraFrame-diamond,.saraFrame-butterfly){min-height:50px!important;min-width:0!important;width:100%!important;height:auto!important;aspect-ratio:auto!important;padding:5px 8px 5px 35px!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important}
+</style><style id="saraHilalLogoKeepAwayFromAvatar20261111">
+/* Club logo stays on the LEFT outside edge; member avatar is on the RIGHT. */
+#messages .who.saraFrame-hilal:not(.tigerOwnerName):not(.tigerOwnerCustomFrame),
+.who.saraFrame-hilal:not(.tigerOwnerName):not(.tigerOwnerCustomFrame),
+.saraFrameSample.saraFrame-hilal{
+position:relative!important;isolation:isolate!important;
+padding-left:48px!important;padding-right:10px!important;
+min-width:0!important;overflow:visible!important;
+}
+#messages .who.saraFrame-hilal:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::before,
+.who.saraFrame-hilal:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::before,
+.saraFrameSample.saraFrame-hilal::before{
+content:""!important;position:absolute!important;
+left:-8px!important;right:auto!important;top:50%!important;bottom:auto!important;
+transform:translateY(-50%)!important;
+width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;
+max-width:42px!important;max-height:42px!important;
+background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important;
+z-index:1!important;pointer-events:none!important;flex:none!important;
+}
+#messages .who.saraFrame-hilal img,
+.who.saraFrame-hilal img,.saraFrameSample.saraFrame-hilal img{
+position:relative!important;z-index:3!important;flex-shrink:0!important;
+}
 </style></body></html>
