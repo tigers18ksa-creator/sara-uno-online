@@ -8,11 +8,11 @@ const style=document.createElement('style');style.textContent=`
 #saraAlbumTop button,#saraAlbumTabs button{background:#352c41;border:1px solid #ab8b57;color:#ffe6b1;border-radius:10px;padding:9px 15px}
 #saraAlbumTabs{display:flex;gap:8px;padding:12px;justify-content:center}
 #saraAlbumTabs button.active{background:#b58c4b;color:#171321;font-weight:800}
-#saraAlbumGrid{overflow-y:auto;flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:11px;align-content:start;padding:12px}
-.saraAlbumCard{background:#241d2e;border:1px solid #6f5b77;border-radius:12px;overflow:hidden}
-.saraAlbumCard img,.saraAlbumCard video{width:100%;aspect-ratio:1;object-fit:cover;background:#0c0c13;display:block}
+#saraAlbumGrid{overflow-y:auto;flex:1;min-height:0;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:10px!important;align-content:start!important;padding:12px!important}@media(min-width:650px){#saraAlbumGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+.saraAlbumCard{display:flex!important;flex-direction:column!important;min-width:0!important;height:auto!important;align-self:start!important;background:#241d2e;border:1px solid #6f5b77;border-radius:12px;overflow:hidden}
+#saraAlbumGrid .saraAlbumCard>img,#saraAlbumGrid .saraAlbumCard>video{display:block!important;position:static!important;float:none!important;flex:none!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:1/1!important;object-fit:cover!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#0c0c13!important}
 .saraAlbumCard img{cursor:zoom-in}
-.saraAlbumCard strong{display:block;padding:9px;font-size:12px;text-align:center;overflow-wrap:anywhere}
+.saraAlbumCard strong{display:block!important;min-height:34px!important;line-height:1.4!important;padding:8px 4px!important;font-size:12px!important;text-align:center!important;overflow-wrap:anywhere;color:#ffe6b1!important}
 #saraAlbumLightbox{position:fixed;inset:0;background:#000e;z-index:100001;display:grid;place-items:center;padding:20px}
 #saraAlbumLightbox img{max-width:100%;max-height:85dvh;object-fit:contain}
 `;document.head.append(style);
