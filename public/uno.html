@@ -315,6 +315,10 @@ border-color:transparent!important;
 #game .table>.players>.player.active .avatar{
 animation:none!important;box-shadow:none!important;background:transparent!important;
 }
+</style><style id="saraRemoveMineCrownAndRingFinal20261111">
+#game .table .player.mine::after,#game .table .player.mine::before{content:none!important;display:none!important}
+#game .table .player.mine,#game .table .player.mine.active{background:transparent!important;box-shadow:none!important;animation:none!important;border:0!important;outline:0!important}
+#game .table .player.mine .avatar,#game .table .player.mine .avatar img{box-shadow:none!important;animation:none!important;outline:0!important}
 </style></head><body><style id="guestLobbyStyles"></style><style>.saraGamesList{display:grid;grid-template-columns:1fr;gap:10px;padding:14px;max-height:min(65vh,610px);overflow-y:auto;overscroll-behavior:contain}
 .saraGameCard{width:100%;min-height:84px;display:flex;align-items:center;gap:13px;text-align:right;border:1px solid rgba(225,182,106,.5);border-radius:16px;padding:8px 10px;background:linear-gradient(110deg,#2d1827,#1b1521);color:#ffe5b2;box-shadow:0 4px 13px #0004;cursor:pointer}
 .saraGameCard:active{transform:scale(.985)}
