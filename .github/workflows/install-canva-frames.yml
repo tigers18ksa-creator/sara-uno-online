@@ -1,0 +1,25 @@
+name: Install Canva nickname frame images
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/install-canva-frames.yml'
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pillow requests
+      - name: Extract original Canva designs
+        run: python .github/scripts/install_canva_frames.py
+      - name: Commit frame assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/assets/royal-frames/
+          git diff --cached --quiet || (git commit -m 'Install six Canva frame image assets' && git push)
