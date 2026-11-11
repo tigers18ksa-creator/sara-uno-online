@@ -799,4 +799,17 @@ z-index:8!important;opacity:1!important;visibility:visible!important;pointer-eve
 #messages .who.saraFrame-ahli:not(.tigerOwnerName),
 .saraFrameSample.saraFrame-ittihad,
 .saraFrameSample.saraFrame-ahli{padding-left:48px!important;overflow:visible!important}
+</style><style id="saraIttihadMatchHilalSize20261111">
+/* Keep Ittihad crest aligned with Salman's Hilal crest; no vertical overflow. */
+#messages .who.saraFrame-ittihad:not(.tigerOwnerName)::before,
+#messages .who.tigerOwnerCustomFrame.saraFrame-ittihad::before,
+.saraFrameSample.saraFrame-ittihad::before{
+left:-5px!important;right:auto!important;top:50%!important;bottom:auto!important;
+transform:translateY(-50%)!important;transform-origin:center!important;
+width:35px!important;height:35px!important;min-width:35px!important;min-height:35px!important;max-width:35px!important;max-height:35px!important;
+background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important;
+filter:drop-shadow(1px 0 white) drop-shadow(-1px 0 white) drop-shadow(0 1px white) drop-shadow(0 -1px white) drop-shadow(0 2px 4px #0009)!important;
+}
+#messages .who.saraFrame-ittihad:not(.tigerOwnerName),
+.saraFrameSample.saraFrame-ittihad{padding-left:39px!important}
 </style></body></html>
