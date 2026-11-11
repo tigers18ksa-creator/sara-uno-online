@@ -666,4 +666,43 @@ z-index:1!important;pointer-events:none!important;flex:none!important;
 .who.saraFrame-hilal img,.saraFrameSample.saraFrame-hilal img{
 position:relative!important;z-index:3!important;flex-shrink:0!important;
 }
-</style></body></html>
+</style><style id="saraAllFrameAvatarAndSaveFix20261111">
+/* Every club/beauty emblem is on the left, never on the profile-photo side. */
+#messages .who[class*="saraFrame-"]:not(.tigerOwnerName):not(.tigerOwnerCustomFrame),
+.who[class*="saraFrame-"]:not(.tigerOwnerName):not(.tigerOwnerCustomFrame),
+.saraFrameSample[class*="saraFrame-"]{position:relative!important;isolation:isolate!important;display:inline-flex!important;align-items:center!important;gap:5px!important;padding-left:49px!important;padding-right:9px!important;overflow:visible!important;min-width:0!important;white-space:nowrap!important}
+#messages .who[class*="saraFrame-"]:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::before,
+.who[class*="saraFrame-"]:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::before,
+.saraFrameSample[class*="saraFrame-"]::before{position:absolute!important;left:-7px!important;right:auto!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;max-width:42px!important;max-height:42px!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important;z-index:1!important;pointer-events:none!important;flex:none!important}
+#messages .who[class*="saraFrame-"]:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::after,
+.who[class*="saraFrame-"]:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::after,
+.saraFrameSample[class*="saraFrame-"]::after{content:none!important;display:none!important}
+#messages .who[class*="saraFrame-"] img,
+.who[class*="saraFrame-"] img,
+.saraFrameSample[class*="saraFrame-"] img{position:relative!important;z-index:5!important;flex-shrink:0!important;transform:none!important}
+.who.tigerOwnerName,.who.tigerOwnerCustomFrame{padding:5px 12px!important}
+</style><script id="saraAllFrameAvatarAndSaveFix20261111Script">(function(){
+function setup(){
+const save=document.getElementById('saraAvatarSave');
+if(!save||save.dataset.saraFixedSave)return;
+save.dataset.saraFixedSave='1';
+save.addEventListener('click',function(){
+const frame=localStorage.getItem('saraMyFrame')||'none';
+const avatar=localStorage.getItem('saraMyAvatar')||'';
+const name=document.getElementById('name')?.value||localStorage.getItem('saraName')||'';
+if(typeof s!=='undefined'&&s?.connected){
+s.emit('setMemberFrame',{frame});
+if(avatar)s.emit('setAvatar',{avatar});
+}
+document.querySelectorAll('#messages .who').forEach(el=>{
+const n=(el.textContent||'').trim();
+if(!name||n!==name)return;
+Array.from(el.classList).filter(k=>k.startsWith('saraFrame-')).forEach(k=>el.classList.remove(k));
+if(/^Tiger(?:⁵¹⁵|515)?/i.test(n)){el.classList.add('tigerOwnerName');el.classList.remove('tigerOwnerCustomFrame')}
+else if(frame!=='none')el.classList.add('saraFrame-'+frame);
+});
+if(typeof updateHeader==='function')try{updateHeader()}catch(e){}
+},false);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+})();</script></body></html>
