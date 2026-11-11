@@ -80,7 +80,16 @@ const reactionReady=store('private',{sender:REACTION_STORE_FROM,other:REACTION_S
     }catch(e){}
   }
 }).catch(e=>{console.error('Could not load saved reactions:',e)});
+let saraLive=null;const saraLiveViewers=new Set();const saraLiveComments=[];const saraLiveState=()=>({active:!!saraLive,startedAt:saraLive?.startedAt||0,host:saraLive?.host||'',viewers:saraLiveViewers.size});const saraLiveBroadcast=()=>io.emit('saraLiveState',saraLiveState());
 io.on('connection',s=>{
+  s.on('saraLiveSync',()=>{if(users.get(s.data.token)?.sid===s.id){s.emit('saraLiveState',saraLiveState());s.emit('saraLiveHistory',saraLiveComments.slice(-80))}});
+  s.on('saraLiveStart',()=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id||!u.primary)return;if(saraLive&&saraLive.sid!==s.id)return;saraLive={sid:s.id,host:u.name,startedAt:Date.now()};saraLiveViewers.clear();saraLiveComments.length=0;saraLiveBroadcast()});
+  s.on('saraLiveStop',()=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id||!u.primary||saraLive?.sid!==s.id)return;saraLive=null;saraLiveViewers.clear();saraLiveBroadcast();io.emit('saraLiveEnded')});
+  s.on('saraLiveWatch',({watching}={})=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id)return;if(watching&&saraLive&&saraLive.sid!==s.id){saraLiveViewers.add(s.id);io.to(saraLive.sid).emit('saraLiveViewerJoined',{id:s.id});s.emit('saraLiveHistory',saraLiveComments.slice(-80))}else{saraLiveViewers.delete(s.id);if(saraLive)io.to(saraLive.sid).emit('saraLiveViewerLeft',{id:s.id})}saraLiveBroadcast()});
+  s.on('saraLiveSignal',({to,data}={})=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id||!saraLive||!data||typeof data!=='object'||JSON.stringify(data).length>18000)return;const host=saraLive.sid;if(s.id===host&&saraLiveViewers.has(to))io.to(to).emit('saraLiveSignal',{from:s.id,data});else if(to===host&&saraLiveViewers.has(s.id))io.to(host).emit('saraLiveSignal',{from:s.id,data})});
+  s.on('saraLiveComment',({text}={})=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id||!saraLive)return;const message=String(text||'').trim().slice(0,250);if(!message)return;const now=Date.now();if(s.data.lastLiveComment&&now-s.data.lastLiveComment<650)return;s.data.lastLiveComment=now;const item={name:u.name,text:message,at:now};saraLiveComments.push(item);if(saraLiveComments.length>100)saraLiveComments.shift();io.emit('saraLiveComment',item)});
+  s.on('disconnect',()=>{if(saraLive?.sid===s.id){saraLive=null;saraLiveViewers.clear();saraLiveBroadcast();io.emit('saraLiveEnded')}else if(saraLiveViewers.delete(s.id)){if(saraLive)io.to(saraLive.sid).emit('saraLiveViewerLeft',{id:s.id});saraLiveBroadcast()}});
+
   reactionReady.then(()=>s.emit('saraReactionSnapshot',Object.fromEntries(saraMessageReactions))).catch(()=>{});
   s.on('saraReactMessage',async({id,emoji}={})=>{
     const u=users.get(s.data.token);
