@@ -302,6 +302,19 @@ flex-shrink:0!important;
 </style><style id="saraUnoRemoveCrownAboveAvatar20261111">
 /* Remove the crown above the player's turn/avatar, preserving the photo and gameplay. */
 #game .table>.status.saraMyTurn::before{content:none!important;display:none!important}
+</style><style id="saraUnoRemoveAllAvatarRoyalHalo20261111">
+/* Player portrait only: remove the animated royal halo layer and its crown-like backdrop. */
+#game .table>.players>.player.active::before,
+#game .table>.players>.player.active::after{
+content:none!important;display:none!important;animation:none!important;
+}
+#game .table>.players>.player.active{
+animation:none!important;box-shadow:none!important;background:transparent!important;
+border-color:transparent!important;
+}
+#game .table>.players>.player.active .avatar{
+animation:none!important;box-shadow:none!important;background:transparent!important;
+}
 </style></head><body><style id="guestLobbyStyles"></style><style>.saraGamesList{display:grid;grid-template-columns:1fr;gap:10px;padding:14px;max-height:min(65vh,610px);overflow-y:auto;overscroll-behavior:contain}
 .saraGameCard{width:100%;min-height:84px;display:flex;align-items:center;gap:13px;text-align:right;border:1px solid rgba(225,182,106,.5);border-radius:16px;padding:8px 10px;background:linear-gradient(110deg,#2d1827,#1b1521);color:#ffe5b2;box-shadow:0 4px 13px #0004;cursor:pointer}
 .saraGameCard:active{transform:scale(.985)}
