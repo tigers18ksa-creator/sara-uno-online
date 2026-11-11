@@ -600,4 +600,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script>
 (function(){function clean(){try{localStorage.setItem('saraMyFrame','none')}catch(e){};document.querySelectorAll('#saraFrameChoices,.saraFrameChoices').forEach(x=>{x.style.display='none';const parent=x.parentElement;if(parent){const h=parent.querySelector('h3');if(h&&h.textContent.includes('إطار'))h.style.display='none';parent.querySelectorAll('p,button').forEach(el=>{if(el.textContent.includes('إطار')||el.textContent.includes('الإخفاء'))el.style.display='none'})}})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();new MutationObserver(clean).observe(document.documentElement,{subtree:true,childList:true})})();
 </script>
-</body></html>
+<style id="saraAbsolutelyNoMemberNameFrames20261111">
+#messages .who:not(.tigerOwnerName):not(.tigerOwnerCustomFrame),.who:not(.tigerOwnerName):not(.tigerOwnerCustomFrame){
+background:transparent!important;background-image:none!important;border:0!important;outline:0!important;border-radius:0!important;box-shadow:none!important;filter:none!important;animation:none!important;transform:none!important;min-width:0!important;min-height:0!important;padding:0!important;margin:0!important;isolation:auto!important;letter-spacing:normal!important;text-shadow:none!important}
+#messages .who:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::before,#messages .who:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::after,.who:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::before,.who:not(.tigerOwnerName):not(.tigerOwnerCustomFrame)::after{content:none!important;display:none!important;background:none!important;box-shadow:none!important}
+#messages .who.tigerOwnerName,#messages .who.tigerOwnerCustomFrame{border:2px solid #f8d57b!important;border-radius:18px!important;background:linear-gradient(120deg,#251707,#513511,#231707)!important;box-shadow:0 0 10px #ffcf63a8,inset 0 0 8px #ffd66c55!important;color:#ffe6a5!important;padding:5px 12px!important}
+</style></body></html>
