@@ -1,3 +1,4 @@
+import {installMonopoly} from './monopoly.js';
 import {installSnakes} from './snakes.js';
 import {installMafia} from './mafia.js';
 import {readFileSync,writeFileSync,readdirSync} from 'node:fs';
@@ -226,4 +227,4 @@ function saraAnnouncementAttach(socket,ownerCheck){
 io.on('connection',s=>saraAnnouncementAttach(s,()=>{const u=users.get(s.data.token);return !!(u&&u.sid===s.id&&u.primary)}));
 io.of('/guest').on('connection',s=>saraAnnouncementAttach(s,()=>false));
 
-installMafia(io,gameGate);installSnakes(io);installSalon(io);setupPremiumGames(io,gameGate);Promise.all([loadPersistentGamesGate(),loadSharedWallpaper()]).then(()=>http.listen(process.env.PORT||3000,'0.0.0.0'));
+installMonopoly(io);installMafia(io,gameGate);installSnakes(io);installSalon(io);setupPremiumGames(io,gameGate);Promise.all([loadPersistentGamesGate(),loadSharedWallpaper()]).then(()=>http.listen(process.env.PORT||3000,'0.0.0.0'));
