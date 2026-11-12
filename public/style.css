@@ -396,3 +396,6 @@ body:has(#chat:not([hidden])) .layout{margin-top:2px!important}
 
 /* Keep the chat composer closer to the bottom edge without resizing its controls. */
 @media(max-width:650px){body:has(#chat:not([hidden])) main{padding-bottom:0!important}body:has(#chat:not([hidden])) .compose{padding-bottom:2px!important}}
+
+/* Chat message text only: stronger strokes, unchanged size and layout. */
+#messages .bubble .body{font-weight:900!important;-webkit-text-stroke:.18px currentColor;}
