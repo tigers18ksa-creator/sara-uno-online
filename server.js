@@ -17,11 +17,11 @@ const WALL_FILE=process.env.SARA_WALLPAPER_FILE||'/var/data/sara-chat-wallpaper.
 async function loadSharedWallpaper(){
   try{
     const saved=JSON.parse(readFileSync(WALL_FILE,'utf8'));
-    if(typeof saved.image==='string'&&(saved.image===''||/^data:image\\/(?:jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(saved.image))){sharedWallpaper=saved.image;wallReady=true;return}
+    if(typeof saved.image==='string'&&(saved.image===''||/^data:image\/(?:jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(saved.image))){sharedWallpaper=saved.image;wallReady=true;return}
   }catch(e){if(e.code!=='ENOENT')console.error('Wallpaper file load:',e.message)}
   try{
     const rows=await store('private',{sender:WALL_SENDER,other:WALL_RECIPIENT});
-    const valid=(Array.isArray(rows)?rows:[]).filter(x=>x.from===WALL_SENDER&&x.to===WALL_RECIPIENT&&(x.text==='default'||(typeof x.image==='string'&&/^data:image\\/(?:jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(x.image)))).sort((a,b)=>Number(b.time)-Number(a.time));
+    const valid=(Array.isArray(rows)?rows:[]).filter(x=>x.from===WALL_SENDER&&x.to===WALL_RECIPIENT&&(x.text==='default'||(typeof x.image==='string'&&/^data:image\/(?:jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(x.image)))).sort((a,b)=>Number(b.time)-Number(a.time));
     sharedWallpaper=valid.length&&valid[0].text!=='default'?(valid[0].image||''):'';
   }catch(e){console.error('Wallpaper load failed:',e.message)}
   wallReady=true;
