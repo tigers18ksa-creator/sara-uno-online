@@ -13,8 +13,25 @@ async function loadPersistentGamesGate(){try{const rows=await store('private',{s
 async function saveGamesGate(enabled){await store('add',{message:{id:'gate-'+randomBytes(16).toString('hex'),from:GATE_SENDER,name:'System Gate',to:GATE_RECIPIENT,text:enabled?'enabled':'disabled',image:'',video:'',color:'#000000',time:Date.now()}})}
 const WALL_SENDER='__sara_internal_chat_wallpaper__',WALL_RECIPIENT='__sara_internal_wallpaper_state__';
 let sharedWallpaper='',wallReady=false,wallSaving=Promise.resolve();
-async function loadSharedWallpaper(){try{const rows=await store('private',{sender:WALL_SENDER,other:WALL_RECIPIENT});const valid=(Array.isArray(rows)?rows:[]).filter(x=>x.from===WALL_SENDER&&x.to===WALL_RECIPIENT&&(x.text==='default'||(typeof x.image==='string'&&/^data:image\/(?:jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(x.image)))).sort((a,b)=>Number(b.time)-Number(a.time));sharedWallpaper=valid.length&&valid[0].text!=='default'?(valid[0].image||''):''}catch(e){console.error('Wallpaper load failed:',e.message)}wallReady=true}
-async function saveSharedWallpaper(image){await store('add',{message:{id:'wall-'+randomBytes(16).toString('hex'),from:WALL_SENDER,name:'System Wallpaper',to:WALL_RECIPIENT,text:image?'wallpaper':'default',image:image||'',video:'',color:'#000000',time:Date.now()}})}
+const WALL_FILE=process.env.SARA_WALLPAPER_FILE||'/var/data/sara-chat-wallpaper.json';
+async function loadSharedWallpaper(){
+  try{
+    const saved=JSON.parse(readFileSync(WALL_FILE,'utf8'));
+    if(typeof saved.image==='string'&&(saved.image===''||/^data:image\\/(?:jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(saved.image))){sharedWallpaper=saved.image;wallReady=true;return}
+  }catch(e){if(e.code!=='ENOENT')console.error('Wallpaper file load:',e.message)}
+  try{
+    const rows=await store('private',{sender:WALL_SENDER,other:WALL_RECIPIENT});
+    const valid=(Array.isArray(rows)?rows:[]).filter(x=>x.from===WALL_SENDER&&x.to===WALL_RECIPIENT&&(x.text==='default'||(typeof x.image==='string'&&/^data:image\\/(?:jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(x.image)))).sort((a,b)=>Number(b.time)-Number(a.time));
+    sharedWallpaper=valid.length&&valid[0].text!=='default'?(valid[0].image||''):'';
+  }catch(e){console.error('Wallpaper load failed:',e.message)}
+  wallReady=true;
+}
+async function saveSharedWallpaper(image){
+  let fileSaved=false,remoteSaved=false;
+  try{writeFileSync(WALL_FILE,JSON.stringify({image,updatedAt:Date.now()}));fileSaved=true}catch(e){console.error('Wallpaper file save:',e.message)}
+  try{await store('add',{message:{id:'wall-'+randomBytes(16).toString('hex'),from:WALL_SENDER,name:'System Wallpaper',to:WALL_RECIPIENT,text:image?'wallpaper':'default',image:image||'',video:'',color:'#000000',time:Date.now()}});remoteSaved=true}catch(e){console.error('Wallpaper remote save:',e.message)}
+  if(!fileSaved&&!remoteSaved)throw Error('Wallpaper persistence unavailable');
+}
 const REVOKED_FILE=process.env.SARA_REVOKED_ROLES_FILE||'/var/data/sara-revoked-roles.json';let revokedRoles=new Set();try{revokedRoles=new Set(JSON.parse(readFileSync(REVOKED_FILE,'utf8')))}catch{}const saveRevoked=()=>{try{writeFileSync(REVOKED_FILE,JSON.stringify([...revokedRoles]))}catch(e){console.error('Role revocation persistence:',e.message)}};const OWNER_FILE=process.env.SARA_OWNER_REGISTRY_FILE||'/var/data/sara-owner-registry.json';let ownerRegistry=new Map();try{ownerRegistry=new Map(JSON.parse(readFileSync(OWNER_FILE,'utf8')))}catch{}const saveOwners=()=>{try{writeFileSync(OWNER_FILE,JSON.stringify([...ownerRegistry]))}catch(e){console.error('Owner registry persistence:',e.message)}};/* Remove the accidental visitor account Fahad from owner permissions. Persist revocation so signed role proofs cannot restore it. */for(const [id,entry] of ownerRegistry){if(String(entry.name||'').trim().toLowerCase()==='fahad'){ownerRegistry.delete(id);revokedRoles.add(id);const active=users.get(id);if(active){active.owner=false;active.admin=false;active.primary=false;active.roleRevoked=true;if(active.sid)io.to(active.sid).emit('roleRevoked');}}}saveOwners();saveRevoked();const ownerList=()=>[...ownerRegistry].map(([id,v])=>({id,name:v.name,primary:!!v.primary,online:!!users.get(id)?.sid&&io.sockets.sockets.has(users.get(id).sid)}));const sendOwners=()=>{for(const u of users.values())if(u.primary&&u.sid)io.to(u.sid).emit('ownerList',ownerList())};const roleSecret=()=>process.env.SARA_ADMIN_PIN||'';
 const roleProof=(token,role)=>createHmac('sha256',roleSecret()).update('sara-role-v1:'+role+':'+token).digest('hex');
 const verifiedRole=(token,proof)=>{if(!roleSecret()||roleSecret().length<6||typeof proof!=='string'||!/^[a-f0-9]{64}$/.test(proof))return null;for(const role of ['primary','owner'])if(timingSafeEqual(Buffer.from(roleProof(token,role),'hex'),Buffer.from(proof,'hex')))return role;return null};
