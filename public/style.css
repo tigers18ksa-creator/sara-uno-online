@@ -399,3 +399,13 @@ body:has(#chat:not([hidden])) .layout{margin-top:2px!important}
 
 /* Chat message text only: stronger strokes, unchanged size and layout. */
 #messages .bubble .body{font-weight:900!important;-webkit-text-stroke:.48px currentColor;text-shadow:0 0 .15px currentColor!important;}
+
+/* Installed PWA: preserve the same chat layout and proportions as browser mode. */
+@media (display-mode:standalone), (display-mode:fullscreen) {
+ html,body{width:100%;min-height:100%;margin:0;overflow-x:hidden}
+ body:has(#chat:not([hidden])) main{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+ body:has(#chat:not([hidden])) #chat,body:has(#chat:not([hidden])) .layout,body:has(#chat:not([hidden])) .conversation{min-width:0;max-width:100%;box-sizing:border-box}
+ body:has(#chat:not([hidden])) .conversation{min-height:0}
+ body:has(#chat:not([hidden])) #messages{min-width:0;max-width:100%;overflow-x:hidden}
+ body:has(#chat:not([hidden])) .compose{width:100%;max-width:100%;box-sizing:border-box}
+}
