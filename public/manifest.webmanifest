@@ -6,7 +6,7 @@
   "dir": "rtl",
   "start_url": "/?source=pwa",
   "scope": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#111323",
   "theme_color": "#111323",
   "icons": [
@@ -16,5 +16,11 @@
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "/",
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
+  "prefer_related_applications": false
 }
