@@ -61,7 +61,7 @@ async function saraAlbumSave(m){
  saraAlbumRows.push(item);
 }
 
-const SARA_PUBLIC_MESSAGE_TTL_MS=48*60*60*1000;
+const SARA_PUBLIC_MESSAGE_TTL_MS=24*60*60*1000;
 let saraPublicCleanupRunning=false;
 async function saraExpirePublicMessages(){
   if(saraPublicCleanupRunning)return;
