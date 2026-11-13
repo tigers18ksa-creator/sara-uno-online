@@ -420,5 +420,5 @@ body:has(#chat:not([hidden])) .layout{margin-top:2px!important}
 /* Owner-selected shared wallpaper: scope strictly to the message viewport. */
 #messages.messages.saraSharedWallpaper,#messages.messages.saraSharedWallpaper.lightChat{background-image:var(--sara-shared-wallpaper)!important;background-color:#f0ebe7!important;background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;background-attachment:local!important}
 
-/* Keep Tiger's entire profile portrait visible without changing avatar frames or layout. */
-.messages .bubble .who.tigerOwnerName>.saraMemberAvatar>img{width:78%!important;height:78%!important;max-width:78%!important;max-height:78%!important;object-fit:contain!important;object-position:center!important;transform:none!important}
+/* Match Tiger's chat portrait crop to the top profile avatar. */
+.messages .bubble .who.tigerOwnerName>.saraMemberAvatar>img{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:cover!important;object-position:center!important;transform:none!important}
