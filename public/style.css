@@ -426,3 +426,7 @@ body:has(#chat:not([hidden])) .layout{margin-top:2px!important}
 /* Match owner chat avatar outer dimensions to top profile avatar, including mobile. */
 .messages .bubble .who.tigerOwnerName>.saraMemberAvatar{flex:0 0 48px!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;max-width:48px!important;max-height:48px!important;aspect-ratio:1/1!important}
 @media(max-width:650px){.messages .bubble .who.tigerOwnerName>.saraMemberAvatar{flex:0 0 48px!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;max-width:48px!important;max-height:48px!important}}
+
+/* Owner portrait and gold circular border: match the visible top-header avatar diameter. */
+#messages .bubble .who.tigerOwnerName>.saraMemberAvatar,.messages .bubble .who.tigerOwnerName>.saraMemberAvatar{flex:0 0 58px!important;width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;max-width:58px!important;max-height:58px!important;box-sizing:border-box!important;border-radius:50%!important;padding:0!important;overflow:hidden!important}
+#messages .bubble .who.tigerOwnerName>.saraMemberAvatar>img{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:cover!important;object-position:center!important;border-radius:50%!important}
