@@ -56,6 +56,35 @@ const weatherDescription=code=>{if(code===0)return '☀️ صافي';if(code<=3)
 function draw(){const now=new Date(),time=new Intl.DateTimeFormat('ar-SA',{timeZone:zone,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now),date=new Intl.DateTimeFormat('ar-SA',{timeZone:zone,weekday:'long',day:'numeric',month:'long'}).format(now);let a=['📍 '+(city||'اختر مدينتك'),'📅 '+date,'🕒 '+time];if(weather?.current){const w=weather.current;a.push(weatherDescription(w.weather_code),'🌡️ الحرارة '+Math.round(w.temperature_2m)+'°م','🌡️ المحسوسة '+Math.round(w.apparent_temperature)+'°م','💧 الرطوبة '+w.relative_humidity_2m+'٪','🌬️ الرياح '+Math.round(w.wind_speed_10m)+' كم/س');const rain=weather.daily?.precipitation_probability_max?.[0];if(rain!=null)a.push('🌧️ احتمال المطر '+rain+'٪')}const x=document.getElementById('srWeatherTrack');if(!x)return;const key=a.filter((v,i)=>i!==2).join('|');if(x.dataset.srWeatherKey!==key){x.innerHTML=pack(a)+pack(a);x.dataset.srWeatherKey=key}else{x.querySelectorAll('.srGroup').forEach(g=>{if(g.children[4])g.children[4].textContent=a[2]})}}
 async function load(){if(!coords)return;try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+coords[0]+'&longitude='+coords[1]+'&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code&daily=precipitation_probability_max&timezone=auto&forecast_days=1');weather=await r.json();zone=weather.timezone||zone;draw()}catch{}}
 async function locate(p){coords=[p.coords.latitude,p.coords.longitude];try{const r=await fetch('https://nominatim.openstreetmap.org/reverse?format=json&accept-language=ar&lat='+coords[0]+'&lon='+coords[1]);const a=(await r.json()).address||{};city=a.city||a.town||a.village||a.county||''}catch{}try{localStorage.setItem('saraWeatherPreferenceV1',JSON.stringify({city,coords}))}catch{}draw();load()}
+
+// Track the separate live-table namespaces without changing game rules.
+const saraOtherTables={monopoly:[],snakes:[]};
+function saraUpdateGameCard(kind){
+ const selector=kind==='monopoly'?'[data-game="monopoly"]':'#gamesSnakes';
+ const card=document.querySelector('#gamesMenu '+selector);if(!card)return;
+ const rooms=saraOtherTables[kind]||[];
+ const count=rooms.reduce((n,t)=>n+(kind==='monopoly'?(Array.isArray(t.players)?t.players.length:0):(Number(t.count)||0)),0);
+ card.classList.toggle('saraHasPlayers',count>0);
+ let label=card.querySelector('.saraLiveIndicator');
+ if(count&&!label){label=document.createElement('span');label.className='saraLiveIndicator';card.querySelector('.saraGameWords')?.append(label)}
+ if(label){if(count)label.textContent='🟢 مباشر · '+count+' لاعب';else label.remove()}
+ let meta=card.querySelector('.saraLiveGameMeta');
+ if(!meta){meta=document.createElement('span');meta.className='saraLiveGameMeta';card.querySelector('.saraGameWords')?.append(meta)}
+ meta.textContent=count?rooms.length+' طاولة مفتوحة':'لا توجد طاولات نشطة';
+ const filter=document.querySelector('#gamesMenu #saraLiveTabs button.active')?.dataset.filter;
+ card.classList.toggle('saraLobbyHidden',filter==='live'?!count:filter==='soon');
+ radar();
+}
+try{if(typeof io==='function'){
+ for(const [kind,namespace,event] of [['monopoly','/monopoly','tables'],['snakes','/snakes','rooms']]){
+  const sock=io(namespace);
+  sock.on(event,data=>{saraOtherTables[kind]=Array.isArray(data)?data.filter(t=>kind==='monopoly'?Array.isArray(t.players)&&t.players.length>0:Number(t.count)>0):[];saraUpdateGameCard(kind)});
+  sock.on('connect',()=>sock.emit('list'));
+  sock.on('disconnect',()=>{saraOtherTables[kind]=[];saraUpdateGameCard(kind)});
+  setInterval(()=>{if(sock.connected)sock.emit('list')},12000);
+ }
+}}catch{}
+
 let saraUnoLiveCount=0;
 try{if(typeof io==='function'){const unoRadarSocket=io('/uno',{transports:['websocket','polling']});unoRadarSocket.on('unoLiveTables',data=>{saraUnoLiveCount=[2,3,4].reduce((n,k)=>n+Math.max(0,Number(data?.[k])||0),0);radar()});unoRadarSocket.on('disconnect',()=>{saraUnoLiveCount=0;radar()})}}catch{}
 function radar(){const cards=[...document.querySelectorAll('.saraGameCard.saraHasPlayers')].filter(c=>!c.hidden);const a=cards.map(c=>'🟢 🎮 يلعبون الآن: '+(c.querySelector('h3,strong')?.textContent||c.textContent||'لعبة جارية').trim().slice(0,55));const results=[...document.querySelectorAll('[data-game-result],[data-match-result],.saraGameResult,.saraMatchResult')].filter(c=>!c.hidden).map(c=>('🏆 النتيجة: '+(c.dataset.gameResult||c.dataset.matchResult||c.textContent||'').trim()).slice(0,110)).filter(v=>v.length>12);if(saraUnoLiveCount>0&&!cards.some(c=>c.id==='gamesUNO')){a.unshift('🟢 🎮 أونو: '+saraUnoLiveCount+' لاعب الآن');cards.unshift(document.getElementById('gamesUNO')||{id:'gamesUNO'})}a.push(...results.slice(-8));const x=document.getElementById('srRadarTrack');if(x){const key=a.join('|');if(x.dataset.key!==key){const items=a.length?a:['🎮 لا توجد طاولات نشطة الآن'];const h='<span class="srGroup">'+items.map((label,i)=>{const card=cards[i];const safe=escape(label);return(i?'<span class="srSep">|</span>':'')+(card?'<button type="button" class="srGameLink" data-sr-game="'+escape(card.id)+'" title="افتح اللعبة النشطة">'+safe+'</button>':'<span>'+safe+'</span>')}).join('')+'</span>';x.innerHTML=a.length?h+h:h;x.dataset.key=key}}}
