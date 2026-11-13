@@ -1,5 +1,5 @@
 (()=>{
-const socket=window.saraBroadcastSocket,open=document.getElementById('saraAlbumOpen');if(!socket||!open)return;
+const socket=window.saraBroadcastSocket,open=document.getElementById('saraAlbumOpen');if(!socket||!open)return;open.hidden=true;socket.on('entered',data=>{open.hidden=!data?.primary;if(!data?.primary){const panel=document.getElementById('saraAlbumOverlay');if(panel)panel.hidden=true}});socket.on('disconnect',()=>{open.hidden=true;const panel=document.getElementById('saraAlbumOverlay');if(panel)panel.hidden=true});
 const style=document.createElement('style');style.textContent=`
 #saraAlbumOverlay{position:fixed;inset:0;background:#0a0911ef;z-index:99999;display:flex;align-items:center;justify-content:center;padding:12px;direction:rtl;color:#fff}
 #saraAlbumOverlay[hidden]{display:none!important}
@@ -39,7 +39,7 @@ function render(){grid.replaceChildren();if(thumbnailObserver)thumbnailObserver.
  const list=items.filter(x=>kind==='all'||(kind==='image'?!!x.image:!!x.video));if(!list.length){grid.textContent='ما فيه صور أو فيديوهات في هذا القسم';return}
  for(const x of list){const card=document.createElement('div');card.className='saraAlbumCard';let media;if(x.image){media=document.createElement('img');media.src=x.image;media.loading='lazy';media.onclick=()=>{const box=document.createElement('div');box.id='saraAlbumLightbox';const img=document.createElement('img');img.src=x.image;box.append(img);box.onclick=()=>box.remove();document.body.append(box)}}else{media=document.createElement('div');media.className='saraAlbumPreview';media.dataset.video=x.video;media.setAttribute('role','button');media.setAttribute('tabindex','0');media.setAttribute('aria-label','تشغيل الفيديو');const poster=document.createElement('img');poster.alt='معاينة الفيديو';poster.loading='lazy';const play=document.createElement('span');play.className='saraAlbumPlay';play.textContent='▶';media.append(poster,play);media.onclick=()=>showVideo(x.video);media.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showVideo(x.video)}};if(thumbnailObserver)thumbnailObserver.observe(media);else previewVideo(x.video,poster)}const name=document.createElement('strong');name.textContent='👤 '+(x.name||'عضو');card.append(media,name);grid.append(card)}
 }
-open.onclick=()=>{overlay.hidden=false;grid.textContent='جاري تحميل الألبوم...';socket.emit('saraAlbumRequest');document.getElementById('councilMenu').hidden=true};
+open.onclick=()=>{if(open.hidden)return;overlay.hidden=false;grid.textContent='جاري تحميل الألبوم...';socket.emit('saraAlbumRequest');document.getElementById('councilMenu').hidden=true};
 overlay.querySelector('#saraAlbumClose').onclick=()=>overlay.hidden=true;overlay.onclick=e=>{if(e.target===overlay)overlay.hidden=true};
 overlay.querySelectorAll('#saraAlbumTabs button').forEach(b=>b.onclick=()=>{kind=b.dataset.kind;overlay.querySelectorAll('#saraAlbumTabs button').forEach(t=>t.classList.toggle('active',t===b));render()});
 socket.on('saraAlbumItems',data=>{items=Array.isArray(data)?data:[];if(!overlay.hidden)render()});
