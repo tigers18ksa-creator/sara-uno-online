@@ -422,3 +422,7 @@ body:has(#chat:not([hidden])) .layout{margin-top:2px!important}
 
 /* Match Tiger's chat portrait crop to the top profile avatar. */
 .messages .bubble .who.tigerOwnerName>.saraMemberAvatar>img{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:cover!important;object-position:center!important;transform:none!important}
+
+/* Match owner chat avatar outer dimensions to top profile avatar, including mobile. */
+.messages .bubble .who.tigerOwnerName>.saraMemberAvatar{flex:0 0 48px!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;max-width:48px!important;max-height:48px!important;aspect-ratio:1/1!important}
+@media(max-width:650px){.messages .bubble .who.tigerOwnerName>.saraMemberAvatar{flex:0 0 48px!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;max-width:48px!important;max-height:48px!important}}
