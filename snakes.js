@@ -6,7 +6,7 @@ export function installSnakes(io){
  const newToken=()=>Math.random().toString(36).slice(2)+Date.now().toString(36);
  const ladders={3:22,8:30,14:35,20:41,27:50,36:57,42:63,51:72,61:82,71:92,80:99,86:97};
  const snakes={17:7,34:12,48:26,64:45,79:43,87:54,93:73,98:78};
- const publish=()=>ns.emit('rooms',[...rooms.values()].map(r=>({id:r.id,count:r.players.length,status:r.status,viewers:r.viewers.size,target:r.target||2})));
+ const publish=()=>ns.emit('rooms',[...rooms.values()].filter(r=>r.players.some(p=>p.socketId&&ns.sockets.has(p.socketId))).map(r=>({id:r.id,count:r.players.filter(p=>p.socketId&&ns.sockets.has(p.socketId)).length,status:r.status,viewers:[...r.viewers].filter(id=>ns.sockets.has(id)).length,target:r.target||2})));
  function send(r){ns.to(r.id).emit('state',{id:r.id,players:r.players.map(p=>({name:p.name,pos:p.pos,id:p.id,avatar:p.avatar||''})),turn:r.turn,status:r.status,last:r.last,winner:r.winner,target:r.target||2,viewers:r.viewers.size,chat:r.chat||[]});publish()}
  ns.on('connection',s=>{
   s.on('list',publish);
