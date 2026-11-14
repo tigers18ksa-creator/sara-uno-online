@@ -81,6 +81,16 @@
 .tile.special-parking::before{content:"🅿️"!important}
 .tile.special-start::before{content:"🏁"!important}
 .tile:is(.special-jail,.special-chest,.special-chance,.special-parking,.special-start) .propertyTitle{z-index:2!important;position:relative!important}
+
+/* Monopoly action controls: enlarged primary buttons, compact exit */
+.gameActions #roll,.gameActions #buy,.gameActions #end{font-size:clamp(15px,3.7vw,20px)!important;font-weight:900!important;min-height:62px!important;padding:12px 8px!important;flex:1 1 27%!important;white-space:nowrap!important}
+.gameActions #roll{order:1;background:linear-gradient(160deg,#e52c2c,#9e0808)!important;color:#fff!important;border:2px solid #ffce78!important}
+.gameActions #buy{order:2;background:linear-gradient(160deg,#23ae48,#096324)!important;color:#fff!important;border:2px solid #b7e888!important}
+.gameActions #end{order:3;background:linear-gradient(160deg,#2577ed,#123c9e)!important;color:#fff!important;border:2px solid #95c7ff!important}
+.gameActions #exitTables{order:4;flex:0 0 auto!important;font-size:11px!important;padding:8px 10px!important;min-height:36px!important}
+.gameActions #bots,.gameActions #start,.gameActions #restartAfterGame{order:5}
+.gameActions{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
+@media(max-width:410px){.gameActions #roll,.gameActions #buy,.gameActions #end{font-size:14px!important;padding:10px 4px!important;min-height:55px!important}}
 </style><style id="monopolyWiderPerimeter20261114">
 /* Only enlarge the four property bands; preserve the restored board colors, cards and center design. */
 .board{grid-template-columns:1.5fr repeat(9,minmax(0,1fr)) 1.5fr!important;grid-template-rows:1.5fr repeat(9,minmax(0,1fr)) 1.5fr!important;aspect-ratio:1/1.12!important;max-width:690px!important;width:100%!important}
