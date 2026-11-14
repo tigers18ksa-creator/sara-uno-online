@@ -91,6 +91,13 @@
 .gameActions #bots,.gameActions #start,.gameActions #restartAfterGame{order:5}
 .gameActions{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
 @media(max-width:410px){.gameActions #roll,.gameActions #buy,.gameActions #end{font-size:14px!important;padding:10px 4px!important;min-height:55px!important}}
+
+/* Keep Monopoly board and actions centered within narrow mobile viewports */
+html,body{max-width:100%;overflow-x:hidden}
+main,.gameLayout,.boardWrap,.side,.panel{min-width:0}
+.boardWrap{margin-inline:auto}
+.board{margin-inline:auto}
+@media(max-width:600px){header{min-width:0;max-width:100%;flex-wrap:wrap}header h1{min-width:0;overflow-wrap:anywhere}main{width:100%;max-width:100%;padding:8px}.gameLayout{display:flex;flex-direction:column;align-items:stretch;width:100%;gap:8px}.boardWrap,.side{width:100%;max-width:100%;flex:none;min-width:0}.board{width:100%;max-width:100%;min-width:0;aspect-ratio:1}.gameActions{width:100%;min-width:0}.gameActions #roll,.gameActions #buy,.gameActions #end{min-width:0!important;flex:1 1 0!important;white-space:normal!important;font-size:clamp(11px,3.3vw,16px)!important;padding:10px 3px!important}}
 </style><style id="monopolyWiderPerimeter20261114">
 /* Only enlarge the four property bands; preserve the restored board colors, cards and center design. */
 .board{grid-template-columns:1.5fr repeat(9,minmax(0,1fr)) 1.5fr!important;grid-template-rows:1.5fr repeat(9,minmax(0,1fr)) 1.5fr!important;aspect-ratio:1/1.12!important;max-width:690px!important;width:100%!important}
