@@ -11,6 +11,20 @@ export function installSnakes(io){
  ns.on('connection',s=>{
   s.on('list',publish);
   s.on('quickMatch',({name,sessionToken,avatar:photo}={})=>{if(s.data.snakes)return;const key=token(sessionToken)||newToken();const existing=[...rooms.values()].find(r=>r.status==='waiting'&&r.players.length===1&&r.players[0].socketId&&r.players[0].socketId!==s.id);if(existing){existing.players.push({id:key,name:clean(name)||'لاعب',pos:0,socketId:s.id,avatar:avatar(photo)});s.join(existing.id);s.data.snakes={id:existing.id,role:'player',playerId:key};s.emit('joined',{id:existing.id,playerId:key,sessionToken:key});existing.status='playing';send(existing);return}const id=Math.random().toString(36).slice(2,8).toUpperCase();const r={id,players:[{id:key,name:clean(name)||'لاعب',pos:0,socketId:s.id,avatar:avatar(photo)}],viewers:new Set(),turn:0,status:'waiting',last:null,winner:null,chat:[]};rooms.set(id,r);s.join(id);s.data.snakes={id,role:'player',playerId:key};s.emit('joined',{id,playerId:key,sessionToken:key});send(r)});
+  s.on('joinOrCreate',({name,sessionToken,avatar:photo,target=2}={})=>{
+    target=[3,4].includes(Number(target))?Number(target):3;
+    if(s.data.snakes)return s.emit('errorMsg','أنت داخل طاولة بالفعل');
+    const key=token(sessionToken)||newToken();
+    let r=[...rooms.values()].find(room=>room.target===target&&room.status==='waiting'&&room.players.length<target&&room.players.some(p=>p.socketId&&ns.sockets.has(p.socketId))&&!room.players.some(p=>p.id===key));
+    if(!r){
+      const id=Math.random().toString(36).slice(2,8).toUpperCase();
+      r={id,target,players:[],viewers:new Set(),turn:0,status:'waiting',last:null,winner:null,chat:[]};
+      rooms.set(id,r);
+    }
+    r.players.push({id:key,name:clean(name)||'لاعب',pos:0,socketId:s.id,avatar:avatar(photo)});
+    s.join(r.id);s.data.snakes={id:r.id,role:'player',playerId:key};
+    s.emit('joined',{id:r.id,playerId:key,sessionToken:key});send(r);
+  });
   s.on('create',({name,sessionToken,avatar:photo,target=2}={})=>{target=[2,3,4].includes(Number(target))?Number(target):2;name=clean(name)||'لاعب';const key=token(sessionToken)||newToken();const id=Math.random().toString(36).slice(2,8).toUpperCase();const r={id,target,players:[{id:key,name,pos:0,socketId:s.id,avatar:avatar(photo)}],viewers:new Set(),turn:0,status:'waiting',last:null,winner:null,chat:[]};rooms.set(id,r);s.join(id);s.data.snakes={id,role:'player',playerId:key};s.emit('joined',{id,playerId:key,sessionToken:key});send(r)});
   s.on('join',({id,name,watch,sessionToken,avatar:photo}={})=>{const r=rooms.get(String(id||'').toUpperCase());if(!r)return s.emit('errorMsg','الطاولة غير موجودة');if(!watch&&(r.status!=='waiting'||r.players.length>=(r.target||2)))return s.emit('errorMsg','الطاولة ممتلئة أو بدأت');s.join(r.id);s.data.snakes={id:r.id,role:watch?'viewer':'player'};if(watch)r.viewers.add(s.id);else {const key=token(sessionToken)||newToken();r.players.push({id:key,name:clean(name)||'لاعب',pos:0,socketId:s.id,avatar:avatar(photo)});s.data.snakes.playerId=key;}s.emit('joined',{id:r.id,playerId:s.data.snakes.playerId||null,sessionToken:s.data.snakes.playerId||null});send(r)});
   s.on('resume',({id,sessionToken}={})=>{const r=rooms.get(String(id||'').toUpperCase()),key=token(sessionToken);if(!r||!key)return s.emit('resumeFailed');const p=r.players.find(x=>x.id===key);if(!p)return s.emit('resumeFailed');if(p.socketId&&p.socketId!==s.id){const old=ns.sockets.get(p.socketId);if(old){old.leave(r.id);old.data.snakes=null;old.emit('sessionMoved')}}p.socketId=s.id;p.disconnectedAt=null;s.join(r.id);s.data.snakes={id:r.id,role:'player',playerId:key};s.emit('joined',{id:r.id,playerId:key,sessionToken:key,resumed:true});send(r)});
