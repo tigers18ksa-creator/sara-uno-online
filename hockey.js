@@ -18,9 +18,9 @@ export function installHockey(io){
  setInterval(()=>{const now=Date.now(),dt=Math.min(.05,(now-last)/1000);last=now;
  for(const g of games.values()){if(g.status!=='playing')continue;
  const b=g.puck;
- if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>0;const defend=b.x>.48;const travel=Math.max(0,(.79-b.x)/Math.max(.12,b.vx));const projected=b.y+b.vy*Math.min(1.4,travel);const reflected=Math.abs(((projected-.05)%(1.8)+1.8)%1.8-.9)+.05;const targetY=approaching&&defend?reflected:(b.x>.62?b.y:.5);c.ty=Math.max(.11,Math.min(.89,targetY));c.tx=approaching&&b.x>.58?Math.max(.68,Math.min(.87,b.x+.035)):.82;}
+ if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>0;const defend=b.x>.39;const travel=Math.max(0,(.77-b.x)/Math.max(.12,b.vx));const projected=b.y+b.vy*Math.min(1.4,travel);const reflected=Math.abs(((projected-.05)%(1.8)+1.8)%1.8-.9)+.05;const targetY=approaching&&defend?reflected:(b.x>.62?b.y:.5);c.ty=Math.max(.11,Math.min(.89,targetY));c.tx=approaching&&b.x>.49?Math.max(.63,Math.min(.88,b.x+.018)):(b.x>.68?.76:.83);}
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
- const speed=i===1&&g.mode==='cpu'?1.05:1.65;
+ const speed=i===1&&g.mode==='cpu'?1.48:1.65;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
  if(dist>.00001){p.x+=dx/dist*step;p.y+=dy/dist*step;}
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
