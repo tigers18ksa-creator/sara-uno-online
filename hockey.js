@@ -18,7 +18,7 @@ export function installHockey(io){
  setInterval(()=>{const now=Date.now(),dt=Math.min(.05,(now-last)/1000);last=now;
  for(const g of games.values()){if(g.status!=='playing')continue;
  const b=g.puck;
- if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>0;const defend=b.x>.39;const travel=Math.max(0,(.77-b.x)/Math.max(.12,b.vx));const projected=b.y+b.vy*Math.min(1.4,travel);const reflected=Math.abs(((projected-.05)%(1.8)+1.8)%1.8-.9)+.05;const targetY=approaching&&defend?reflected:(b.x>.62?b.y:.5);c.ty=Math.max(.11,Math.min(.89,targetY));c.tx=approaching&&b.x>.49?Math.max(.63,Math.min(.88,b.x+.018)):(b.x>.68?.76:.83);}
+ if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>0;const defend=b.x>.39;const travel=Math.max(0,(.77-b.x)/Math.max(.12,b.vx));const projected=b.y+b.vy*Math.min(1.4,travel);const reflected=Math.abs(((projected-.05)%(1.8)+1.8)%1.8-.9)+.05;const targetY=approaching&&defend?reflected:(b.x>.62?b.y:.5);c.ty=Math.max(.14,Math.min(.86,targetY));c.tx=approaching&&b.x>.49?Math.max(.63,Math.min(.78,b.x-.065)):(b.x>.68?.76:.78);}
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
  const speed=i===1&&g.mode==='cpu'?1.48:1.65;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
@@ -42,8 +42,8 @@ export function installHockey(io){
  if(dist<radius){const nx=dist>.00001?dx/dist:(i===0?1:-1),ny=dist>.00001?dy/dist:0;
  const approach=(b.vx-p.vx)*nx+(b.vy-p.vy)*ny;
  b.x=p.x+nx*(radius+.004);b.y=Math.max(.05,Math.min(.95,p.y+ny*(radius+.004)));
- if(approach<-.025){const impulse=Math.min(1.85,Math.max(.45,-approach*1.22+.36));
- b.vx+=nx*impulse;b.vy+=ny*impulse; if(i===1&&b.vx>-.25)b.vx=-Math.max(.38,Math.abs(b.vx));if(i===0&&b.vx<.25)b.vx=Math.max(.38,Math.abs(b.vx));
+ if(approach<-.025 || (i===1&&b.vx>=-.08&&b.x>=p.x) || (i===0&&b.vx<=.08&&b.x<=p.x)){const impulse=Math.min(1.85,Math.max(.55,-approach*1.22+.36));
+ b.vx+=nx*impulse;b.vy+=ny*impulse; if(i===1){b.vx=-Math.max(.62,Math.abs(b.vx));}else{b.vx=Math.max(.62,Math.abs(b.vx));}
  const v=Math.hypot(b.vx,b.vy);if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
  g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,impulse),hitter:i};}
  }}
