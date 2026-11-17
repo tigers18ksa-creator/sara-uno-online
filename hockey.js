@@ -25,7 +25,7 @@ export function installHockey(io){
  if(dist>.00001){p.x+=dx/dist*step;p.y+=dy/dist*step;}
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
  }
- b.x+=b.vx*dt;b.y+=b.vy*dt;
+ // Substep fast puck movement to reduce tunneling through a moving mallet.\n const puckSteps=Math.max(1,Math.ceil(Math.hypot(b.vx,b.vy)*dt/.025));\n for(let sub=0;sub<puckSteps;sub++){b.x+=b.vx*dt/puckSteps;b.y+=b.vy*dt/puckSteps;
  // Puck remains inside the side rails, including its radius.
  if(b.y<.05||b.y>.95){b.y=Math.max(.05,Math.min(.95,b.y));b.vy=-b.vy*.92;g.effect={type:'wall',seq:++g.effectSeq,force:Math.abs(b.vy)};}
  // A goal is possible only through the center opening at each end.
@@ -35,17 +35,15 @@ export function installHockey(io){
  if(Math.abs(b.y-.5)<.155 && ((end===0&&b.vx<0)||(end===1&&b.vx>0))){goal=end===0?1:0;}
  else{b.x=Math.max(.032,Math.min(.968,b.x));b.vx=-b.vx*.9;g.effect={type:'wall',seq:++g.effectSeq,force:Math.abs(b.vx)};}
  }
- if(goal>=0){g.score[goal]++;g.effect={type:'goal',seq:++g.effectSeq,force:1,scorer:goal};if(g.score[goal]>=7){g.status='finished';g.winner=g.players[goal]?.name||'الكمبيوتر';}reset(g);send(g);list();continue;}
- for(let i=0;i<2;i++){const p=g.paddles[i];const dx=b.x-p.x,dy=b.y-p.y;const dist=Math.hypot(dx,dy);const radius=.083;
+ if(goal>=0){g.score[goal]++;g.effect={type:'goal',seq:++g.effectSeq,force:1,scorer:goal};if(g.score[goal]>=10){g.status='finished';g.winner=g.players[goal]?.name||'الكمبيوتر';}reset(g);send(g);list();continue;}
+ for(let i=0;i<2;i++){const p=g.paddles[i];const dx=b.x-p.x,dy=b.y-p.y;const dist=Math.hypot(dx,dy);const radius=.099;
  if(dist<radius){const nx=dist>.00001?dx/dist:(i===0?1:-1),ny=dist>.00001?dy/dist:0;
  const approach=(b.vx-p.vx)*nx+(b.vy-p.vy)*ny;
  b.x=p.x+nx*radius;b.y=Math.max(.05,Math.min(.95,p.y+ny*radius));
- if(approach<0){const impulse=Math.min(1.65,-approach*1.22+.2);
+ if(approach<0 || (i===0?b.vx<.15:b.vx>-.15)){const impulse=Math.min(1.85,Math.max(.45,-approach*1.22+.36));
  b.vx+=nx*impulse;b.vy+=ny*impulse; if(i===1&&b.vx>-.25)b.vx=-Math.max(.38,Math.abs(b.vx));if(i===0&&b.vx<.25)b.vx=Math.max(.38,Math.abs(b.vx));
  const v=Math.hypot(b.vx,b.vy);if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
- g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,impulse)};}
+ g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,impulse),hitter:i};}
  }}
- send(g);
- }
- },50).unref();
+ }\n send(g);\n }\n },50).unref();
 }
