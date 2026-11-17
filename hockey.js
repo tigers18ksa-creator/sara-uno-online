@@ -25,7 +25,9 @@ export function installHockey(io){
  if(dist>.00001){p.x+=dx/dist*step;p.y+=dy/dist*step;}
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
  }
- // Substep fast puck movement to reduce tunneling through a moving mallet.\n const puckSteps=Math.max(1,Math.ceil(Math.hypot(b.vx,b.vy)*dt/.025));\n for(let sub=0;sub<puckSteps;sub++){b.x+=b.vx*dt/puckSteps;b.y+=b.vy*dt/puckSteps;
+ // Substep fast puck movement to reduce tunneling through a moving mallet.
+ const puckSteps=Math.max(1,Math.ceil(Math.hypot(b.vx,b.vy)*dt/.025));
+ for(let sub=0;sub<puckSteps;sub++){b.x+=b.vx*dt/puckSteps;b.y+=b.vy*dt/puckSteps;
  // Puck remains inside the side rails, including its radius.
  if(b.y<.05||b.y>.95){b.y=Math.max(.05,Math.min(.95,b.y));b.vy=-b.vy*.92;g.effect={type:'wall',seq:++g.effectSeq,force:Math.abs(b.vy)};}
  // A goal is possible only through the center opening at each end.
