@@ -16,9 +16,9 @@
     const frames=document.createElement('div');frames.style.cssText='position:absolute;inset:0;display:flex;overflow:hidden';timeline.append(frames);
     const shadeLeft=document.createElement('div'),shadeRight=document.createElement('div');for(const x of [shadeLeft,shadeRight]){x.style.cssText='position:absolute;top:0;bottom:0;background:#0009;pointer-events:none';timeline.append(x)}
     const selection=document.createElement('div');selection.style.cssText='position:absolute;top:0;bottom:0;border-top:3px solid #23c86a;border-bottom:3px solid #23c86a;box-sizing:border-box;pointer-events:none';timeline.append(selection);
-    const playhead=document.createElement('div');playhead.style.cssText='position:absolute;left:50%;top:0;bottom:0;width:4px;transform:translateX(-50%);background:white;border-radius:4px;box-shadow:0 0 0 1px #2229,0 0 6px #0009;pointer-events:auto;touch-action:none;cursor:ew-resize;z-index:5';timeline.append(playhead);
+    const playhead=document.createElement('div');playhead.style.cssText='position:absolute;left:0%;top:0;bottom:0;width:4px;transform:translateX(-50%);background:white;border-radius:4px;box-shadow:0 0 0 1px #2229,0 0 6px #0009;pointer-events:auto;touch-action:none;cursor:ew-resize;z-index:5';timeline.append(playhead);
     let playheadTime=0;
-    const updatePlayhead=()=>{playheadTime=Math.max(0,Math.min(duration,vid.currentTime||0));const pct=playheadTime/duration*100;frames.style.transform='translateX(calc(50% - '+pct+'%))';frames.style.width='100%';frames.style.overflow='visible';};
+    const updatePlayhead=()=>{playheadTime=Math.max(0,Math.min(duration,vid.currentTime||0));const pct=playheadTime/duration*100;playhead.style.left=pct+'%';};
     vid.addEventListener('seeked',updatePlayhead);
     vid.addEventListener('timeupdate',updatePlayhead);
     const handle=(side)=>{const h=document.createElement('div');h.style.cssText='position:absolute;top:0;bottom:0;width:19px;background:#23c86a;border-radius:5px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:ew-resize;z-index:2;transform:translateX(-50%)';h.innerHTML='<span style="width:3px;height:23px;border-radius:3px;background:white;box-shadow:5px 0 #ffffff90,-5px 0 #ffffff90"></span>';h.setAttribute('aria-label',side==='start'?'اسحب لتحديد بداية الفيديو':'اسحب لتحديد نهاية الفيديو');timeline.append(h);return h};
@@ -29,6 +29,7 @@
     const cancel=btn('إلغاء','#777'),whole=btn('إرسال كامل','#555'),trim=btn('قص وإرسال','#8a2145');
     const refresh=()=>{const x=startTime/duration*100,y=endTime/duration*100;shadeLeft.style.cssText+=';left:0;width:'+x+'%';shadeRight.style.cssText+=';right:0;width:'+(100-y)+'%';selection.style.left=x+'%';selection.style.width=(y-x)+'%';leftHandle.style.left=x+'%';rightHandle.style.left=y+'%';label.textContent='من '+fmt(startTime)+' إلى '+fmt(endTime)+' ('+fmt(endTime-startTime)+')'};
     let dragging=null,lastScrubX=null,dragOriginX=0,dragOriginTime=0;const setFromPointer=e=>{const r=timeline.getBoundingClientRect();const t=Math.max(0,Math.min(duration,(e.clientX-r.left)/r.width*duration));if(dragging==='start')startTime=Math.min(t,endTime-.2);else if(dragging==='end')endTime=Math.max(t,startTime+.2);startTime=Math.max(0,startTime);endTime=Math.min(duration,endTime);vid.currentTime=startTime;refresh()};
+    playhead.style.setProperty('min-width','12px');playhead.style.background='linear-gradient(90deg,transparent 0,transparent 4px,#fff 4px,#fff 8px,transparent 8px)';
     const beginDrag=(e,mode)=>{dragging=mode;dragOriginX=e.clientX;dragOriginTime=vid.currentTime||0;lastScrubX=e.clientX;timeline.setPointerCapture(e.pointerId);e.preventDefault()};
     playhead.addEventListener('pointerdown',e=>{beginDrag(e,'playhead');e.stopPropagation()});
     timeline.addEventListener('pointerdown',e=>{if(e.target===playhead)return;const r=timeline.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*duration;const nearStart=Math.abs(e.clientX-(r.left+startTime/duration*r.width))<24,nearEnd=Math.abs(e.clientX-(r.left+endTime/duration*r.width))<24;const mode=nearStart||nearEnd?(Math.abs(x-startTime)<=Math.abs(x-endTime)?'start':'end'):'scrub';beginDrag(e,mode);if(mode==='scrub'){vid.currentTime=Math.max(startTime,Math.min(endTime,dragOriginTime+(e.clientX-r.left-r.width/2)/r.width*duration));updatePlayhead()}else setFromPointer(e)});
@@ -53,7 +54,7 @@
      }catch(e){trim.disabled=false;trim.textContent='قص وإرسال';alert(e.message||'تعذر قص الفيديو')}
     };
     row.append(cancel,whole,trim);
-    panel.append(heading,vid,help,timeline,label,preview,row);overlay.append(panel);document.body.append(overlay);refresh();
+    panel.append(heading,vid,help,timeline,label,preview,row);overlay.append(panel);document.body.append(overlay);refresh();updatePlayhead();
    });
   }finally{URL.revokeObjectURL(url)}
  };
