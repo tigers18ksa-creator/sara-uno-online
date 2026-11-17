@@ -1,3 +1,4 @@
+import {installHockey} from './hockey.js';
 import {installMonopoly} from './monopoly.js';
 import {installVideoTrim} from './video-trim-server.js';
 import {installSnakes} from './snakes.js';
@@ -258,4 +259,4 @@ function saraAnnouncementAttach(socket,ownerCheck){
 io.on('connection',s=>saraAnnouncementAttach(s,()=>{const u=users.get(s.data.token);return !!(u&&u.sid===s.id&&u.primary)}));
 io.of('/guest').on('connection',s=>saraAnnouncementAttach(s,()=>false));
 
-installMonopoly(io);installMafia(io,gameGate);installSnakes(io);installSalon(io);setupPremiumGames(io,gameGate);Promise.all([loadPersistentGamesGate(),loadSharedWallpaper(),loadRoomGate()]).then(()=>http.listen(process.env.PORT||3000,'0.0.0.0'));
+installHockey(io);installMonopoly(io);installMafia(io,gameGate);installSnakes(io);installSalon(io);setupPremiumGames(io,gameGate);Promise.all([loadPersistentGamesGate(),loadSharedWallpaper(),loadRoomGate()]).then(()=>http.listen(process.env.PORT||3000,'0.0.0.0'));
