@@ -34,8 +34,17 @@ export function installHockey(io){
  let goal=-1;
  if(b.x<.032||b.x>.968){
  const end=b.x<.032?0:1;
- if(Math.abs(b.y-.5)<.155 && ((end===0&&b.vx<0)||(end===1&&b.vx>0))){goal=end===0?1:0;}
- else{b.x=Math.max(.032,Math.min(.968,b.x));b.vx=-b.vx*.9;g.effect={type:'wall',seq:++g.effectSeq,force:Math.abs(b.vx)};}
+ // The entire puck must fit inside the goal mouth (visual opening is 32% wide).
+ const puckHalfWidth=.055,clearOpening=.16-puckHalfWidth;
+ const insideOpening=Math.abs(b.y-.5)<=clearOpening;
+ const movingIntoGoal=end===0?b.vx<0:b.vx>0;
+ if(insideOpening&&movingIntoGoal){
+ // Only score after the puck's trailing edge has completely crossed the goal line.
+ if((end===0&&b.x<.032-.04)||(end===1&&b.x>.968+.04))goal=end===0?1:0;
+ }else{
+ b.x=Math.max(.032,Math.min(.968,b.x));b.vx=-b.vx*.9;
+ g.effect={type:'wall',seq:++g.effectSeq,force:Math.abs(b.vx)};
+ }
  }
  if(goal>=0){g.score[goal]++;g.effect={type:'goal',seq:++g.effectSeq,force:1,scorer:goal};if(g.score[goal]>=10){g.status='finished';g.winner=g.players[goal]?.name||'الكمبيوتر';}if(g.status==='playing'){g.goalPauseUntil=now+1300;b.vx=0;b.vy=0;}send(g);list();break;}
  for(let i=0;i<2;i++){const p=g.paddles[i];const dx=b.x-p.x,dy=b.y-p.y;const dist=Math.hypot(dx,dy);const radius=.099;
