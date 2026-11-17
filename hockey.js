@@ -45,5 +45,8 @@ export function installHockey(io){
  const v=Math.hypot(b.vx,b.vy);if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
  g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,impulse),hitter:i};}
  }}
- }\n send(g);\n }\n },50).unref();
+ }
+ send(g);
+ }
+ },50).unref();
 }
