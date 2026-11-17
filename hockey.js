@@ -16,7 +16,7 @@ export function installHockey(io){
  io.on('connection',attach);io.of('/guest').on('connection',attach);
  let last=Date.now();
  setInterval(()=>{const now=Date.now(),dt=Math.min(.05,(now-last)/1000);last=now;
- for(const g of games.values()){if(g.status!=='playing')continue;
+ for(const g of games.values()){if(g.status!=='playing')continue;if(g.goalPauseUntil){if(now<g.goalPauseUntil)continue;g.goalPauseUntil=0;reset(g);send(g);continue;}
  const b=g.puck;
  if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>0;const defend=b.x>.39;const travel=Math.max(0,(.77-b.x)/Math.max(.12,b.vx));const projected=b.y+b.vy*Math.min(1.4,travel);const reflected=Math.abs(((projected-.05)%(1.8)+1.8)%1.8-.9)+.05;const targetY=approaching&&defend?reflected:(b.x>.62?b.y:.5);c.ty=Math.max(.14,Math.min(.86,targetY));c.tx=approaching&&b.x>.49?Math.max(.63,Math.min(.78,b.x-.065)):(b.x>.68?.76:.78);}
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
@@ -37,7 +37,7 @@ export function installHockey(io){
  if(Math.abs(b.y-.5)<.155 && ((end===0&&b.vx<0)||(end===1&&b.vx>0))){goal=end===0?1:0;}
  else{b.x=Math.max(.032,Math.min(.968,b.x));b.vx=-b.vx*.9;g.effect={type:'wall',seq:++g.effectSeq,force:Math.abs(b.vx)};}
  }
- if(goal>=0){g.score[goal]++;g.effect={type:'goal',seq:++g.effectSeq,force:1,scorer:goal};if(g.score[goal]>=10){g.status='finished';g.winner=g.players[goal]?.name||'الكمبيوتر';}reset(g);send(g);list();break;}
+ if(goal>=0){g.score[goal]++;g.effect={type:'goal',seq:++g.effectSeq,force:1,scorer:goal};if(g.score[goal]>=10){g.status='finished';g.winner=g.players[goal]?.name||'الكمبيوتر';}if(g.status==='playing'){g.goalPauseUntil=now+1300;b.vx=0;b.vy=0;}send(g);list();break;}
  for(let i=0;i<2;i++){const p=g.paddles[i];const dx=b.x-p.x,dy=b.y-p.y;const dist=Math.hypot(dx,dy);const radius=.099;
  if(dist<radius){const nx=dist>.00001?dx/dist:(i===0?1:-1),ny=dist>.00001?dy/dist:0;
  const approach=(b.vx-p.vx)*nx+(b.vy-p.vy)*ny;
