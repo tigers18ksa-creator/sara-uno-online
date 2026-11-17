@@ -1,4 +1,5 @@
 import {installMonopoly} from './monopoly.js';
+import {installVideoTrim} from './video-trim-server.js';
 import {installSnakes} from './snakes.js';
 import {installMafia} from './mafia.js';
 import {readFileSync,writeFileSync,readdirSync} from 'node:fs';
@@ -120,6 +121,7 @@ const reactionReady=store('private',{sender:REACTION_STORE_FROM,other:REACTION_S
   }
 }).catch(e=>{console.error('Could not load saved reactions:',e)});
 let saraLive=null;const saraLiveViewers=new Set();const saraLiveComments=[];const saraLiveNames=new Map();const saraLiveState=()=>({active:!!saraLive,startedAt:saraLive?.startedAt||0,host:saraLive?.host||'',viewers:saraLiveViewers.size});const saraLiveBroadcast=()=>io.emit('saraLiveState',saraLiveState());
+installVideoTrim(app,io,users);
 io.on('connection',s=>{
   s.on('saraLiveSync',()=>{if(users.get(s.data.token)?.sid===s.id){s.emit('saraLiveState',saraLiveState());s.emit('saraLiveHistory',saraLiveComments.slice(-80))}});
   s.on('saraLiveStart',()=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id||!u.owner)return;if(saraLive&&saraLive.sid!==s.id)return;saraLive={sid:s.id,host:u.name,startedAt:Date.now()};saraLiveViewers.clear();saraLiveNames.clear();saraLiveComments.length=0;saraLiveBroadcast()});
