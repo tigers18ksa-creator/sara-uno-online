@@ -8,15 +8,15 @@
    return await new Promise((resolve,reject)=>{
     const overlay=document.createElement('div');overlay.style.cssText='position:fixed;inset:0;background:#000c;z-index:2147483600;display:flex;align-items:center;justify-content:center;padding:12px;direction:rtl';
     const panel=document.createElement('div');panel.style.cssText='width:min(94vw,460px);max-height:94vh;overflow:auto;background:#fff;color:#222;border-radius:16px;padding:16px;box-sizing:border-box;font-family:inherit';
-    const heading=document.createElement('h3');heading.textContent='معاينة وقص الفيديو';heading.style.margin='0 0 10px';
+    const heading=document.createElement('h3');heading.textContent='اختر الجزء اللي تبي ترسله';heading.style.margin='0 0 10px';
     const vid=document.createElement('video');vid.src=url;vid.controls=true;vid.playsInline=true;vid.style.cssText='width:100%;max-height:48vh;background:#111;border-radius:9px';
     const fmt=n=>Math.floor(n/60)+':'+String(Math.floor(n%60)).padStart(2,'0');
     const label=document.createElement('div');label.style.cssText='text-align:center;margin:10px 0;font-weight:bold';
     const makeSlider=()=>{const el=document.createElement('input');el.type='range';el.min='0';el.max=String(duration);el.step='0.1';el.style.width='100%';return el};
     const start=makeSlider(),end=makeSlider();end.value=String(duration);
-    const row=document.createElement('div');row.style.cssText='display:flex;gap:8px;justify-content:space-between;margin-top:14px';
+    const help=document.createElement('p');help.textContent='شغّل الفيديو، ووقف عند البداية واضغط «بداية هنا»، ثم وقف عند النهاية واضغط «نهاية هنا». بعدها عاين الجزء المقصوص.';help.style.cssText='font-size:13px;line-height:1.8;color:#555';const pickRow=document.createElement('div');pickRow.style.cssText='display:flex;gap:8px;margin:8px 0';const row=document.createElement('div');row.style.cssText='display:flex;gap:8px;justify-content:space-between;margin-top:14px';
     const btn=(title,background)=>{const b=document.createElement('button');b.type='button';b.textContent=title;b.style.cssText='flex:1;padding:11px 5px;background:'+background+';color:white;border:0;border-radius:9px;font-weight:bold';return b};
-    const cancel=btn('إلغاء','#777'),whole=btn('إرسال كامل','#555'),trim=btn('قص وإرسال','#8a2145');
+    const pickStart=btn('① بداية هنا','#236b67'),pickEnd=btn('② نهاية هنا','#236b67'),preview=btn('▶ معاينة القص','#335e9c');pickStart.onclick=()=>{start.value=String(vid.currentTime);refresh()};pickEnd.onclick=()=>{end.value=String(vid.currentTime);refresh()};preview.onclick=()=>{vid.currentTime=Number(start.value);vid.play().catch(()=>{})};vid.addEventListener('timeupdate',()=>{if(!vid.paused&&vid.currentTime>=Number(end.value)){vid.pause();vid.currentTime=Number(start.value)}});pickRow.append(pickStart,pickEnd);const cancel=btn('إلغاء','#777'),whole=btn('إرسال كامل','#555'),trim=btn('قص وإرسال','#8a2145');
     const refresh=()=>{let a=Number(start.value),b=Number(end.value);if(b<=a+.1){if(document.activeElement===start)end.value=String(Math.min(duration,a+.1));else start.value=String(Math.max(0,b-.1));a=Number(start.value);b=Number(end.value)}label.textContent='من '+fmt(a)+' إلى '+fmt(b)+' ('+fmt(b-a)+')'};
     start.oninput=()=>{refresh();vid.currentTime=Number(start.value)};end.oninput=()=>{refresh();vid.currentTime=Number(start.value)};
     const done=(v,error)=>{vid.pause();overlay.remove();if(error)reject(error);else resolve(v)};
@@ -26,7 +26,7 @@
      const a=Number(start.value),b=Number(end.value);
      if(b-a<.2)return;
      if(a<.1&&b>=duration-.1)return done(file);
-     trim.disabled=true;trim.textContent='جاري قص الفيديو...';
+     trim.disabled=true;trim.textContent='جاري قص الفيديو... انتظر';
      try{
       const auth=await new Promise((resolve,reject)=>socket.timeout(15000).emit('saraTrimTicket',(err,r)=>err||!r?.token?reject(Error(r?.error||'تعذر بدء القص')):resolve(r.token)));
       const response=await fetch('/api/video/trim',{method:'POST',headers:{'Content-Type':'application/octet-stream','x-sara-trim-token':auth,'x-trim-start':String(a),'x-trim-end':String(b)},body:file});
@@ -37,7 +37,7 @@
     };
     row.append(cancel,whole,trim);
     const p1=document.createElement('div');p1.textContent='بداية المقطع';const p2=document.createElement('div');p2.textContent='نهاية المقطع';
-    panel.append(heading,vid,p1,start,p2,end,label,row);overlay.append(panel);document.body.append(overlay);refresh();
+    panel.append(heading,help,vid,pickRow,p1,start,p2,end,label,preview,row);overlay.append(panel);document.body.append(overlay);refresh();
    });
   }finally{URL.revokeObjectURL(url)}
  };
