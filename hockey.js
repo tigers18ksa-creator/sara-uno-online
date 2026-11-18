@@ -51,6 +51,9 @@ export function installHockey(io){
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
  }
  // Substep fast puck movement to reduce tunneling through a moving mallet.
+ // Slightly heavier puck: mild glide resistance, retaining momentum and shot direction.
+ const puckDrag=Math.exp(-.38*dt);
+ b.vx*=puckDrag;b.vy*=puckDrag;
  const puckSteps=Math.max(1,Math.ceil(Math.hypot(b.vx,b.vy)*dt/.025));
  for(let sub=0;sub<puckSteps;sub++){b.x+=b.vx*dt/puckSteps;b.y+=b.vy*dt/puckSteps;
  // Puck remains inside the side rails, including its radius.
@@ -91,7 +94,7 @@ export function installHockey(io){
  // transfers more momentum along the actual contact normal.
  const swing=Math.max(0,p.vx*nx+p.vy*ny);
  const incoming=Math.max(0,-(b.vx*nx+b.vy*ny));
- const strength=Math.min(1.75,Math.max(.12,incoming*.86+swing*.75));
+ const strength=Math.min(1.55,Math.max(.11,incoming*.83+swing*.65));
  const tangentX=-ny,tangentY=nx;
  const tangent=(b.vx*tangentX+b.vy*tangentY)*.93+(p.vx*tangentX+p.vy*tangentY)*.14;
  b.vx=nx*strength+tangentX*tangent;
