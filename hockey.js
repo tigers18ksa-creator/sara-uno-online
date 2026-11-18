@@ -28,8 +28,8 @@ export function installHockey(io){
  projected=low+(projected>span?2*span-projected:projected);
  projected=Math.max(.12,Math.min(.88,projected));
  // Medium-strength defense: follow shots without perfect positioning.
- const danger=incoming&&b.x>.59;
- const attackable=b.x>.65&&b.x<.88;
+ const danger=incoming&&b.x>.64;
+ const attackable=b.x>.70&&b.x<.87;
  const attack=!danger&&attackable;
  if(attack){
    // Set up on the goal-side, then lunge through the puck toward the player.
@@ -39,16 +39,16 @@ export function installHockey(io){
    cpu.ty=Math.max(.12,Math.min(.88,b.y+(b.y>.5?-.018:.018)));
    cpu.tx=aligned&&inRange?Math.max(.59,b.x-.025):behind;
  }else{
-   cpu.ty=danger?Math.max(.19,Math.min(.81,projected*.58+.5*.42)):.5;
+   cpu.ty=danger?Math.max(.19,Math.min(.81,projected*.48+.5*.52)):.5;
    cpu.tx=danger&&b.x>.67?Math.max(.66,Math.min(.91,b.x+.11)):.85;
  }
  if(b.x>.91){cpu.tx=.91;cpu.ty=Math.max(.31,Math.min(.69,b.y));}
  }
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
  p.prevX=oldX;p.prevY=oldY;
- const speed=i===1&&g.mode==='cpu'?.91:2.05;
+ const speed=i===1&&g.mode==='cpu'?.78:2.8;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
- if(dist>.00001){const ease=i===1&&g.mode==='cpu'?.77:Math.min(1,.58+dist*3.2);p.x+=dx/dist*step*ease;p.y+=dy/dist*step*ease;}
+ if(dist>.00001){const ease=i===1&&g.mode==='cpu'?.73:Math.min(1,.88+dist*2.8);p.x+=dx/dist*step*ease;p.y+=dy/dist*step*ease;}
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
  }
  // Substep fast puck movement to reduce tunneling through a moving mallet.
