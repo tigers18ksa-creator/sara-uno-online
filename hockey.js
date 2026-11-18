@@ -19,9 +19,9 @@ export function installHockey(io){
  setInterval(()=>{const now=Date.now(),dt=Math.min(.05,(now-last)/1000);last=now;
  for(const g of games.values()){if(g.status!=='playing')continue;if(g.goalPauseUntil){if(now<g.goalPauseUntil)continue;g.goalPauseUntil=0;reset(g);send(g);continue;}
  const b=g.puck;
- if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>.025;const travel=Math.max(0,(.76-b.x)/Math.max(.12,b.vx));const projected=b.y+b.vy*Math.min(1.65,travel);const reflected=Math.abs(((projected-.05)%(1.8)+1.8)%1.8-.9)+.05;const threatened=approaching&&b.x>.30;const targetY=threatened?reflected:(b.x>.56?b.y:.5);c.ty=Math.max(.14,Math.min(.86,targetY));const strike=threatened&&b.x>.55&&Math.abs(c.y-b.y)<.19;c.tx=strike?Math.max(.62,Math.min(.78,b.x-.072)):(b.x>.66?.74:.79);}
+ if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>.015;const targetX=.76;const travel=approaching?Math.max(0,(targetX-b.x)/Math.max(.08,b.vx)):0;let projected=b.y+b.vy*travel;const low=.05,high=.95,span=high-low;projected=((projected-low)%(span*2)+(span*2))%(span*2);projected=low+(projected>span?2*span-projected:projected);const threatened=approaching&&b.x>.22;const intercept=Math.max(.13,Math.min(.87,projected));const attack=b.x>.52&&b.vx<.02;const targetY=threatened?intercept:(attack?Math.max(.13,Math.min(.87,b.y)):.5);c.ty=targetY;const strike=threatened&&b.x>.51&&Math.abs(c.y-intercept)<.14;c.tx=strike?Math.max(.57,Math.min(.78,b.x-.078)):(attack?.67:.79);}
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
- const speed=i===1&&g.mode==='cpu'?2.05:1.65;
+ const speed=i===1&&g.mode==='cpu'?2.85:1.65;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
  if(dist>.00001){p.x+=dx/dist*step;p.y+=dy/dist*step;}
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
