@@ -75,7 +75,17 @@ export function installHockey(io){
  for(let i=0;i<2;i++){const p=g.paddles[i];const dx=b.x-p.x,dy=b.y-p.y;const dist=Math.hypot(dx,dy);const radius=.099;
  if(dist<radius){const nx=dist>.00001?dx/dist:(i===0?1:-1),ny=dist>.00001?dy/dist:0;
  const approach=(b.vx-p.vx)*nx+(b.vy-p.vy)*ny;
- b.x=p.x+nx*(radius+.006);b.y=Math.max(.05,Math.min(.95,p.y+ny*(radius+.006)));
+ b.x=p.x+nx*(radius+.008);b.y=Math.max(.05,Math.min(.95,p.y+ny*(radius+.008)));
+ // Avoid corner traps: if the puck is pinned against a rail, separate tangentially
+ // and add a minimum outward speed instead of letting the mallet carry it.
+ const railTrap=b.y<=.065||b.y>=.935;
+ if(railTrap){
+   const awayX=i===0?1:-1;
+   if(Math.abs(b.vx)<.28||b.vx*awayX<0) b.vx=awayX*.48;
+   b.vy=b.y<=.065?Math.max(.24,b.vy):Math.min(-.24,b.vy);
+   b.x=Math.max(.045,Math.min(.955,b.x+awayX*.013));
+ }
+
  if(approach<-.025){const impulse=Math.min(1.85,Math.max(.55,-approach*1.22+.36));
  b.vx+=nx*impulse;b.vy+=ny*impulse;
  // CPU should block/return shots, never propel the puck into its own goal.
