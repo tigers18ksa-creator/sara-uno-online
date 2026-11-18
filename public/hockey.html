@@ -31,9 +31,9 @@ game.paddles.forEach((p,i)=>{const x=p.y*w,y=(side===0?1-p.x:p.x)*h;const isOwn=
 const px=game.puck.y*w,py=(side===0?1-game.puck.x:game.puck.x)*h,r=31;ctx.save();
 ctx.shadowColor='#11182766';ctx.shadowBlur=13;ctx.shadowOffsetY=7;ctx.fillStyle='#171717';ctx.beginPath();ctx.ellipse(px,py+6,r+1,r*.78,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.shadowOffsetY=0;
 // Smooth 3D concave yellow puck: soft sidewall, raised rounded lip and recessed center.
-const side=ctx.createLinearGradient(px,py-r*.8,px,py+r);
-side.addColorStop(0,'#ffe95c');side.addColorStop(.45,'#ffce05');side.addColorStop(.78,'#d69a00');side.addColorStop(1,'#986000');
-ctx.fillStyle=side;ctx.beginPath();ctx.ellipse(px,py+6,r,r*.83,0,0,Math.PI*2);ctx.fill();
+const puckSideGradient=ctx.createLinearGradient(px,py-r*.8,px,py+r);
+puckSideGradient.addColorStop(0,'#ffe95c');puckSideGradient.addColorStop(.45,'#ffce05');puckSideGradient.addColorStop(.78,'#d69a00');puckSideGradient.addColorStop(1,'#986000');
+ctx.fillStyle=puckSideGradient;ctx.beginPath();ctx.ellipse(px,py+6,r,r*.83,0,0,Math.PI*2);ctx.fill();
 const lip=ctx.createRadialGradient(px-9,py-12,3,px,py-2,r+2);
 lip.addColorStop(0,'#fff7a6');lip.addColorStop(.48,'#ffde20');lip.addColorStop(.77,'#ffc000');lip.addColorStop(.91,'#fff18a');lip.addColorStop(1,'#b97a00');
 ctx.fillStyle=lip;ctx.beginPath();ctx.ellipse(px,py-4,r,r*.79,0,0,Math.PI*2);ctx.fill();
