@@ -45,9 +45,9 @@ export function installHockey(io){
  if(b.x>.91){cpu.tx=.91;cpu.ty=Math.max(.31,Math.min(.69,b.y));}
  }
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
- const speed=i===1&&g.mode==='cpu'?1.65:1.65;
+ const speed=i===1&&g.mode==='cpu'?1.12:2.05;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
- if(dist>.00001){p.x+=dx/dist*step;p.y+=dy/dist*step;}
+ if(dist>.00001){const ease=i===1&&g.mode==='cpu'?.80:Math.min(1,.58+dist*3.2);p.x+=dx/dist*step*ease;p.y+=dy/dist*step*ease;}
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
  }
  // Substep fast puck movement to reduce tunneling through a moving mallet.
@@ -86,15 +86,22 @@ export function installHockey(io){
    b.x=Math.max(.045,Math.min(.955,b.x+awayX*.013));
  }
 
- if(approach<-.025){const impulse=Math.min(1.85,Math.max(.55,-approach*1.22+.36));
- b.vx+=nx*impulse;b.vy+=ny*impulse;
- // CPU should block/return shots, never propel the puck into its own goal.
- if(g.mode==='cpu'&&i===1&&b.vx>.02){
- b.vx=-Math.max(.43,Math.min(.98,Math.abs(b.vx)));
- b.vy=Math.max(-1.05,Math.min(1.05,b.vy+(b.y-.5)*.38));
+ if(approach<-.025){
+ // Continuous collision response: a gentle tap gives a gentle return, a fast swing
+ // transfers more momentum along the actual contact normal.
+ const swing=Math.max(0,p.vx*nx+p.vy*ny);
+ const incoming=Math.max(0,-(b.vx*nx+b.vy*ny));
+ const strength=Math.min(1.75,Math.max(.12,incoming*.86+swing*.75));
+ const tangentX=-ny,tangentY=nx;
+ const tangent=(b.vx*tangentX+b.vy*tangentY)*.93+(p.vx*tangentX+p.vy*tangentY)*.14;
+ b.vx=nx*strength+tangentX*tangent;
+ b.vy=ny*strength+tangentY*tangent;
+ // Keep CPU returns toward the player without giving it an unnatural power boost.
+ if(g.mode==='cpu'&&i===1&&b.vx>-.12)b.vx=-Math.max(.24,Math.min(.85,strength));
+ const v=Math.hypot(b.vx,b.vy);
+ if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
+ g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,strength),hitter:i};
  }
- const v=Math.hypot(b.vx,b.vy);if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
- g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,impulse),hitter:i};}
  }}
  }
  send(g);
