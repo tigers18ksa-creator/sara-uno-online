@@ -51,9 +51,9 @@ export function installHockey(io){
  for(let i=0;i<2;i++){const p=g.paddles[i];const dx=b.x-p.x,dy=b.y-p.y;const dist=Math.hypot(dx,dy);const radius=.099;
  if(dist<radius){const nx=dist>.00001?dx/dist:(i===0?1:-1),ny=dist>.00001?dy/dist:0;
  const approach=(b.vx-p.vx)*nx+(b.vy-p.vy)*ny;
- b.x=p.x+nx*(radius+.004);b.y=Math.max(.05,Math.min(.95,p.y+ny*(radius+.004)));
- if(approach<-.025 || (i===1&&b.vx>=-.08&&b.x>=p.x) || (i===0&&b.vx<=.08&&b.x<=p.x)){const impulse=Math.min(1.85,Math.max(.55,-approach*1.22+.36));
- b.vx+=nx*impulse;b.vy+=ny*impulse; if(i===1){b.vx=-Math.max(.62,Math.abs(b.vx));}else{b.vx=Math.max(.62,Math.abs(b.vx));}
+ b.x=p.x+nx*(radius+.006);b.y=Math.max(.05,Math.min(.95,p.y+ny*(radius+.006)));
+ if(approach<-.025){const impulse=Math.min(1.85,Math.max(.55,-approach*1.22+.36));
+ b.vx+=nx*impulse;b.vy+=ny*impulse;
  const v=Math.hypot(b.vx,b.vy);if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
  g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,impulse),hitter:i};}
  }}
