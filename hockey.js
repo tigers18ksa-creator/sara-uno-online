@@ -19,7 +19,24 @@ export function installHockey(io){
  setInterval(()=>{const now=Date.now(),dt=Math.min(.05,(now-last)/1000);last=now;
  for(const g of games.values()){if(g.status!=='playing')continue;if(g.goalPauseUntil){if(now<g.goalPauseUntil)continue;g.goalPauseUntil=0;reset(g);send(g);continue;}
  const b=g.puck;
- if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>.015;const targetX=.76;const travel=approaching?Math.max(0,(targetX-b.x)/Math.max(.08,b.vx)):0;let projected=b.y+b.vy*travel;const low=.05,high=.95,span=high-low;projected=((projected-low)%(span*2)+(span*2))%(span*2);projected=low+(projected>span?2*span-projected:projected);const threatened=approaching&&b.x>.22;const intercept=Math.max(.13,Math.min(.87,projected));const attack=b.x>.52&&b.vx<.02;const targetY=threatened?intercept:(attack?Math.max(.13,Math.min(.87,b.y)):.5);c.ty=targetY;const strike=threatened&&b.x>.51&&Math.abs(c.y-intercept)<.14;c.tx=strike?Math.max(.57,Math.min(.78,b.x-.078)):(attack?.67:.79);}
+ if(g.mode==='cpu'){
+ const cpu=g.paddles[1],incoming=b.vx>.025;
+ // Predict side-wall rebounds and intercept before the puck reaches the CPU goal.
+ const defendX=.82,travel=incoming?Math.max(0,(defendX-b.x)/Math.max(.06,b.vx)):0;
+ const low=.05,span=.90;
+ let predicted=b.y+b.vy*travel;
+ predicted=((predicted-low)%(2*span)+2*span)%(2*span);
+ predicted=low+(predicted>span?2*span-predicted:predicted);
+ predicted=Math.max(.11,Math.min(.89,predicted));
+ const danger=incoming&&b.x>.32;
+ const reachable=b.x>.53&&b.x<.89;
+ const canAttack=reachable&&b.vx<=.04;
+ cpu.ty=danger?predicted:(canAttack?Math.max(.11,Math.min(.89,b.y)):.5);
+ // Stay goal-side of the puck: never chase behind it and knock it into our own goal.
+ const safeX=Math.max(.58,Math.min(.91,b.x+.115));
+ cpu.tx=danger&&b.x>.58?safeX:(canAttack?safeX:.86);
+ if(b.x>.91){cpu.tx=.91;cpu.ty=Math.max(.32,Math.min(.68,b.y));}
+ }
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
  const speed=i===1&&g.mode==='cpu'?2.85:1.65;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
@@ -54,6 +71,11 @@ export function installHockey(io){
  b.x=p.x+nx*(radius+.006);b.y=Math.max(.05,Math.min(.95,p.y+ny*(radius+.006)));
  if(approach<-.025){const impulse=Math.min(1.85,Math.max(.55,-approach*1.22+.36));
  b.vx+=nx*impulse;b.vy+=ny*impulse;
+ // CPU should block/return shots, never propel the puck into its own goal.
+ if(g.mode==='cpu'&&i===1&&b.vx>.02){
+ b.vx=-Math.max(.62,Math.min(1.5,Math.abs(b.vx)));
+ b.vy=Math.max(-1.05,Math.min(1.05,b.vy+(b.y-.5)*.38));
+ }
  const v=Math.hypot(b.vx,b.vy);if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
  g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,impulse),hitter:i};}
  }}
