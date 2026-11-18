@@ -45,6 +45,7 @@ export function installHockey(io){
  if(b.x>.91){cpu.tx=.91;cpu.ty=Math.max(.31,Math.min(.69,b.y));}
  }
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
+ p.prevX=oldX;p.prevY=oldY;
  const speed=i===1&&g.mode==='cpu'?1.12:2.05;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
  if(dist>.00001){const ease=i===1&&g.mode==='cpu'?.80:Math.min(1,.58+dist*3.2);p.x+=dx/dist*step*ease;p.y+=dy/dist*step*ease;}
@@ -75,10 +76,15 @@ export function installHockey(io){
  }
  }
  if(goal>=0){g.score[goal]++;g.effect={type:'goal',seq:++g.effectSeq,force:1,scorer:goal};if(g.score[goal]>=10){g.status='finished';g.winner=g.players[goal]?.name||'الكمبيوتر';}if(g.status==='playing'){g.goalPauseUntil=now+1300;b.vx=0;b.vy=0;}send(g);list();break;}
- for(let i=0;i<2;i++){const p=g.paddles[i];const dx=b.x-p.x,dy=b.y-p.y;const dist=Math.hypot(dx,dy);const radius=.099;
+ for(let i=0;i<2;i++){const p=g.paddles[i];// Swept mallet contact: detect the full path between ticks, not just its final position.
+ const pathX=p.x-(p.prevX??p.x),pathY=p.y-(p.prevY??p.y);
+ const pathLen2=pathX*pathX+pathY*pathY;
+ const contactT=pathLen2>1e-9?Math.max(0,Math.min(1,((b.x-(p.prevX??p.x))*pathX+(b.y-(p.prevY??p.y))*pathY)/pathLen2)):1;
+ const hitX=(p.prevX??p.x)+pathX*contactT,hitY=(p.prevY??p.y)+pathY*contactT;
+ const dx=b.x-hitX,dy=b.y-hitY;const dist=Math.hypot(dx,dy);const radius=.099;
  if(dist<radius){const nx=dist>.00001?dx/dist:(i===0?1:-1),ny=dist>.00001?dy/dist:0;
  const approach=(b.vx-p.vx)*nx+(b.vy-p.vy)*ny;
- b.x=p.x+nx*(radius+.008);b.y=Math.max(.05,Math.min(.95,p.y+ny*(radius+.008)));
+ b.x=hitX+nx*(radius+.008);b.y=Math.max(.05,Math.min(.95,hitY+ny*(radius+.008)));
  // Avoid corner traps: if the puck is pinned against a rail, separate tangentially
  // and add a minimum outward speed instead of letting the mallet carry it.
  const railTrap=b.y<=.065||b.y>=.935;
@@ -89,12 +95,12 @@ export function installHockey(io){
    b.x=Math.max(.045,Math.min(.955,b.x+awayX*.013));
  }
 
- if(approach<-.025){
+ if(approach<-.025 || (pathLen2>.000001 && (p.vx*nx+p.vy*ny)>.08)){
  // Continuous collision response: a gentle tap gives a gentle return, a fast swing
  // transfers more momentum along the actual contact normal.
  const swing=Math.max(0,p.vx*nx+p.vy*ny);
  const incoming=Math.max(0,-(b.vx*nx+b.vy*ny));
- const strength=Math.min(1.55,Math.max(.11,incoming*.83+swing*.65));
+ const strength=Math.min(1.55,Math.max(.22,incoming*.83+swing*.75));
  const tangentX=-ny,tangentY=nx;
  const tangent=(b.vx*tangentX+b.vy*tangentY)*.93+(p.vx*tangentX+p.vy*tangentY)*.14;
  b.vx=nx*strength+tangentX*tangent;
