@@ -19,42 +19,14 @@ export function installHockey(io){
  setInterval(()=>{const now=Date.now(),dt=Math.min(.05,(now-last)/1000);last=now;
  for(const g of games.values()){if(g.status!=='playing')continue;if(g.goalPauseUntil){if(now<g.goalPauseUntil)continue;g.goalPauseUntil=0;reset(g);send(g);continue;}
  const b=g.puck;
- if(g.mode==='cpu'){
- const cpu=g.paddles[1],incoming=b.vx>.035;
- const defendX=.79,travel=incoming?Math.max(0,(defendX-b.x)/Math.max(.07,b.vx)):0;
- const low=.05,span=.90;
- let projected=b.y+b.vy*travel;
- projected=((projected-low)%(2*span)+2*span)%(2*span);
- projected=low+(projected>span?2*span-projected:projected);
- projected=Math.max(.12,Math.min(.88,projected));
- // Medium-strength defense: follow shots without perfect positioning.
- const danger=incoming&&b.x>.64;
- const attackable=b.x>.70&&b.x<.87;
- const attack=!danger&&attackable;
- if(attack){
-   // Set up on the goal-side, then lunge through the puck toward the player.
-   const behind=Math.max(.58,Math.min(.91,b.x+.105));
-   const aligned=Math.abs(cpu.y-b.y)<.11;
-   const inRange=Math.abs(cpu.x-b.x)<.20;
-   cpu.ty=Math.max(.12,Math.min(.88,b.y+(b.y>.5?-.018:.018)));
-   cpu.tx=aligned&&inRange?Math.max(.59,b.x-.025):behind;
- }else{
-   cpu.ty=danger?Math.max(.19,Math.min(.81,projected*.48+.5*.52)):.5;
-   cpu.tx=danger&&b.x>.67?Math.max(.66,Math.min(.91,b.x+.11)):.85;
- }
- if(b.x>.91){cpu.tx=.91;cpu.ty=Math.max(.31,Math.min(.69,b.y));}
- }
+ if(g.mode==='cpu'){const c=g.paddles[1];const approaching=b.vx>.025;const travel=Math.max(0,(.76-b.x)/Math.max(.12,b.vx));const projected=b.y+b.vy*Math.min(1.65,travel);const reflected=Math.abs(((projected-.05)%(1.8)+1.8)%1.8-.9)+.05;const threatened=approaching&&b.x>.30;const targetY=threatened?reflected:(b.x>.56?b.y:.5);c.ty=Math.max(.14,Math.min(.86,targetY));const strike=threatened&&b.x>.55&&Math.abs(c.y-b.y)<.19;c.tx=strike?Math.max(.62,Math.min(.78,b.x-.072)):(b.x>.66?.74:.79);}
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
- p.prevX=oldX;p.prevY=oldY;
- const speed=i===1&&g.mode==='cpu'?.78:2.8;
+ const speed=i===1&&g.mode==='cpu'?2.05:1.65;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
- if(dist>.00001){const ease=i===1&&g.mode==='cpu'?.73:Math.min(1,.88+dist*2.8);p.x+=dx/dist*step*ease;p.y+=dy/dist*step*ease;}
+ if(dist>.00001){p.x+=dx/dist*step;p.y+=dy/dist*step;}
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
  }
  // Substep fast puck movement to reduce tunneling through a moving mallet.
- // Slightly heavier puck: mild glide resistance, retaining momentum and shot direction.
- const puckDrag=Math.exp(-.38*dt);
- b.vx*=puckDrag;b.vy*=puckDrag;
  const puckSteps=Math.max(1,Math.ceil(Math.hypot(b.vx,b.vy)*dt/.025));
  for(let sub=0;sub<puckSteps;sub++){b.x+=b.vx*dt/puckSteps;b.y+=b.vy*dt/puckSteps;
  // Puck remains inside the side rails, including its radius.
@@ -76,41 +48,14 @@ export function installHockey(io){
  }
  }
  if(goal>=0){g.score[goal]++;g.effect={type:'goal',seq:++g.effectSeq,force:1,scorer:goal};if(g.score[goal]>=10){g.status='finished';g.winner=g.players[goal]?.name||'الكمبيوتر';}if(g.status==='playing'){g.goalPauseUntil=now+1300;b.vx=0;b.vy=0;}send(g);list();break;}
- for(let i=0;i<2;i++){const p=g.paddles[i];// Swept mallet contact: detect the full path between ticks, not just its final position.
- const pathX=p.x-(p.prevX??p.x),pathY=p.y-(p.prevY??p.y);
- const pathLen2=pathX*pathX+pathY*pathY;
- const contactT=pathLen2>1e-9?Math.max(0,Math.min(1,((b.x-(p.prevX??p.x))*pathX+(b.y-(p.prevY??p.y))*pathY)/pathLen2)):1;
- const hitX=(p.prevX??p.x)+pathX*contactT,hitY=(p.prevY??p.y)+pathY*contactT;
- const dx=b.x-hitX,dy=b.y-hitY;const dist=Math.hypot(dx,dy);const radius=.099;
+ for(let i=0;i<2;i++){const p=g.paddles[i];const dx=b.x-p.x,dy=b.y-p.y;const dist=Math.hypot(dx,dy);const radius=.099;
  if(dist<radius){const nx=dist>.00001?dx/dist:(i===0?1:-1),ny=dist>.00001?dy/dist:0;
  const approach=(b.vx-p.vx)*nx+(b.vy-p.vy)*ny;
- b.x=hitX+nx*(radius+.008);b.y=Math.max(.05,Math.min(.95,hitY+ny*(radius+.008)));
- // Avoid corner traps: if the puck is pinned against a rail, separate tangentially
- // and add a minimum outward speed instead of letting the mallet carry it.
- const railTrap=b.y<=.065||b.y>=.935;
- if(railTrap){
-   const awayX=i===0?1:-1;
-   if(Math.abs(b.vx)<.28||b.vx*awayX<0) b.vx=awayX*.48;
-   b.vy=b.y<=.065?Math.max(.24,b.vy):Math.min(-.24,b.vy);
-   b.x=Math.max(.045,Math.min(.955,b.x+awayX*.013));
- }
-
- if(approach<-.025 || (pathLen2>.000001 && (p.vx*nx+p.vy*ny)>.08)){
- // Continuous collision response: a gentle tap gives a gentle return, a fast swing
- // transfers more momentum along the actual contact normal.
- const swing=Math.max(0,p.vx*nx+p.vy*ny);
- const incoming=Math.max(0,-(b.vx*nx+b.vy*ny));
- const strength=Math.min(1.55,Math.max(.22,incoming*.83+swing*.75));
- const tangentX=-ny,tangentY=nx;
- const tangent=(b.vx*tangentX+b.vy*tangentY)*.93+(p.vx*tangentX+p.vy*tangentY)*.14;
- b.vx=nx*strength+tangentX*tangent;
- b.vy=ny*strength+tangentY*tangent;
- // Keep CPU returns toward the player without giving it an unnatural power boost.
- if(g.mode==='cpu'&&i===1&&b.vx>-.12)b.vx=-Math.max(.24,Math.min(.85,strength));
- const v=Math.hypot(b.vx,b.vy);
- if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
- g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,strength),hitter:i};
- }
+ b.x=p.x+nx*(radius+.004);b.y=Math.max(.05,Math.min(.95,p.y+ny*(radius+.004)));
+ if(approach<-.025 || (i===1&&b.vx>=-.08&&b.x>=p.x) || (i===0&&b.vx<=.08&&b.x<=p.x)){const impulse=Math.min(1.85,Math.max(.55,-approach*1.22+.36));
+ b.vx+=nx*impulse;b.vy+=ny*impulse; if(i===1){b.vx=-Math.max(.62,Math.abs(b.vx));}else{b.vx=Math.max(.62,Math.abs(b.vx));}
+ const v=Math.hypot(b.vx,b.vy);if(v>1.65){b.vx*=1.65/v;b.vy*=1.65/v;}
+ g.effect={type:'hit',seq:++g.effectSeq,force:Math.min(1.5,impulse),hitter:i};}
  }}
  }
  send(g);
