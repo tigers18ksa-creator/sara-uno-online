@@ -20,25 +20,32 @@ export function installHockey(io){
  for(const g of games.values()){if(g.status!=='playing')continue;if(g.goalPauseUntil){if(now<g.goalPauseUntil)continue;g.goalPauseUntil=0;reset(g);send(g);continue;}
  const b=g.puck;
  if(g.mode==='cpu'){
- const cpu=g.paddles[1],incoming=b.vx>.025;
- // Predict side-wall rebounds and intercept before the puck reaches the CPU goal.
- const defendX=.82,travel=incoming?Math.max(0,(defendX-b.x)/Math.max(.06,b.vx)):0;
+ const cpu=g.paddles[1],incoming=b.vx>.035;
+ const defendX=.79,travel=incoming?Math.max(0,(defendX-b.x)/Math.max(.07,b.vx)):0;
  const low=.05,span=.90;
- let predicted=b.y+b.vy*travel;
- predicted=((predicted-low)%(2*span)+2*span)%(2*span);
- predicted=low+(predicted>span?2*span-predicted:predicted);
- predicted=Math.max(.11,Math.min(.89,predicted));
- const danger=incoming&&b.x>.32;
- const reachable=b.x>.53&&b.x<.89;
- const canAttack=reachable&&b.vx<=.04;
- cpu.ty=danger?predicted:(canAttack?Math.max(.11,Math.min(.89,b.y)):.5);
- // Stay goal-side of the puck: never chase behind it and knock it into our own goal.
- const safeX=Math.max(.58,Math.min(.91,b.x+.115));
- cpu.tx=danger&&b.x>.58?safeX:(canAttack?safeX:.86);
- if(b.x>.91){cpu.tx=.91;cpu.ty=Math.max(.32,Math.min(.68,b.y));}
+ let projected=b.y+b.vy*travel;
+ projected=((projected-low)%(2*span)+2*span)%(2*span);
+ projected=low+(projected>span?2*span-projected:projected);
+ projected=Math.max(.12,Math.min(.88,projected));
+ // Medium-strength defense: follow shots without perfect positioning.
+ const danger=incoming&&b.x>.40;
+ const attackable=b.x>.53&&b.x<.91;
+ const attack=!danger&&attackable;
+ if(attack){
+   // Set up on the goal-side, then lunge through the puck toward the player.
+   const behind=Math.max(.58,Math.min(.91,b.x+.105));
+   const aligned=Math.abs(cpu.y-b.y)<.07;
+   const inRange=Math.abs(cpu.x-b.x)<.20;
+   cpu.ty=Math.max(.12,Math.min(.88,b.y+(b.y>.5?-.018:.018)));
+   cpu.tx=aligned&&inRange?Math.max(.535,b.x-.065):behind;
+ }else{
+   cpu.ty=danger?Math.max(.16,Math.min(.84,projected*.88+.5*.12)):.5;
+   cpu.tx=danger&&b.x>.59?Math.max(.62,Math.min(.91,b.x+.105)):.85;
+ }
+ if(b.x>.91){cpu.tx=.91;cpu.ty=Math.max(.31,Math.min(.69,b.y));}
  }
  for(let i=0;i<2;i++){const p=g.paddles[i],oldX=p.x,oldY=p.y;
- const speed=i===1&&g.mode==='cpu'?2.85:1.65;
+ const speed=i===1&&g.mode==='cpu'?2.3:1.65;
  const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy),step=Math.min(dist,speed*dt);
  if(dist>.00001){p.x+=dx/dist*step;p.y+=dy/dist*step;}
  p.vx=(p.x-oldX)/dt;p.vy=(p.y-oldY)/dt;
