@@ -30,8 +30,19 @@ const own=side<0?0:side;
 game.paddles.forEach((p,i)=>{const x=p.y*w,y=(side===0?1-p.x:p.x)*h;const isOwn=i===own;const base=isOwn?'#0757e8':'#d51027';const light=isOwn?'#82d7ff':'#ffb3ba';ctx.save();ctx.shadowColor='#2228';ctx.shadowBlur=16;ctx.shadowOffsetY=9;ctx.fillStyle='#151625';ctx.beginPath();ctx.ellipse(x,y+17,52,24,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.shadowOffsetY=0;const rim=ctx.createRadialGradient(x-17,y-24,3,x,y,53);rim.addColorStop(0,'#fff');rim.addColorStop(.23,light);rim.addColorStop(.67,base);rim.addColorStop(1,'#151a47');ctx.fillStyle=rim;ctx.beginPath();ctx.ellipse(x,y+5,53,38,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=light;ctx.lineWidth=7;ctx.stroke();ctx.fillStyle=base;ctx.beginPath();ctx.roundRect(x-23,y-46,46,51,16);ctx.fill();ctx.fillStyle=light;ctx.beginPath();ctx.ellipse(x-9,y-34,12,7,-.4,0,Math.PI*2);ctx.fill();ctx.restore();});
 const px=game.puck.y*w,py=(side===0?1-game.puck.x:game.puck.x)*h,r=31;ctx.save();
 ctx.shadowColor='#11182766';ctx.shadowBlur=13;ctx.shadowOffsetY=7;ctx.fillStyle='#171717';ctx.beginPath();ctx.ellipse(px,py+6,r+1,r*.78,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.shadowOffsetY=0;
-const rim=ctx.createLinearGradient(px-r,py-r,px+r,py+r);rim.addColorStop(0,'#252525');rim.addColorStop(.22,'#050505');rim.addColorStop(.55,'#3c3c3c');rim.addColorStop(1,'#070707');ctx.fillStyle=rim;ctx.beginPath();ctx.ellipse(px,py+4,r,r*.8,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#050505';ctx.lineWidth=3;ctx.stroke();
-const face=ctx.createRadialGradient(px-11,py-14,2,px,py,r);face.addColorStop(0,'#fff9a2');face.addColorStop(.28,'#ffeb46');face.addColorStop(.72,'#f6c500');face.addColorStop(1,'#c88b00');ctx.fillStyle=face;ctx.beginPath();ctx.ellipse(px,py-3,r-3,r*.71,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#111111';ctx.lineWidth=3.5;ctx.stroke();ctx.fillStyle='#ffffff88';ctx.beginPath();ctx.ellipse(px-11,py-14,8,3.5,-.3,0,Math.PI*2);ctx.fill();ctx.restore();drawGoalFx();drawWinFx();}
+// Smooth 3D concave yellow puck: soft sidewall, raised rounded lip and recessed center.
+const side=ctx.createLinearGradient(px,py-r*.8,px,py+r);
+side.addColorStop(0,'#ffe95c');side.addColorStop(.45,'#ffce05');side.addColorStop(.78,'#d69a00');side.addColorStop(1,'#986000');
+ctx.fillStyle=side;ctx.beginPath();ctx.ellipse(px,py+6,r,r*.83,0,0,Math.PI*2);ctx.fill();
+const lip=ctx.createRadialGradient(px-9,py-12,3,px,py-2,r+2);
+lip.addColorStop(0,'#fff7a6');lip.addColorStop(.48,'#ffde20');lip.addColorStop(.77,'#ffc000');lip.addColorStop(.91,'#fff18a');lip.addColorStop(1,'#b97a00');
+ctx.fillStyle=lip;ctx.beginPath();ctx.ellipse(px,py-4,r,r*.79,0,0,Math.PI*2);ctx.fill();
+const recess=ctx.createRadialGradient(px+5,py+4,2,px,py-5,r*.85);
+recess.addColorStop(0,'#edb300');recess.addColorStop(.6,'#ffd225');recess.addColorStop(.91,'#ffe85a');recess.addColorStop(1,'#b57a00');
+ctx.fillStyle=recess;ctx.beginPath();ctx.ellipse(px,py-5,r*.77,r*.58,0,0,Math.PI*2);ctx.fill();
+ctx.strokeStyle='#fff3a4bb';ctx.lineWidth=2.3;ctx.beginPath();ctx.ellipse(px,py-5,r*.85,r*.67,0,Math.PI*1.05,Math.PI*1.89);ctx.stroke();
+ctx.fillStyle='#ffffff80';ctx.beginPath();ctx.ellipse(px-11,py-17,7,2.6,-.32,0,Math.PI*2);ctx.fill();
+ctx.restore();drawGoalFx();drawWinFx();}
 function drawGoalFx(){if(!goalFx)return;const elapsed=performance.now()-goalFx.start;if(elapsed>1450){goalFx=null;return;}const t=elapsed/1450,alpha=Math.min(1,t/.13, (1-t)/.27),w=600,h=880,top=goalFx.end==='top';ctx.save();ctx.globalAlpha=Math.max(0,alpha);ctx.shadowBlur=32;ctx.shadowColor='#ed102e';ctx.strokeStyle='#ed102e';ctx.lineWidth=10*(1-t)+3;ctx.strokeRect(w*.34,top?4:h-28,w*.32,24);
 // The goal net drops only after a score, then retracts and disappears.
 const ease=x=>1-Math.pow(1-x,3);
