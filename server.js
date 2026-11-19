@@ -130,7 +130,7 @@ let saraLive=null;const saraLiveViewers=new Set();const saraLiveComments=[];cons
 installVideoTrim(app,io,users);
 let winterEnabled=false;const WINTER_FILE=process.env.SARA_WINTER_FILE||'/var/data/sara-winter.json';try{winterEnabled=JSON.parse(readFileSync(WINTER_FILE,'utf8')).enabled===true}catch(e){}
 io.on('connection',s=>{
-  s.emit('saraWinterState',{enabled:winterEnabled});
+  s.emit('saraWinterState',{enabled:winterEnabled});s.on('saraWinterSync',()=>s.emit('saraWinterState',{enabled:winterEnabled}));
   s.on('saraWinterSet',({enabled}={})=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id||!u.primary)return s.emit('chatError','الشتاء للمالك الرئيسي فقط');const next=enabled===true;try{writeFileSync(WINTER_FILE,JSON.stringify({enabled:next}));winterEnabled=next;io.emit('saraWinterState',{enabled:next})}catch(e){console.error('Winter save failed',e.message);s.emit('chatError','تعذر حفظ وضع الشتاء')}});
 
   s.emit('roomGateState',{closed:roomClosed});
