@@ -128,7 +128,11 @@ const reactionReady=store('private',{sender:REACTION_STORE_FROM,other:REACTION_S
 }).catch(e=>{console.error('Could not load saved reactions:',e)});
 let saraLive=null;const saraLiveViewers=new Set();const saraLiveComments=[];const saraLiveNames=new Map();const saraLiveState=()=>({active:!!saraLive,startedAt:saraLive?.startedAt||0,host:saraLive?.host||'',viewers:saraLiveViewers.size});const saraLiveBroadcast=()=>io.emit('saraLiveState',saraLiveState());
 installVideoTrim(app,io,users);
+let winterEnabled=false;const WINTER_FILE=process.env.SARA_WINTER_FILE||'/var/data/sara-winter.json';try{winterEnabled=JSON.parse(readFileSync(WINTER_FILE,'utf8')).enabled===true}catch(e){}
 io.on('connection',s=>{
+  s.emit('saraWinterState',{enabled:winterEnabled});
+  s.on('saraWinterSet',({enabled}={})=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id||!u.primary)return s.emit('chatError','الشتاء للمالك الرئيسي فقط');const next=enabled===true;try{writeFileSync(WINTER_FILE,JSON.stringify({enabled:next}));winterEnabled=next;io.emit('saraWinterState',{enabled:next})}catch(e){console.error('Winter save failed',e.message);s.emit('chatError','تعذر حفظ وضع الشتاء')}});
+
   s.emit('roomGateState',{closed:roomClosed});
   s.on('setRoomGate',({closed}={})=>{const u=users.get(s.data.token);if(!u||u.sid!==s.id||!u.primary)return s.emit('chatError','هذه الصلاحية للمالك الرئيسي فقط');if(!roomGateReady)return s.emit('chatError','انتظر تحميل حالة المجلس');roomGateSaving=roomGateSaving.then(async()=>{const next=closed===true;await saveRoomGate(next);roomClosed=next;io.emit('roomGateState',{closed:next});if(next){for(const sock of io.sockets.sockets.values()){const member=users.get(sock.data.token);if(member&&!member.owner)sock.disconnect(true)}}}).catch(e=>{console.error('Room gate save:',e.message);s.emit('chatError','تعذر حفظ حالة المجلس')});});
 
